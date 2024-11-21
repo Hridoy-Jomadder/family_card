@@ -102,7 +102,7 @@ $conn->close();
 </head>
 <body>
 <div class="header">
-    <h1>Welcome to Family Card</h1>
+    <h1 style="color:white;">Welcome to Family Card</h1>
     <h4 style="color:white;">Hand in hand, the country of pride is Shahid Zia's Bangladesh.</h4>
 </div> 
    <div class="navbar">
@@ -134,6 +134,7 @@ $conn->close();
         </div>
      </div>
     </div>
+
     <div class="container">
     <div style="width: 100%;padding: 50px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex;">
         <div>
@@ -174,5 +175,59 @@ $conn->close();
         </form>
     </div>
     </div>
+
+    <div class="container">
+    <div style="width: 100%;padding: 50px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex;">
+        <div>
+    <h2>Edit </h2>
+        <?php if (!empty($message)): ?>
+            <p style="color: green;"><?= htmlspecialchars($message) ?></p>
+        <?php endif; ?>
+        <form action="profile.php" method="">
+            <div class="form-group">
+                <label for="family_name">Job/Commpany/Work:</label>
+                <input type="text" class="form-control" id="family_name" name="family_name" value="<?= htmlspecialchars($family_data['family_name'] ?? '') ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="nid_number">Job/Commpany/Work Type:</label>
+                <input type="text" class="form-control" id="nid_number" name="nid_number" value="<?= htmlspecialchars($family_data['nid_number'] ?? '') ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="full_name">Family Job/Commpany members </label>
+                <input type="text" class="form-control" id="full_name" name="full_name" value="<?= htmlspecialchars($family_data['full_name'] ?? '') ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="father_name">Father's Work:</label>
+                <input type="text" class="form-control" id="father_name" name="father_name" value="<?= htmlspecialchars($family_data['father_name'] ?? '') ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="mother_name">Mother's Work:</label>
+                <input type="text" class="form-control" id="mother_name" name="mother_name" value="<?= htmlspecialchars($family_data['mother_name'] ?? '') ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="mobile_number">Son's Work:</label>
+                <input type="text" class="form-control" id="mobile_number" name="mobile_number" value="<?= htmlspecialchars($family_data['mobile_number'] ?? '') ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="mobile_number">Son's Work:</label>
+                <input type="text" class="form-control" id="mobile_number" name="mobile_number" value="<?= htmlspecialchars($family_data['mobile_number'] ?? '') ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="mobile_number">Son's Work:</label>
+                <input type="text" class="form-control" id="mobile_number" name="mobile_number" value="<?= htmlspecialchars($family_data['mobile_number'] ?? '') ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="mobile_number">Dautor's Work:</label>
+                <input type="text" class="form-control" id="mobile_number" name="mobile_number" value="<?= htmlspecialchars($family_data['mobile_number'] ?? '') ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="family_members">Other Family Members work:</label>
+                <input type="text" class="form-control" id="family_members" name="family_members" value="<?= htmlspecialchars($family_data['family_members'] ?? '') ?>" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+    </div>
+    </div>
+
 </body>
 </html>

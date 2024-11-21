@@ -127,7 +127,7 @@ $conn->close();
 </head>
 <body>
 <div class="header">
-    <h1>Welcome to Family Card</h1>
+    <h1 style="color:white;">Welcome to Family Card</h1>
     <h4 style="color:white;">Hand in hand, the country of pride is Shahid Zia's Bangladesh.</h4>
 </div>    <div class="navbar">
         <a href="index.php">Home</a>

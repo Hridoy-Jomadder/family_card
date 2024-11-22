@@ -6,6 +6,7 @@ session_start();
 
 // Initialize variables
 $family_data = [];
+$products = [];
 $message = "";
 
 // Check if user is logged in and session contains a valid user ID
@@ -21,17 +22,33 @@ if (isset($_SESSION['user_id'])) {
 $DB = new Database();
 $conn = $DB->connect(); // Assuming `connect` is a method in your `Database` class
 
-// Fetch family data based on the user ID
-$stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
+// Fetch user data based on the user ID
+$stmt = $conn->prepare("SELECT * FROM leader WHERE id = ?");
 $stmt->bind_param("i", $user_id); // Bind the user ID as an integer
 
 if ($stmt->execute()) {
     $result = $stmt->get_result();
 
     if ($result && $result->num_rows > 0) {
-        $family_data = $result->fetch_assoc(); // Fetch user data
+        $user = $result->fetch_assoc(); // Fetch user data
+        $family_data = $user;
+
+        // Check user role to determine access level
+        $role = $user['role']; // Get the user's role
+
+        // Example role-based logic
+        if ($role == 'Admin') {
+            // Admin-specific content or actions
+            $message = "Welcome, Admin. You have full access.";
+        } elseif ($role == 'Editor') {
+            // Editor-specific content or actions
+            $message = "Welcome, Editor. You can edit family data.";
+        } elseif ($role == 'User') {
+            // User-specific content or actions
+            $message = "Welcome, User. You have limited access.";
+        }
     } else {
-        $message = "No family data found in the database.";
+        $message = "No user data found.";
     }
 } else {
     $message = "Error executing query: " . $stmt->error;
@@ -39,24 +56,49 @@ if ($stmt->execute()) {
 
 $stmt->close();
 
-// Fetch family products
-$stmt = $conn->prepare("
-    SELECT fp.*, u.family_name 
-    FROM family_products fp
-    JOIN users u ON fp.family_id = u.id
-    WHERE fp.family_id = ?
-");
-$stmt->bind_param("i", $user_id);
+// Fetch family products (if role allows)
+if ($role == 'Admin' || $role == 'Editor') {
+    $stmt = $conn->prepare("
+        SELECT fp.*, u.family_name 
+        FROM family_products fp
+        JOIN users u ON fp.family_id = u.id
+        WHERE fp.family_id = ?
+    ");
+    $stmt->bind_param("i", $user_id);
 
-if ($stmt->execute()) {
-    $products = $stmt->get_result();
+    if ($stmt->execute()) {
+        $products = $stmt->get_result();
+    } else {
+        $message = "Error executing query: " . $stmt->error;
+    }
+
+    $stmt->close();
 } else {
-    $message = "Error executing query: " . $stmt->error;
+    // Redirect non-admin or non-editor roles if they try to access family products
+    $message = "You do not have permission to view family products.";
 }
 
-$stmt->close();
-$conn->close(); // Close the connection after all queries are executed
+// Initialize variables
+$limit = 10; // Rows per page
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $limit;
+$search = $_POST['search'] ?? '';
 
+// Prepare SQL with filtering and pagination
+$query = "SELECT id, family_name, full_name, family_image, family_members, mobile_number, nid_number, family_card_number, tax
+          FROM users 
+          WHERE family_name LIKE ? 
+          LIMIT ? OFFSET ?";
+$stmt = $conn->prepare($query);
+$search_param = "%$search%";
+$stmt->bind_param("sii", $search_param, $limit, $offset);
+
+// Execute and fetch results
+$stmt->execute();
+$result = $stmt->get_result();
+$users = $result->fetch_all(MYSQLI_ASSOC);
+
+$conn->close(); // Close the connection after all queries are executed
 ?>
 
 <!DOCTYPE html>
@@ -115,6 +157,9 @@ $conn->close(); // Close the connection after all queries are executed
            <!-- Star Start -->
            <div class="container-fluid pt-4 px-4">
                 <div class="row g-4">
+                <?php if (!empty($message)): ?>
+            <p style="color: black;text-align: center; font-size: 22px;"><?php echo htmlspecialchars($message); ?></p>
+        <?php endif; ?>
                     <div class="col-sm-6 col-xl-3">
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-id-card fa-3x text-primary"></i>
@@ -206,8 +251,6 @@ $conn->close(); // Close the connection after all queries are executed
             <p><strong>Number of Family Members:</strong> <?= htmlspecialchars($familyData['family_members'] ?? 'Not Available') ?></p>
             <img src="<?= htmlspecialchars($familyData['family_image'] ?? 'uploads/default-image.jpg') ?>" alt="Family Image" style="max-width: 100%; height: auto;">
         </div>
-    <?php else: ?>
-        <p><?= htmlspecialchars($message) ?></p>
     <?php endif; ?>
     <br>
     <div style="width: 35%;">
@@ -219,63 +262,64 @@ $conn->close(); // Close the connection after all queries are executed
     </div>
 
     </div>
-<div class="container">
- <!-- Family Account Start -->
-<div class="container-fluid pt-4 px-4">
-    <div class="bg-light text-center rounded p-4">
-        <div class="d-flex align-items-center justify-content-between mb-4">
-            <h6 class="mb-0">Family Informations</h6>
-        </div>
-        <div class="table-responsive">
-            <table class="table text-start align-middle table-bordered table-hover mb-0">
-                <thead>
-                    <tr class="text-dark">
-                        <th scope="col">ID</th>
-                        <th scope="col">Family Name</th>
-                        <th scope="col">Full Name</th>
-                        <th scope="col">Profile Image</th>
-                        <th scope="col">Family Members</th>
-                        <th scope="col">Mobile</th>
-                        <th scope="col">NID  Card</th>
-                        <th scope="col">Family Card Number</th>
-                        <th scope="col">Work</th>
-                        <th scope="col">Work Type</th>
-                        <th scope="col" colspan="2">Balance</th>
-                        <th scope="col" colspan="2">Tax</th>
 
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php 
-                    // Check if $users is defined and not null
-                    if (isset($users) && $users !== false) {
-                        foreach ($users as $user): ?>
-                            <tr>
-                                <td><?php echo $user['id']; ?></td>
-                                <td><?php echo $user['userid']; ?></td>
-                                <td><?php echo $user['first_name'] . ' ' . $user['last_name']; ?></td>
-                                <td><img src="<?php echo $user['profile_image_url']; ?>" alt="Profile Image" width="50" height="50"></td>
-                                <td><?php echo $user['gender']; ?></td>
-                                <td><?php echo $user['date']; ?></td>
-                                <td><?php echo $user['email']; ?></td>
-                                <td><?php echo $user['ip_address']; ?></td>
-                                <td><?php echo $user['country']; ?></td>
-                                <td><?php echo $user['']; ?></td>
-                                <td><?php echo $user['']; ?></td>
-                                <td><a class="btn btn-sm btn-info" href="detail.php?id=<?php echo $user['id']; ?>">Detail</a></td>
-                            </tr>
-                    <?php endforeach; 
-                    } else {
-                        // Handle the case where no users were fetched or $users is not defined
-                        echo "<tr><td colspan='11'>No users found.</td></tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
+<div class="container">
+    <!-- Family Account Start -->
+    <div class="container-fluid pt-4 px-4">
+        <div class="bg-light text-center rounded p-4">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h6 class="mb-0">Family Informations</h6>
+            </div>
+            <div class="table-responsive">
+                <table class="table text-start align-middle table-bordered table-hover mb-0">
+                    <thead>
+                        <tr class="text-dark">
+                            <th scope="col">ID</th>
+                            <th scope="col">Family Name</th>
+                            <th scope="col">Full Name</th>
+                            <th scope="col">Profile Image</th>
+                            <th scope="col">Family Members</th>
+                            <th scope="col">Mobile</th>
+                            <th scope="col">NID Card</th>
+                            <th scope="col">Family Card Number</th>
+                            <th scope="col">Work</th>
+                            <th scope="col">Work Type</th>
+                            <th scope="col">Balance</th>
+                            <th scope="col">Tax</th>
+                        </tr>
+                    </thead>
+                      <tbody>
+                        <?php 
+                        if (!empty($users)) {
+                            foreach ($users as $user): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($user['id']); ?></td>
+                                    <td><?php echo htmlspecialchars($user['family_name']); ?></td>
+                                    <td><?php echo htmlspecialchars($user['full_name']); ?></td>
+                                    <td>
+                                        <img src="<?php echo !empty($user['profile_image']) ? $user['profile_image'] : 'default-profile.png'; ?>" 
+                                            alt="Profile Image" width="50" height="50">
+                                    </td>
+                                    <td><?php echo isset($user['family_members']) ? htmlspecialchars($user['family_members']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['mobile']) ? htmlspecialchars($user['mobile']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['nid_card']) ? htmlspecialchars($user['nid_card']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['family_card_number']) ? htmlspecialchars($user['family_card_number']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['work']) ? htmlspecialchars($user['work']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['work_type']) ? htmlspecialchars($user['work_type']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['balance']) ? htmlspecialchars($user['balance']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['tax']) ? htmlspecialchars($user['tax']) : 'N/A'; ?></td>
+                                </tr>
+                        <?php endforeach; 
+                        } else {
+                            echo "<tr><td colspan='12'>No family data available.</td></tr>";
+                        }
+                        ?>
+                        </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
-<!-- Family Account End -->
+    <!-- Family Account End -->
 </div>
 
 <div class="container">
@@ -292,15 +336,14 @@ $conn->close(); // Close the connection after all queries are executed
                         <th scope="col">ID</th>
                         <th scope="col">Family Name</th>
                         <th scope="col">Full Name</th>
-                        <th scope="col">Profile Image</th>
                         <th scope="col">Family Members</th>
                         <th scope="col">Family Card Number</th>
                         <th scope="col">Gold</th>
                         <th scope="col">Assets</th>
                         <th scope="col">Work</th>
                         <th scope="col">Work Type</th>
-                        <th scope="col" colspan="2">Balance</th>
-                        <th scope="col" colspan="2">Tax</th>
+                        <th scope="col" >Balance</th>
+                        <th scope="col" >Tax</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -309,17 +352,17 @@ $conn->close(); // Close the connection after all queries are executed
                     if (isset($users) && $users !== false) {
                         foreach ($users as $user): ?>
                             <tr>
-                                <td><?php echo $user['id']; ?></td>
-                                <td><?php echo $user['userid']; ?></td>
-                                <td><?php echo $user['first_name'] . ' ' . $user['last_name']; ?></td>
-                                <td><img src="<?php echo $user['profile_image_url']; ?>" alt="Profile Image" width="50" height="50"></td>
-                                <td><?php echo $user['gender']; ?></td>
-                                <td><?php echo $user['date']; ?></td>
-                                <td><?php echo $user['email']; ?></td>
-                                <td><?php echo $user['ip_address']; ?></td>
-                                <td><?php echo $user['country']; ?></td>
-                                <td><?php echo $user['browser_name']; ?></td>
-                                <td><a class="btn btn-sm btn-info" href="detail.php?id=<?php echo $user['id']; ?>">Detail</a></td>\
+                            <td><?php echo htmlspecialchars($user['id']); ?></td>
+                                    <td><?php echo htmlspecialchars($user['family_name']); ?></td>
+                                    <td><?php echo htmlspecialchars($user['full_name']); ?></td>
+                                    <td><?php echo isset($user['family_members']) ? htmlspecialchars($user['family_members']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['family_card_number']) ? htmlspecialchars(string: $user['family_card_number']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['mobile']) ? htmlspecialchars($user['mobile']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['nid_card']) ? htmlspecialchars($user['nid_card']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['work']) ? htmlspecialchars($user['work']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['work_type']) ? htmlspecialchars($user['work_type']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['balance']) ? htmlspecialchars($user['balance']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['tax']) ? htmlspecialchars($user['tax']) : 'N/A'; ?></td>
                             </tr>
                     <?php endforeach; 
                     } else {
@@ -357,7 +400,7 @@ $conn->close(); // Close the connection after all queries are executed
                     </tr>
                 </thead>
                 <tbody>
-                    <?php while ($row = $products->fetch_assoc()): ?>
+                    <!-- <?php while ($row = $products->fetch_assoc()): ?>
                     <tr>
                         <td><?= htmlspecialchars($row['id']) ?></td>
                         <td><?= htmlspecialchars($row['family_name']) ?></td>
@@ -368,7 +411,7 @@ $conn->close(); // Close the connection after all queries are executed
                         <td><?= htmlspecialchars($row['vehicle'] ?? 'N/A') ?></td>
                         <td><?= number_format($row['balance'], 2) ?></td>
                     </tr>
-                    <?php endwhile; ?>
+                    <?php endwhile; ?> -->
                 </tbody>
             </table>
         </div>
@@ -377,6 +420,10 @@ $conn->close(); // Close the connection after all queries are executed
 <!-- Star Products End -->
 </div>
 </div>
+
+
+
+
 <!-- Back to Top -->
 <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>

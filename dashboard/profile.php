@@ -1,41 +1,104 @@
 <?php
 include "classes/connection.php";
 
+// Start the session to access session variables
+session_start();
+
 // Initialize variables
-$familyData = [];
+$family_data = [];
+$products = [];
 $message = "";
 
-// Check if NID number is set in form submission
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nidnumber'])) {
-    $nidNumber = $_POST['nidnumber'];
-
-    // Query to fetch family data by NID Number
-    $query = "SELECT * FROM families WHERE nid_number = ?";
-    $stmt = $conn->prepare($query);
-
-    if ($stmt) {
-        $stmt->bind_param("s", $nidNumber);
-        
-        if ($stmt->execute()) {
-            $result = $stmt->get_result();
-            if ($result->num_rows > 0) {
-                $familyData = $result->fetch_assoc();
-            } else {
-                $message = "No family found with the specified NID Number.";
-            }
-            $result->close();
-        } else {
-            $message = "Error fetching family data: " . $stmt->error;
-        }
-        $stmt->close();
-    } else {
-        $message = "Error preparing the statement: " . $conn->error;
-    }
+// Check if user is logged in and session contains a valid user ID
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id']; // Retrieve user ID from session
 } else {
-    $message = "Please provide an NID Number to view family details.";
+    // Redirect to login page if no user ID in session
+    header("Location: login.php");
+    exit;
 }
 
-$conn->close();
+// Create a Database instance
+$DB = new Database();
+$conn = $DB->connect(); // Assuming `connect` is a method in your `Database` class
+
+// Fetch user data based on the user ID
+$stmt = $conn->prepare("SELECT * FROM leader WHERE id = ?");
+$stmt->bind_param("i", $user_id); // Bind the user ID as an integer
+
+if ($stmt->execute()) {
+    $result = $stmt->get_result();
+
+    if ($result && $result->num_rows > 0) {
+        $user = $result->fetch_assoc(); // Fetch user data
+        $family_data = $user;
+
+        // Check user role to determine access level
+        $role = $user['role']; // Get the user's role
+
+        // Example role-based logic
+        if ($role == 'Admin') {
+            // Admin-specific content or actions
+            $message = "Welcome, Admin. You have full access.";
+        } elseif ($role == 'Editor') {
+            // Editor-specific content or actions
+            $message = "Welcome, Editor. You can edit family data.";
+        } elseif ($role == 'User') {
+            // User-specific content or actions
+            $message = "Welcome, User. You have limited access.";
+        }
+    } else {
+        $message = "No user data found.";
+    }
+} else {
+    $message = "Error executing query: " . $stmt->error;
+}
+
+$stmt->close();
+
+// Fetch family products (if role allows)
+if ($role == 'Admin' || $role == 'Editor') {
+    $stmt = $conn->prepare("
+        SELECT fp.*, u.family_name 
+        FROM family_products fp
+        JOIN users u ON fp.family_id = u.id
+        WHERE fp.family_id = ?
+    ");
+    $stmt->bind_param("i", $user_id);
+
+    if ($stmt->execute()) {
+        $products = $stmt->get_result();
+    } else {
+        $message = "Error executing query: " . $stmt->error;
+    }
+
+    $stmt->close();
+} else {
+    // Redirect non-admin or non-editor roles if they try to access family products
+    $message = "You do not have permission to view family products.";
+}
+
+// Initialize variables
+$limit = 10; // Rows per page
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $limit;
+$search = $_POST['search'] ?? '';
+
+// Prepare SQL with filtering and pagination
+$query = "SELECT id, family_name, full_name, family_image, family_members, mobile_number, nid_number, family_card_number, tax
+          FROM users 
+          WHERE family_name LIKE ? 
+          LIMIT ? OFFSET ?";
+$stmt = $conn->prepare($query);
+$search_param = "%$search%";
+$stmt->bind_param("sii", $search_param, $limit, $offset);
+
+// Execute and fetch results
+$stmt->execute();
+$result = $stmt->get_result();
+$users = $result->fetch_all(MYSQLI_ASSOC);
+
+$conn->close(); // Close the connection after all queries are executed
 ?>
 
 <!DOCTYPE html>
@@ -119,6 +182,39 @@ $conn->close();
         <?php endif; ?>
     </div>
 </div>
+
+<h2>Family Data</h2>
+        <p>Username: <?php echo htmlspecialchars($family_data['username']); ?></p>
+        <p>Email: <?php echo htmlspecialchars($family_data['email']); ?></p>
+        <p>Role: <?php echo htmlspecialchars($family_data['role']); ?></p>
+
+        <!-- Display family products for Admins and Editors -->
+        <?php if ($role == 'Admin' || $role == 'Editor'): ?>
+            <h3>Family Products</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product ID</th>
+                        <th>Product Name</th>
+                        <th>Family Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while ($product = $products->fetch_assoc()): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($product['id']); ?></td>
+                            <td><?php echo htmlspecialchars($product['product_name']); ?></td>
+                            <td><?php echo htmlspecialchars($product['family_name']); ?></td>
+                        </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+
+        <!-- Display restricted content for Users -->
+        <?php if ($role == 'User'): ?>
+            <p>Your family products are not accessible to you at the moment.</p>
+        <?php endif; ?>
 
 
 <!-- Back to Top -->

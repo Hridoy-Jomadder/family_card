@@ -1,18 +1,19 @@
 <?php
 class Database {
-    private $host = "localhost";    // Your database host
-    private $user = "root";         // Your database username
-    private $password = "";         // Your database password
-    private $dbname = "family_data"; // Your database name
+    private $servername = "127.0.0.1"; // Change to your database host if needed
+    private $username = "root";       // Replace with your DB username
+    private $password = "";           // Replace with your DB password
+    private $dbname = "family_data";  // Replace with your database name
+    public $conn;
 
     public function connect() {
-        $conn = new mysqli($this->host, $this->user, $this->password, $this->dbname);
+        $this->conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
 
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
+        // Check connection
+        if ($this->conn->connect_error) {
+            die("Connection failed: " . $this->conn->connect_error);
         }
-
-        return $conn;
+        return $this->conn;
     }
 }
 ?>

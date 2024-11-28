@@ -170,7 +170,7 @@ $conn->close(); // Close the connection after all queries are executed
     <a href="index.php">Home</a>
     <a href="profile.php">Profile</a>
     <a href="gift.php">Gift</a>
-    <a href="logout.php">Logout</a>
+    <a href="logout.php" onclick="return confirm('Are you sure you want to log out?');">Logout</a>
 </div>
 
 <div class="container">
@@ -178,8 +178,8 @@ $conn->close(); // Close the connection after all queries are executed
            <div class="container-fluid pt-4 px-4">
                 <div class="row g-4">
                 <?php if (!empty($message)): ?>
-            <p style="color: black;text-align: center; font-size: 22px;"><?php echo htmlspecialchars($message); ?></p>
-        <?php endif; ?>
+                        <p style="color: black;text-align: center; font-size: 22px;"><?php echo htmlspecialchars($message); ?></p>
+                    <?php endif; ?>
                     <div class="col-sm-6 col-xl-3">
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-id-card fa-3x text-primary"></i>

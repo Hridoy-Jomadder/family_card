@@ -55,6 +55,46 @@ if ($stmt->execute()) {
 }
 
 $stmt->close();
+
+// Function to generate a random family card number
+function generateFamilyCardNumber() {
+    // Generate a random family card number (10-digit number)
+    return mt_rand(1000000000, 9999999999);
+}
+
+// Function to update family card number in the database
+function updateFamilyCardNumberOnce($conn, $user_id) {
+    // চেক করুন যদি ব্যবহারকারীর ফ্যামিলি কার্ড নাম্বার ইতিমধ্যে বিদ্যমান থাকে
+    $stmt = $conn->prepare("SELECT family_card_number FROM users WHERE id = ? AND (family_card_number IS NULL OR family_card_number = 0)");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result && $result->num_rows > 0) {
+        // যদি ফ্যামিলি কার্ড নাম্বার না থাকে, তাহলে নতুন একটি জেনারেট করুন
+        $family_card_number = mt_rand(1000000000, 9999999999);
+
+        // ফ্যামিলি কার্ড নাম্বার আপডেট করুন
+        $update_stmt = $conn->prepare("UPDATE users SET family_card_number = ? WHERE id = ?");
+        $update_stmt->bind_param("ii", $family_card_number, $user_id);
+
+        if ($update_stmt->execute()) {
+            return "Family card number created successfully: " . $family_card_number;
+        } else {
+            return "Error updating family card number: " . $update_stmt->error;
+        }
+
+        $update_stmt->close();
+    } else {
+        return "Family card number already exists or user not found.";
+    }
+
+    $stmt->close();
+}
+
+// ফ্যামিলি কার্ড নাম্বার আপডেট করার চেষ্টা করুন
+$message .= updateFamilyCardNumberOnce($conn, $user_id);
+
 $conn->close(); // Close the connection after all queries are executed
 
 ?>

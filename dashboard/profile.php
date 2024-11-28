@@ -160,7 +160,7 @@ $conn->close(); // Close the connection after all queries are executed
 </head>
 <body>
 <div class="header">
-    <h1>Welcome to Family Card</h1>
+    <h1 style="color:white;">Welcome to Family Card</h1>
     <h4 style="color:white;">Hand in hand, the country of pride is Shahid Zia's Bangladesh.</h4>
 </div>
 
@@ -169,18 +169,18 @@ $conn->close(); // Close the connection after all queries are executed
     <div>
         <a href="index.php">Home</a>
         <a href="profile.php">Profile</a>
-        <a href="upload_family_image.php">Upload Image</a>
-        <a href="logout.php">Logout</a>
-    </div>
+        <a href="gift.php">Gift</a>
+        <a href="logout.php" onclick="return confirm('Are you sure you want to log out?');">Logout</a>
+        </div>
 </div>
 
 <div style="padding: 50px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
     <div class="header">
-    <h3><?= htmlspecialchars($message) ?></h3>
-        <h1 style="color:white;">Family Profile</h1>
-        <p>Username: <?php echo htmlspecialchars($family_data['username']); ?></p>
-        <p>Email: <?php echo htmlspecialchars($family_data['email']); ?></p>
-        <p>Role: <?php echo htmlspecialchars($family_data['role']); ?></p>
+    <h3 style="color:white;"><?= htmlspecialchars($message) ?></h3>
+        <h1 style="color:black;">Family Profile</h1>
+        <p style="color:black;">Username: <?php echo htmlspecialchars($family_data['username']); ?></p>
+        <p style="color:black;">Email: <?php echo htmlspecialchars($family_data['email']); ?></p>
+        <p style="color:black;">Role: <?php echo htmlspecialchars($family_data['role']); ?></p>
 
     </div>
     <br><br>

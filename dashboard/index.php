@@ -169,7 +169,7 @@ $conn->close(); // Close the connection after all queries are executed
 <div class="navbar">
     <a href="index.php">Home</a>
     <a href="profile.php">Profile</a>
-    <a href="upload_family_image.php">Upload Image</a>
+    <a href="gift.php">Gift</a>
     <a href="logout.php">Logout</a>
 </div>
 
@@ -304,7 +304,7 @@ $conn->close(); // Close the connection after all queries are executed
                             <th scope="col">Family Card Number</th>
                             <th scope="col">Work</th>
                             <th scope="col">Work Type</th>
-                            <th scope="col">Balance</th>
+                            <th scope="col">Total amount(Taka)</th>
                             <th scope="col">Tax</th>
                         </tr>
                     </thead>

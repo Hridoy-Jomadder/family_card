@@ -1,13 +1,15 @@
 <?php
 include "classes/connection.php";
+include "classes/product.php";
 
 // Start the session to access session variables
 session_start();
 
 // Initialize variables
 $family_data = [];
-$products = [];
+$products = null; // Set to null initially
 $message = "";
+$role = null; // Initialize $role to avoid undefined variable errors
 
 // Check if user is logged in and session contains a valid user ID
 if (isset($_SESSION['user_id'])) {
@@ -56,36 +58,50 @@ if ($stmt->execute()) {
 
 $stmt->close();
 
-// Fetch family products (if role allows)
-if ($role == 'Admin' || $role == 'Editor') {
+if (isset($user['role'])) {
+    $role = $user['role'];
+} else {
+    $role = null; // Default value if role is not set
+}
+
+// Ensure $role is defined
+$role = $family_data['role'] ?? null;
+
+// Fetch products if the user has the correct role
+if ($role === 'Admin' || $role === 'Editor') {
     $stmt = $conn->prepare("
         SELECT fp.*, u.family_name 
         FROM family_products fp
         JOIN users u ON fp.family_id = u.id
         WHERE fp.family_id = ?
     ");
+
+    if (!$stmt) {
+        die("SQL Prepare Error: " . $conn->error); // Debugging: Check for prepare errors
+    }
+
     $stmt->bind_param("i", $user_id);
 
     if ($stmt->execute()) {
         $products = $stmt->get_result();
     } else {
-        $message = "Error executing query: " . $stmt->error;
+        die("Query Execution Error: " . $stmt->error); // Debugging: Output execution errors
     }
 
     $stmt->close();
 } else {
-    // Redirect non-admin or non-editor roles if they try to access family products
-    $message = "You do not have permission to view family products.";
+    $products = null; // Set to null for unauthorized roles
 }
 
-// Initialize variables
+
+// Initialize variables for search and pagination
 $limit = 10; // Rows per page
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 $search = $_POST['search'] ?? '';
 
 // Prepare SQL with filtering and pagination
-$query = "SELECT id, family_name, full_name, family_image, family_members, mobile_number, nid_number, family_card_number, tax
+$query = "SELECT id, family_name, full_name, family_image, family_members, nid_number, mobile_number, family_card_number, balance, tax
           FROM users 
           WHERE family_name LIKE ? 
           LIMIT ? OFFSET ?";
@@ -94,9 +110,12 @@ $search_param = "%$search%";
 $stmt->bind_param("sii", $search_param, $limit, $offset);
 
 // Execute and fetch results
-$stmt->execute();
-$result = $stmt->get_result();
-$users = $result->fetch_all(MYSQLI_ASSOC);
+if ($stmt->execute()) {
+    $result = $stmt->get_result();
+    $users = $result->fetch_all(MYSQLI_ASSOC);
+} else {
+    $message = "Error fetching users: " . $stmt->error;
+}
 
 $conn->close(); // Close the connection after all queries are executed
 ?>
@@ -107,9 +126,6 @@ $conn->close(); // Close the connection after all queries are executed
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Family Profile</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/stylel.css">
-
     <meta content="" name="keywords">
     <meta content="" name="description">
     <meta content="Hridoy Jomadder" name="author">
@@ -135,14 +151,19 @@ $conn->close(); // Close the connection after all queries are executed
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+    <link href="css/stylel.css" rel="stylesheet">
+
 
     <!-- Replace HTTP with HTTPS in the CDN links -->
         <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
+<div class="header">
+    <h1>Welcome to Family Card</h1>
+    <h4 style="color:white;">Hand in hand, the country of pride is Shahid Zia's Bangladesh.</h4>
+</div>
 
-  <h1>Family Card System</h1>
 <div class="navbar">
     
     <div>
@@ -155,7 +176,12 @@ $conn->close(); // Close the connection after all queries are executed
 
 <div style="padding: 50px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
     <div class="header">
+    <h3><?= htmlspecialchars($message) ?></h3>
         <h1 style="color:white;">Family Profile</h1>
+        <p>Username: <?php echo htmlspecialchars($family_data['username']); ?></p>
+        <p>Email: <?php echo htmlspecialchars($family_data['email']); ?></p>
+        <p>Role: <?php echo htmlspecialchars($family_data['role']); ?></p>
+
     </div>
     <br><br>
     <div class="container">
@@ -178,44 +204,12 @@ $conn->close(); // Close the connection after all queries are executed
                 <img src="<?= htmlspecialchars($familyData['family_image'] ?? 'uploads/default-image.jpg') ?>" alt="Family Image" style="max-width: 100%; height: auto;">
             </div>
         <?php else: ?>
-            <p><?= htmlspecialchars($message) ?></p>
+            <!-- <p><?= htmlspecialchars($message) ?></p> -->
         <?php endif; ?>
     </div>
+    
 </div>
-
-<h2>Family Data</h2>
-        <p>Username: <?php echo htmlspecialchars($family_data['username']); ?></p>
-        <p>Email: <?php echo htmlspecialchars($family_data['email']); ?></p>
-        <p>Role: <?php echo htmlspecialchars($family_data['role']); ?></p>
-
-        <!-- Display family products for Admins and Editors -->
-        <?php if ($role == 'Admin' || $role == 'Editor'): ?>
-            <h3>Family Products</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Product ID</th>
-                        <th>Product Name</th>
-                        <th>Family Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($product = $products->fetch_assoc()): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($product['id']); ?></td>
-                            <td><?php echo htmlspecialchars($product['product_name']); ?></td>
-                            <td><?php echo htmlspecialchars($product['family_name']); ?></td>
-                        </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
-        <?php endif; ?>
-
-        <!-- Display restricted content for Users -->
-        <?php if ($role == 'User'): ?>
-            <p>Your family products are not accessible to you at the moment.</p>
-        <?php endif; ?>
-
+        
 
 <!-- Back to Top -->
 <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>

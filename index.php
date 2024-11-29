@@ -183,7 +183,7 @@ $conn->close(); // Close the connection after all queries are executed
                     <tr class="text-dark">
                         <th scope="col">ID</th>
                         <th scope="col">Family Name</th>
-                        <th scope="col">Profile Image</th>
+                        <th scope="col">Full Name</th>
                         <th scope="col">Family Card Number</th>
                         <th scope="col">Agricultural</th>
                         <th scope="col">Product</th>
@@ -196,7 +196,7 @@ $conn->close(); // Close the connection after all queries are executed
                     <tr>
                         <td><?= htmlspecialchars($row['id']) ?></td>
                         <td><?= htmlspecialchars($row['family_name']) ?></td>
-                        <td><img src="<?= htmlspecialchars($row['profile_image']) ?>" alt="Profile Image" style="width: 50px; height: 50px;"></td>
+                        <td><?= htmlspecialchars($row['full_name']) ?></td>
                         <td><?= htmlspecialchars($row['family_card_number']) ?></td>
                         <td><?= htmlspecialchars($row['agricultural_product'] ?? 'N/A') ?></td>
                         <td><?= htmlspecialchars($row['product_name'] ?? 'N/A') ?></td>

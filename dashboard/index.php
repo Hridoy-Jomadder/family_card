@@ -267,7 +267,7 @@ $conn->close(); // Close the connection after all queries are executed
             <p><strong>Full Name:</strong> <?= htmlspecialchars($familyData['full_name'] ?? 'Not Available') ?></p>
             <p><strong>Father Name:</strong> <?= htmlspecialchars($familyData['father_name'] ?? 'Not Available') ?></p>
             <p><strong>Mother Name:</strong> <?= htmlspecialchars($familyData['mother_name'] ?? 'Not Available') ?></p>
-            <p><strong>Mobile Number:</strong> <?= htmlspecialchars($familyData['mobile'] ?? 'Not Available') ?></p>
+            <p><strong>Mobile Number:</strong> <?= htmlspecialchars($familyData['mobile_number'] ?? 'Not Available') ?></p>
             <p><strong>Number of Family Members:</strong> <?= htmlspecialchars($familyData['family_members'] ?? 'Not Available') ?></p>
             <img src="<?= htmlspecialchars($familyData['family_image'] ?? 'uploads/default-image.jpg') ?>" alt="Family Image" style="max-width: 100%; height: auto;">
         </div>
@@ -280,11 +280,10 @@ $conn->close(); // Close the connection after all queries are executed
             <button type="submit">View Profile</button>
     </form>
     </div>
-
     </div>
 
-<div class="container">
     <!-- Family Account Start -->
+<div class="container">
     <div class="container-fluid pt-4 px-4">
         <div class="bg-light text-center rounded p-4">
             <div class="d-flex align-items-center justify-content-between mb-4">
@@ -414,7 +413,7 @@ $conn->close(); // Close the connection after all queries are executed
                             <th scope="col">Profile Image</th>
                             <th scope="col">Family Card Number</th>
                             <th scope="col">Balance</th>
-                            <th scope="col">Agricultural</th>
+                            <th scope="col">Agricultural Product</th>
                             <th scope="col">Product</th>
                             <th scope="col">Vehicles</th>
                             <th scope="col">Action</th>

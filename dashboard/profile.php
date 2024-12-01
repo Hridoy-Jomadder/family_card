@@ -164,8 +164,7 @@ $conn->close(); // Close the connection after all queries are executed
     <h4 style="color:white;">Hand in hand, the country of pride is Shahid Zia's Bangladesh.</h4>
 </div>
 
-<div class="navbar">
-    
+<div class="navbar"> 
     <div>
         <a href="index.php">Home</a>
         <a href="profile.php">Profile</a>
@@ -177,7 +176,7 @@ $conn->close(); // Close the connection after all queries are executed
 <div style="padding: 50px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
     <div class="header">
     <h3 style="color:white;"><?= htmlspecialchars($message) ?></h3>
-        <h1 style="color:black;">Family Profile</h1>
+        <h1 style="color:black;">Family Profile</h1><br>
         <p style="color:black;">Username: <?php echo htmlspecialchars($family_data['username']); ?></p>
         <p style="color:black;">Email: <?php echo htmlspecialchars($family_data['email']); ?></p>
         <p style="color:black;">Role: <?php echo htmlspecialchars($family_data['role']); ?></p>

@@ -101,7 +101,7 @@ $offset = ($page - 1) * $limit;
 $search = $_POST['search'] ?? '';
 
 // Prepare SQL with filtering and pagination
-$query = "SELECT id, family_name, full_name, family_image, family_members, nid_number, mobile_number, family_card_number, balance, tax
+$query = "SELECT id, family_name, full_name, family_image, family_members, mobile_number, nid_number, family_card_number, job, job_type, job_salary, balance, gold, asset, family_member_asset, family_member_salary, balance, zakat
           FROM users 
           WHERE family_name LIKE ? 
           LIMIT ? OFFSET ?";
@@ -301,10 +301,11 @@ $conn->close(); // Close the connection after all queries are executed
                             <th scope="col">Mobile</th>
                             <th scope="col">NID Card</th>
                             <th scope="col">Family Card Number</th>
-                            <th scope="col">Work</th>
-                            <th scope="col">Work Type</th>
-                            <th scope="col">Total amount(Taka)</th>
-                            <th scope="col">Tax</th>
+                            <th scope="col">Job/Commpany Name</th>
+                            <th scope="col">Job/Commpany Designation</th>
+                            <th scope="col">Salary</th>
+                            <th scope="col">Total Amount(Taka)</th>
+                            <!-- <th scope="col">Zakat</th> -->
                         </tr>
                     </thead>
                       <tbody>
@@ -323,10 +324,11 @@ $conn->close(); // Close the connection after all queries are executed
                                     <td><?php echo isset($user['mobile']) ? htmlspecialchars($user['mobile']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['nid_number']) ? htmlspecialchars($user['nid_number']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['family_card_number']) ? htmlspecialchars($user['family_card_number']) : 'N/A'; ?></td>
-                                    <td><?php echo isset($user['work']) ? htmlspecialchars($user['work']) : 'N/A'; ?></td>
-                                    <td><?php echo isset($user['work_type']) ? htmlspecialchars($user['work_type']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['job']) ? htmlspecialchars($user['job']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['job_type']) ? htmlspecialchars($user['job_type']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['job_salary']) ? htmlspecialchars($user['job_salary']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['balance']) ? htmlspecialchars($user['balance']) : 'N/A'; ?></td>
-                                    <td><?php echo isset($user['tax']) ? htmlspecialchars($user['tax']) : 'N/A'; ?></td>
+                                    <!-- <td><?php echo isset($user['zakat']) ? htmlspecialchars($user['zakat']) : 'N/A'; ?></td> -->
                                 </tr>
                         <?php endforeach; 
                         } else {
@@ -341,8 +343,8 @@ $conn->close(); // Close the connection after all queries are executed
     <!-- Family Account End -->
 </div>
 
+<!-- Family assets Start -->
 <div class="container">
- <!-- Family assets Start -->
 <div class="container-fluid pt-4 px-4">
     <div class="bg-light text-center rounded p-4">
         <div class="d-flex align-items-center justify-content-between mb-4">
@@ -359,10 +361,11 @@ $conn->close(); // Close the connection after all queries are executed
                         <th scope="col">Family Card Number</th>
                         <th scope="col">Gold</th>
                         <th scope="col">Assets</th>
-                        <th scope="col">Work</th>
-                        <th scope="col">Work Type</th>
-                        <th scope="col" >Balance</th>
-                        <th scope="col" >Tax</th>
+                        <th scope="col">Job/Commpany</th>
+                        <th scope="col">Job/Commpany Designation</th>
+                        <th scope="col">Job/Commpany Salary</th>
+                        <th scope="col">Balance</th>
+                        <!-- <th scope="col">Zakat</th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -376,12 +379,13 @@ $conn->close(); // Close the connection after all queries are executed
                                     <td><?php echo htmlspecialchars(string: $user['full_name']); ?></td>
                                     <td><?php echo isset($user['family_members']) ? htmlspecialchars($user['family_members']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['family_card_number']) ? htmlspecialchars(string: $user['family_card_number']) : 'N/A'; ?></td>
-                                    <td><?php echo isset($user['mobile']) ? htmlspecialchars($user['mobile']) : 'N/A'; ?></td>
-                                    <td><?php echo isset($user['nid_card']) ? htmlspecialchars($user['nid_card']) : 'N/A'; ?></td>
-                                    <td><?php echo isset($user['work']) ? htmlspecialchars($user['work']) : 'N/A'; ?></td>
-                                    <td><?php echo isset($user['work_type']) ? htmlspecialchars($user['work_type']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['gold']) ? htmlspecialchars($user['gold']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['asset']) ? htmlspecialchars($user['asset']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['job']) ? htmlspecialchars($user['job']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['job_type']) ? htmlspecialchars($user['job_type']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['job_salary']) ? htmlspecialchars($user['job_salary']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['balance']) ? htmlspecialchars($user['balance']) : 'N/A'; ?></td>
-                                    <td><?php echo isset($user['tax']) ? htmlspecialchars($user['tax']) : 'N/A'; ?></td>
+                                    <!-- <td><?php echo isset($user['zakat']) ? htmlspecialchars($user['zakat']) : 'N/A'; ?></td> -->
                             </tr>
                     <?php endforeach; 
                     } else {
@@ -439,9 +443,9 @@ $conn->close(); // Close the connection after all queries are executed
                                             <option value="wheat">Wheat 1 kg</option>
                                             <option value="wheat">Wheat 2 kg</option>
                                             <option value="wheat">Wheat 3 kg</option>
-                                            <option value="chicken">Chicken 3 Piece</option>
-                                            <option value="duck">Duck 4 Piece</option>
-                                            <option value="goat">Goat 2 Piece</option>
+                                            <option value="chicken">Chicken 3 Pieces</option>
+                                            <option value="duck">Duck 4 Pieces</option>
+                                            <option value="goat">Goat 2 Pieces</option>
                                             <option value="cow">Cow 1 Piece</option>
                                         </select>
                                     </td>
@@ -455,6 +459,7 @@ $conn->close(); // Close the connection after all queries are executed
                                     <td>
                                         <select name="agricultural_products" id="agricultural_products">
                                             <option value=""></option>
+                                            <option value="home">Home</option>
                                             <option value="car">Car</option>
                                             <option value="bike">Bike</option>
                                             <option value="rickshaw">Rickshaw</option>

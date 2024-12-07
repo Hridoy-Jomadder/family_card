@@ -46,11 +46,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $full_name = $_POST['full_name'];
     $father_name = $_POST['father_name'];
     $mother_name = $_POST['mother_name'];
+    $son_name_all = $_POST['son_name_all'];
+    $dau_name_all = $_POST['dau_name_all'];
     $mobile_number = $_POST['mobile_number'];
     $family_members = $_POST['family_members'];
 
-    $stmt = $conn->prepare("UPDATE users SET family_name = ?, nid_number = ?, full_name = ?, father_name = ?, mother_name = ?, mobile_number = ?, family_members = ? WHERE id = ?");
-    $stmt->bind_param("sssssssi", $family_name, $nid_number, $full_name, $father_name, $mother_name, $mobile_number, $family_members, $user_id);
+    $stmt = $conn->prepare("UPDATE users SET family_name = ?, nid_number = ?, full_name = ?, father_name = ?, mother_name = ?, son_name_all = ?, dau_name_all = ?,  mobile_number = ?, family_members = ? WHERE id = ?");
+    $stmt->bind_param("sssssssssi", $family_name, $nid_number, $full_name, $father_name, $mother_name, $son_name_all, $dau_name_all, $mobile_number, $family_members, $user_id);
 
     if ($stmt->execute()) {
         $message = "Profile updated successfully!";
@@ -60,7 +62,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $stmt->close();
 }
-$conn->close();
+
+// Update profile data when form is submitted
+     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Retrieve and sanitize POST data
+    $gold = htmlspecialchars($_POST['gold']);
+    $asset = htmlspecialchars($_POST['asset']);
+    $family_member_asset = htmlspecialchars($_POST['family_member_asset']);
+    $family_member_salary = htmlspecialchars($_POST['family_member_salary']);
+
+    // Assume $user_id is available from session or URL
+    $user_id = $_SESSION['user_id'];
+
+    // Update query
+    $query = "UPDATE users SET gold=?, asset=?, family_member_asset=?, family_member_salary=? WHERE id=?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('ssssi', $gold, $asset, $family_member_asset, $family_member_salary, $user_id);
+
+    if ($stmt->execute()) {
+        $message1 = "Family assets updated successfully!";
+    } else {
+        $message1 = "Failed to update family assets.";
+    }
+    $stmt->close();
+     }
+
+// Update profile data when form is submitted
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $fields = [
+        'job', 'job_type', 'job_salary', 'family_jc_members',
+        'father_job', 'father_salary', 'mother_job', 'mother_salary',
+        'wife_job', 'wife_salary', 'son_job', 'son_salary',
+        'son_job1', 'son_salary1', 'son_job2', 'son_salary2',
+        'dau_job', 'dau_salary', 'dau_job1', 'dau_salary1',
+        'dau_job2', 'dau_salary2', 'family_other_members', 'family_other_members_salary'
+    ];
+
+    // Prepare dynamic query
+    $updateFields = [];
+    $values = [];
+    foreach ($fields as $field) {
+        $updateFields[] = "$field = ?";
+        $values[] = $_POST[$field] ?? '';
+    }
+    $values[] = $_SESSION['user_id']; // Assuming user_id is stored in the session
+
+    $query = "UPDATE users SET " . implode(', ', $updateFields) . " WHERE id = ?";
+    $stmt = $conn->prepare($query);
+
+    // Bind dynamic values
+    $types = str_repeat('s', count($values) - 1) . 'i'; // Strings and final integer for user_id
+    $stmt->bind_param($types, ...$values);
+
+    if ($stmt->execute()) {
+        $message2 = "Job details updated successfully!";
+    } else {
+        $message2 = "Failed to update job details.";
+    }
+    $stmt->close();
+    $conn->close();
+    header("Location: profile.php");
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -108,6 +171,8 @@ $conn->close();
    <div class="navbar">
         <a href="index.php">Home</a>
         <a href="profile.php">Profile</a>
+        <a href="asset.php">Asset</a>
+        <a href="jobcompany.php">Job/Company</a>
         <a href="upload_family_image.php">Upload Image</a>
         <a href="logout.php">Logout</a>
     </div>
@@ -124,6 +189,8 @@ $conn->close();
                     <p style="color:white;"><strong>Full Name:</strong> <?= htmlspecialchars(string: $family_data['full_name'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Father's Name:</strong> <?= htmlspecialchars($family_data['father_name'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Mother's Name:</strong> <?= htmlspecialchars($family_data['mother_name'] ?? 'Not Available') ?></p>
+                    <p style="color:white;"><strong>Son's Name:</strong> <?= htmlspecialchars($family_data['son_name_all'] ?? 'Not Available') ?></p>
+                    <p style="color:white;"><strong>Daughter's Name:</strong> <?= htmlspecialchars($family_data['dau_name_all'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>NID Number:</strong> <?= htmlspecialchars($family_data['nid_number'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Family Card Number:</strong> <?= htmlspecialchars(string: $family_data['family_card_number'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Mobile Number:</strong> <?= htmlspecialchars($family_data['mobile_number'] ?? 'Not Available') ?></p>
@@ -132,16 +199,15 @@ $conn->close();
             <?php else: ?>
                 <p style="color:white;"><?= htmlspecialchars($message) ?></p>
             <?php endif; ?>
+            <h2 style="color:white;">Family Assets Information</h2>
             <?php if (!empty($family_data)): ?>
                 <div><br>
-                    <p style="color:white;"><strong>Family Name:</strong> <?= htmlspecialchars($family_data['family_name'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Full Name:</strong> <?= htmlspecialchars(string: $family_data['full_name'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Father's Name:</strong> <?= htmlspecialchars($family_data['father_name'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Mother's Name:</strong> <?= htmlspecialchars($family_data['mother_name'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>NID Number:</strong> <?= htmlspecialchars($family_data['nid_number'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Family Card Number:</strong> <?= htmlspecialchars(string: $family_data['family_card_number'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Mobile Number:</strong> <?= htmlspecialchars($family_data['mobile_number'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p>
+                    <p style="color:white;"><strong>Gold:</strong> <?= htmlspecialchars($family_data['gold'] ?? 'Not Available') ?></p>
+                    <p style="color:white;"><strong>Assets:</strong> <?= htmlspecialchars(string: $family_data['asset'] ?? 'Not Available') ?></p>
+                    <p style="color:white;"><strong>Family Members Assets:</strong> <?= htmlspecialchars($family_data['family_member_asset'] ?? 'Not Available') ?></p>
+                    <p style="color:white;"><strong>Family Members Salary:</strong> <?= htmlspecialchars($family_data['family_member_salary'] ?? 'Not Available') ?></p>
+                    <!-- <p style="color:white;"><strong>Family Card Number:</strong> <?= htmlspecialchars(string: $family_data['family_card_number'] ?? 'Not Available') ?></p>
+                    <p style="color:white;"><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p> -->
                 </div>
             <?php else: ?>
                 <p style="color:white;"><?= htmlspecialchars($message) ?></p>
@@ -174,7 +240,8 @@ $conn->close();
             <div class="form-group">
                 <label for="mother_name">Mother's Name:</label>
                 <input type="text" class="form-control" id="mother_name" name="mother_name" value="<?= htmlspecialchars($family_data['mother_name'] ?? '') ?>" required>
-            </div>            <div class="form-group">
+            </div>            
+            <div class="form-group">
                 <label for="nid_number">NID Number:</label>
                 <input type="text" class="form-control" id="nid_number" name="nid_number" value="<?= htmlspecialchars($family_data['nid_number'] ?? '') ?>" required>
             </div>
@@ -186,164 +253,20 @@ $conn->close();
                 <label for="family_members">Number of Family Members:</label>
                 <input type="text" class="form-control" id="family_members" name="family_members" value="<?= htmlspecialchars($family_data['family_members'] ?? '') ?>" required>
             </div>
+            <div class="form-group">
+                <label for="son_name_all">Son's Name:</label>
+                <input type="text" class="form-control" id="son_name_all" name="son_name_all" value="<?= htmlspecialchars($family_data['son_name_all'] ?? '') ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="dau_name_all">Daughter's Name:</label>
+                <input type="text" class="form-control" id="dau_name_all" name="dau_name_all" value="<?= htmlspecialchars($family_data['dau_name_all'] ?? '') ?>" required>
+            </div>
             <button type="submit" class="btn btn-primary">Save Changes</button>
         </form>
     </div>
     </div>
 </div>
 
-<!--  -->
- <div class="container">
-    <div style="width: 100%;padding: 50px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex;">
-        <div>
-    <h2>Edit Family Assets Information</h2>
-        <?php if (!empty($message)): ?>
-            <p style="color: green;"><?= htmlspecialchars($message) ?></p>
-        <?php endif; ?>
-        <form action="profile.php" method="POST">
-            <div class="form-group">
-                <label for="family_name">Family Name:</label>
-                <input type="text" class="form-control" id="family_name" name="family_name" value="<?= htmlspecialchars($family_data['family_name'] ?? '') ?>" required>
-            </div>
-
-            <div class="form-group">
-                <label for="full_name">Full Name:</label>
-                <input type="text" class="form-control" id="full_name" name="full_name" value="<?= htmlspecialchars($family_data['full_name'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="father_name">Family Card Number:</label>
-                <input type="text" class="form-control" id="father_name" name="father_name" value="<?= htmlspecialchars($family_data['father_name'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="mother_name">Gold:</label>
-                <input type="text" class="form-control" id="mother_name" name="mother_name" value="<?= htmlspecialchars($family_data['mother_name'] ?? '') ?>" required>
-            </div>            <div class="form-group">
-                <label for="nid_number">Assets:</label>
-                <input type="text" class="form-control" id="nid_number" name="nid_number" value="<?= htmlspecialchars($family_data['nid_number'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="mobile_number">Mobile Number:</label>
-                <input type="text" class="form-control" id="mobile_number" name="mobile_number" value="<?= htmlspecialchars($family_data['mobile_number'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="family_members">Number of Family Members:</label>
-                <input type="text" class="form-control" id="family_members" name="family_members" value="<?= htmlspecialchars($family_data['family_members'] ?? '') ?>" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-        </form>
-    </div>
-    </div>
-
-    <div style="width: 100%;padding: 50px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex;">
-        <div>
-    <h2>Job/Commpany Edit </h2>
-        <?php if (!empty($message)): ?>
-            <p style="color: green;"><?= htmlspecialchars($message) ?></p>
-        <?php endif; ?>
-        <form action="profile.php" method="">
-            <div class="form-group">
-                <label for="family_name">Job/Commpany:</label>
-                <input type="text" class="form-control" id="family_job" name="family_job" value="<?= htmlspecialchars($family_data['family_job'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="nid_number">Job/Commpany Type:</label>
-                <input type="text" class="form-control" id="family_job_type" name="family_job_type" value="<?= htmlspecialchars($family_data['family_job_type'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="nid_number">Job/Commpany Salary/Annually:</label>
-                <input type="text" class="form-control" id="family_job_type" name="family_job_type" value="<?= htmlspecialchars($family_data['family_job_type'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="full_name">Family Job/Commpany members </label>
-                <input type="text" class="form-control" id="family_jc_members" name="family_jc_members" value="<?= htmlspecialchars($family_data['family_jc_members'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="father_name">Father's Job:</label>
-                <input type="text" class="form-control" id="father_job" name="father_job" value="<?= htmlspecialchars($family_data['father_job'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="father_name">Father's Salary:</label>
-                <input type="text" class="form-control" id="father_job" name="father_job" value="<?= htmlspecialchars($family_data['father_job'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="mother_name">Mother's Job:</label>
-                <input type="text" class="form-control" id="mother_job" name="mother_job" value="<?= htmlspecialchars($family_data['mother_job'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="mother_name">Mother's Salary:</label>
-                <input type="text" class="form-control" id="mother_job" name="mother_job" value="<?= htmlspecialchars($family_data['mother_job'] ?? '') ?>" required>
-            </div>
-            <!-- <div class="form-group">
-                <label for="father_name">My Job:</label>
-                <input type="text" class="form-control" id="my_job" name="my_job" value="<?= htmlspecialchars($family_data['my_job'] ?? '') ?>" required>
-            </div> -->
-            <div class="form-group">
-                <label for="mother_name">Wife Job:</label>
-                <input type="text" class="form-control" id="wife_job" name="wife_job" value="<?= htmlspecialchars($family_data['wife_job'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="mother_name">Wife Salary:</label>
-                <input type="text" class="form-control" id="wife_job" name="wife_job" value="<?= htmlspecialchars($family_data['wife_job'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="mobile_number">Son's Job:</label>
-                <input type="text" class="form-control" id="son_job" name="son_job" value="<?= htmlspecialchars($family_data['son_job'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="mobile_number">Son's Salary:</label>
-                <input type="text" class="form-control" id="son_job" name="son_job" value="<?= htmlspecialchars($family_data['son_job'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="mobile_number">Son's Job:</label>
-                <input type="text" class="form-control" id="son_job" name="son_job" value="<?= htmlspecialchars($family_data['son_job1'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="mobile_number">Son's Salary:</label>
-                <input type="text" class="form-control" id="son_job" name="son_job" value="<?= htmlspecialchars($family_data['son_job'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="mobile_number">Son's Job:</label>
-                <input type="text" class="form-control" id="son_job" name="son_job" value="<?= htmlspecialchars($family_data['son_job2'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="mobile_number">Son's Salary:</label>
-                <input type="text" class="form-control" id="son_job" name="son_job" value="<?= htmlspecialchars($family_data['son_job'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="mobile_number">Daughter's Job:</label>
-                <input type="text" class="form-control" id="dau_job" name="dau_job" value="<?= htmlspecialchars($family_data['dau_job'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="mobile_number">Daughter's Salary:</label>
-                <input type="text" class="form-control" id="dau_job" name="dau_job" value="<?= htmlspecialchars($family_data['dau_job'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="mobile_number">Daughter's Job:</label>
-                <input type="text" class="form-control" id="dau_job" name="dau_job" value="<?= htmlspecialchars($family_data['dau_job1'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="mobile_number">Daughter's Salary:</label>
-                <input type="text" class="form-control" id="dau_job" name="dau_job" value="<?= htmlspecialchars($family_data['dau_job'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="mobile_number">Daughter's Job:</label>
-                <input type="text" class="form-control" id="dau_job" name="dau_job" value="<?= htmlspecialchars($family_data['dau_job2'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="mobile_number">Daughter's Salary:</label>
-                <input type="text" class="form-control" id="dau_job" name="dau_job" value="<?= htmlspecialchars($family_data['dau_job'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="family_members">Other Family Members work:</label>
-                <input type="text" class="form-control" id="family_other_members" name="family_other_members" value="<?= htmlspecialchars($family_data['family_other_members'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="family_members">Other Family Members Salary:</label>
-                <input type="text" class="form-control" id="family_other_members" name="family_other_members" value="<?= htmlspecialchars($family_data['family_other_members'] ?? '') ?>" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-        </form>
-    </div>
 
 </body>
 </html>

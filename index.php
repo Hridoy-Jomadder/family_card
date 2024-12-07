@@ -95,6 +95,16 @@ function updateFamilyCardNumberOnce($conn, $user_id) {
 // ফ্যামিলি কার্ড নাম্বার আপডেট করার চেষ্টা করুন
 $message .= updateFamilyCardNumberOnce($conn, $user_id);
 
+$created_at = date("Y-m-d");
+$expered_at = date("Y-m-d", strtotime("+30 days"));
+
+$stmt = $conn->prepare("
+    INSERT INTO family_products 
+    (family_id, family_card_number, full_name, product_name, agricultural_product, vehicle, balance, profile_image, created_at, expered_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+");
+$stmt->bind_param("iissssdsss", $family_id, $family_card_number, $full_name, $product_name, $agricultural_product, $vehicle, $balance, $profile_image, $created_at, $expered_at);
+
 $conn->close(); // Close the connection after all queries are executed
 
 ?>
@@ -146,13 +156,15 @@ $conn->close(); // Close the connection after all queries are executed
 <div class="navbar">
         <a href="index.php">Home</a>
         <a href="profile.php">Profile</a>
+        <a href="asset.php">Asset</a>
+        <a href="jobcompany.php">Job/Company</a>
         <a href="upload_family_image.php">Upload Image</a>
         <a href="logout.php">Logout</a>
     </div>
     <div class="container">
     <div style="width: 100%;padding: 50px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex;">
         <div>
-            <h2 style="color:white;">Family Profile</h2>
+            <h2 style="color:white;">Family Information</h2>
             <?php if (!empty($family_data)): ?>
                 <div>
                     <p style="color:white;"><strong>Family Name:</strong> <?= htmlspecialchars($family_data['family_name'] ?? 'Not Available') ?></p>
@@ -171,47 +183,56 @@ $conn->close(); // Close the connection after all queries are executed
      </div>
     </div>
 
-  <!-- Star Products Start -->
-   <div class="container">
-<div class="container-fluid pt-4 px-4">
-    <div class="bg-light text-center rounded p-4">
-        <div class="d-flex align-items-center justify-content-between mb-4">
-            <h6 class="mb-0">Family Gift Products</h6>
+<!-- Star Products Start -->
+<div class="container">
+    <div class="container-fluid pt-4 px-4">
+        <div class="bg-light text-center rounded p-4">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h6 class="mb-0">Family Gifts</h6>
+            </div>
+            <div class="table-responsive">
+                <table class="table text-start align-middle table-bordered table-hover mb-0">
+                    <thead>
+                        <tr class="text-dark">
+                            <th scope="col">ID</th>
+                            <th scope="col">Family Name</th>
+                            <th scope="col">Full Name</th>
+                            <th scope="col">Family Card Number</th>
+                            <th scope="col">Agricultural Product</th>
+                            <th scope="col">Product</th>
+                            <th scope="col">Vehicles</th>
+                            <!-- <th scope="col">Balance</th> -->
+                            <th scope="col">Issued Date</th>
+                            <th scope="col">Expered Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($row = $products->fetch_assoc()): {
+                                $days_remaining = (strtotime($row['expered_at']) - time()) / (60 * 60 * 24);
+                            } ?>
+                        <tr>
+                            <td><?= htmlspecialchars($row['id']) ?></td>
+                            <td><?= htmlspecialchars($row['family_name']) ?></td>
+                            <td><?= htmlspecialchars($row['full_name']) ?></td>
+                            <td><?= htmlspecialchars($row['family_card_number']) ?></td>
+                            <td><?= htmlspecialchars($row['agricultural_product'] ?? 'N/A') ?></td>
+                            <td><?= htmlspecialchars($row['product_name'] ?? 'N/A') ?></td>
+                            <td><?= htmlspecialchars($row['vehicle'] ?? 'N/A') ?></td>
+                            <!-- <td><?= number_format($row['balance'], 0) ?></td> -->
+                            <td><?= htmlspecialchars($row['created_at'] ?? 'N/A') ?></td>
+                            <td>
+                                <?= $days_remaining > 0 
+                                    ? "$days_remaining days remaining" 
+                                    : "Expired" ?>
+                            </td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="table-responsive">
-            <table class="table text-start align-middle table-bordered table-hover mb-0">
-                <thead>
-                    <tr class="text-dark">
-                        <th scope="col">ID</th>
-                        <th scope="col">Family Name</th>
-                        <th scope="col">Full Name</th>
-                        <th scope="col">Family Card Number</th>
-                        <th scope="col">Agricultural</th>
-                        <th scope="col">Product</th>
-                        <th scope="col">Vehicles</th>
-                        <th scope="col" colspan="2">Balance</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($row = $products->fetch_assoc()): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($row['id']) ?></td>
-                        <td><?= htmlspecialchars($row['family_name']) ?></td>
-                        <td><?= htmlspecialchars($row['full_name']) ?></td>
-                        <td><?= htmlspecialchars($row['family_card_number']) ?></td>
-                        <td><?= htmlspecialchars($row['agricultural_product'] ?? 'N/A') ?></td>
-                        <td><?= htmlspecialchars($row['product_name'] ?? 'N/A') ?></td>
-                        <td><?= htmlspecialchars($row['vehicle'] ?? 'N/A') ?></td>
-                        <td><?= number_format($row['balance'], 2) ?></td>
-                    </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
-        </div>
+      </div>
     </div>
-</div>
-<!-- Star Products End -->
-</div>
 </div>
 
 <!-- Back to Top -->

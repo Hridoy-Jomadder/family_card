@@ -101,7 +101,7 @@ $offset = ($page - 1) * $limit;
 $search = $_POST['search'] ?? '';
 
 // Prepare SQL with filtering and pagination
-$query = "SELECT id, family_name, full_name, family_image, family_members, nid_number, mobile_number, family_card_number, balance, tax
+$query = "SELECT id, family_name, full_name, family_image, family_members, nid_number, mobile_number, family_card_number, gold, asset, family_member_asset, family_member_salary balance, zakat
           FROM users 
           WHERE family_name LIKE ? 
           LIMIT ? OFFSET ?";
@@ -115,6 +115,39 @@ if ($stmt->execute()) {
     $users = $result->fetch_all(MYSQLI_ASSOC);
 } else {
     $message = "Error fetching users: " . $stmt->error;
+}
+
+
+// Initialize variables
+$familyData = [];
+$message = "";
+
+// Check if NID number is set in form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nidnumber'])) {
+    $nidNumber = $_POST['nidnumber'];
+
+    // Query to fetch family data by NID Number
+    $query = "SELECT * FROM users WHERE nid_number = ?";
+    $stmt = $conn->prepare($query);
+
+    if ($stmt) {
+        $stmt->bind_param("s", $nidNumber);
+        
+        if ($stmt->execute()) {
+            $result = $stmt->get_result();
+            if ($result->num_rows > 0) {
+                $familyData = $result->fetch_assoc();
+            } else {
+                $message = "No family found with the specified NID Number.";
+            }
+            $result->close();
+        } else {
+            $message = "Error fetching family data: " . $stmt->error;
+        }
+        $stmt->close();
+    } else {
+        $message = "Error preparing the statement: " . $conn->error;
+    }
 }
 
 $conn->close(); // Close the connection after all queries are executed
@@ -184,13 +217,17 @@ $conn->close(); // Close the connection after all queries are executed
     </div>
     <br><br>
     <div class="container">
+            <div class="mt-4">
         <form method="POST" action="profile.php">
             <label for="nidnumber">Enter NID Number:</label>
             <input type="text" name="nidnumber" id="nidnumber" required>
             <button type="submit">View Profile</button>
         </form>
         <br>
-        
+           </div>
+           <div class="container">           
+        <h3>Family Details: </h3>
+        <div style="color:black; margin: 25px;">
         <?php if (!empty($familyData)): ?>
             <div class="family-profile">
                 <p><strong>Family Name:</strong> <?= htmlspecialchars($familyData['family_name'] ?? 'Not Available') ?></p>
@@ -205,10 +242,9 @@ $conn->close(); // Close the connection after all queries are executed
         <?php else: ?>
             <!-- <p><?= htmlspecialchars($message) ?></p> -->
         <?php endif; ?>
+        </div>
     </div>
-    
-</div>
-        
+</div>   
 
 <!-- Back to Top -->
 <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>

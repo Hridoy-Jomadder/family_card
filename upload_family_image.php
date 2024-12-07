@@ -132,14 +132,17 @@ $conn->close();
 </div>    <div class="navbar">
         <a href="index.php">Home</a>
         <a href="profile.php">Profile</a>
+        <a href="asset.php">Asset</a>
+        <a href="jobcompany.php">Job/Company</a>
         <a href="upload_family_image.php">Upload Image</a>
         <a href="logout.php">Logout</a>
     </div>
 
-    <div style="padding: 50px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
-        <h2 style="color:white;">Family Profile</h2>
-        <div> 
-   <p style="color:white;"><?= htmlspecialchars($message) ?></p>
+    <div class="container">
+    <!-- <div style="padding: 50px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);"> -->
+    <div style="width: 100%;">         
+        <h2 style="color:black;">Family Profile</h2>
+   <p style="color:black;"><?= htmlspecialchars($message) ?></p>
         <form action="upload_family_image.php" method="post" enctype="multipart/form-data">
             <label for="nidnumber">NID Number:</label>
             <input type="text" name="nidnumber" required>
@@ -147,7 +150,9 @@ $conn->close();
             <input type="file" name="family_image" accept="image/*" required>
             <button type="submit">Upload</button>
         </form>
-   </div>
+        </div>
+    <!-- </div> -->
 </div>
+
 </body>
 </html>

@@ -144,8 +144,8 @@ $conn->close(); // Close the database connection
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-users fa-3x text-primary"></i>
                             <div class="ms-3">
-                                <p class="mb-2">Family Card</p>
-                                <h6 class="mb-0">Need 2 Crore </h6>
+                                <p class="mb-2">Tax</p>
+                                <h6 class="mb-0">Online 6 lakh</h6>
                             </div>
                         </div>
                     </div>

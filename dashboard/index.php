@@ -117,6 +117,86 @@ if ($stmt->execute()) {
     $message = "Error fetching users: " . $stmt->error;
 }
 
+// Check if the form is submitted
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Loop through each gift selection and insert data for each user
+    if (isset($_POST['gift'])) {
+        foreach ($_POST['gift'] as $userId => $giftAction) {
+            
+            // Fetch the selected values for agricultural products, products, and vehicles
+            $agriculturalProduct = isset($_POST["agricultural_products_$userId"]) ? $_POST["agricultural_products_$userId"] : null;
+            $product = isset($_POST["product_$userId"]) ? $_POST["product_$userId"] : null;
+            $vehicle = isset($_POST["vehicles_$userId"]) ? $_POST["vehicles_$userId"] : null;
+
+            // Fetch user data from the database
+            $query = "SELECT * FROM users WHERE id = ?";
+            $stmt = $conn->prepare($query);
+            if ($stmt) {
+                $stmt->bind_param("i", $userId);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $user = $result->fetch_assoc();
+                
+                if ($user) {
+                    // Prepare data for insertion
+                    $giftName = "Gift Selection";
+                    $value = 0.00; // Default value, adjust as needed
+                    $description = "Gifted products";
+                    $issuedDate = date('Y-m-d'); // Today's date
+
+                    // Insert into the gift table
+                    $insertQuery = "INSERT INTO gift (
+                        full_name, 
+                        family_card_number, 
+                        gift_name, 
+                        agricultural_product, 
+                        product_name, 
+                        vehicle, 
+                        value, 
+                        description, 
+                        issued_date, 
+                        created_at, 
+                        updated_at
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
+
+                    $insertStmt = $conn->prepare($insertQuery);
+
+                    if ($insertStmt) {
+                        $insertStmt->bind_param(
+                            "sssssssss", 
+                            $user['full_name'], // full_name from users table
+                            $user['family_card_number'], // family_card_number from users table
+                            $giftName,
+                            $agriculturalProduct,
+                            $product,
+                            $vehicle,
+                            $value,
+                            $description,
+                            $issuedDate
+                        );
+
+                        // Execute the insert query
+                        if ($insertStmt->execute()) {
+                            echo "Gift successfully added for " . htmlspecialchars($user['full_name']) . "<br>";
+                        } else {
+                            echo "Error inserting gift for " . htmlspecialchars($user['full_name']) . ": " . $insertStmt->error . "<br>";
+                        }
+                    } else {
+                        echo "Error preparing the insert query: " . $conn->error . "<br>";
+                    }
+                } else {
+                    echo "User not found for ID: $userId<br>";
+                }
+            } else {
+                echo "Error preparing the select query: " . $conn->error . "<br>";
+            }
+        }
+    } else {
+        echo "No gift selected.<br>";
+    }
+} 
+
+
 $conn->close(); // Close the connection after all queries are executed
 ?>
 
@@ -267,7 +347,7 @@ $conn->close(); // Close the connection after all queries are executed
             <p><strong>Full Name:</strong> <?= htmlspecialchars($familyData['full_name'] ?? 'Not Available') ?></p>
             <p><strong>Father Name:</strong> <?= htmlspecialchars($familyData['father_name'] ?? 'Not Available') ?></p>
             <p><strong>Mother Name:</strong> <?= htmlspecialchars($familyData['mother_name'] ?? 'Not Available') ?></p>
-            <p><strong>Mobile Number:</strong> <?= htmlspecialchars($familyData['mobile_number'] ?? 'Not Available') ?></p>
+            <p><strong>Mobile Number:</strong> <?= htmlspecialchars(string: $familyData['mobile_number'] ?? 'Not Available') ?></p>
             <p><strong>Number of Family Members:</strong> <?= htmlspecialchars($familyData['family_members'] ?? 'Not Available') ?></p>
             <img src="<?= htmlspecialchars($familyData['family_image'] ?? 'uploads/default-image.jpg') ?>" alt="Family Image" style="max-width: 100%; height: auto;">
         </div>
@@ -317,11 +397,10 @@ $conn->close(); // Close the connection after all queries are executed
                                     <td><?php echo htmlspecialchars($user['family_name']); ?></td>
                                     <td><?php echo htmlspecialchars($user['full_name']); ?></td>
                                     <td>
-                                        <img src="<?php echo !empty($user['uploads/profile_image']) ? $user['profile_image'] : 'default-profile.png'; ?>" 
-                                            alt="Profile Image" width="50" height="50">
+                                    <img src="<?= htmlspecialchars(string: $family_data['family_image'] ?? '') ?>" alt="" style="width: 60px; height: 80px;">
                                     </td>
                                     <td><?php echo isset($user['family_members']) ? htmlspecialchars($user['family_members']) : 'N/A'; ?></td>
-                                    <td><?php echo isset($user['mobile']) ? htmlspecialchars($user['mobile']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['mobile_number']) ? htmlspecialchars($user['mobile_number']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['nid_number']) ? htmlspecialchars($user['nid_number']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['family_card_number']) ? htmlspecialchars($user['family_card_number']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['job']) ? htmlspecialchars($user['job']) : 'N/A'; ?></td>
@@ -340,7 +419,6 @@ $conn->close(); // Close the connection after all queries are executed
             </div>
         </div>
     </div>
-    <!-- Family Account End -->
 </div>
 
 <!-- Family assets Start -->
@@ -409,97 +487,75 @@ $conn->close(); // Close the connection after all queries are executed
                 <h6 class="mb-0">Family Products</h6>
             </div>
             <div class="table-responsive">
-                <table class="table text-start align-middle table-bordered table-hover mb-0">
-                    <thead>
-                        <tr class="text-dark">
-                            <th scope="col">ID</th>
-                            <th scope="col">Family Name</th>
-                            <th scope="col">Profile Image</th>
-                            <th scope="col">Family Card Number</th>
-                            <th scope="col">Balance</th>
-                            <th scope="col">Agricultural Product</th>
-                            <th scope="col">Product</th>
-                            <th scope="col">Vehicles</th>
-                            <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php 
-                    // Check if $users is defined and not null
-                    if (isset($users) && $users !== false) {
-                        foreach ($users as $user): ?>
-                            <tr>
-                            <td><?php echo htmlspecialchars($user['id']); ?></td>
+                <form method="POST" action="">
+                    <table class="table text-start align-middle table-bordered table-hover mb-0">
+                        <thead>
+                            <tr class="text-dark">
+                                <th scope="col">ID</th>
+                                <th scope="col">Family Name</th>
+                                <th scope="col">Full Name</th>
+                                <th scope="col">Family Card Number</th>
+                                <th scope="col">Family Members</th>
+                                <th scope="col">Balance</th>
+                                <th scope="col">Agricultural Product</th>
+                                <th scope="col">Product</th>
+                                <th scope="col">Vehicles</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php 
+                        if (isset($users) && !empty($users)) {
+                            foreach ($users as $user): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($user['id']); ?></td>
                                     <td><?php echo htmlspecialchars($user['family_name']); ?></td>
-                                    <td><?php echo htmlspecialchars(string: $user['full_name']); ?></td>
-                                    <td><?php echo isset($user['family_card_number']) ? htmlspecialchars(string: $user['family_card_number']) : 'N/A'; ?></td>
+                                    <td><?php echo htmlspecialchars($user['full_name']); ?></td>
+                                    <td><?php echo isset($user['family_card_number']) ? htmlspecialchars($user['family_card_number']) : 'N/A'; ?></td>
+                                    <td><?php echo htmlspecialchars($user['family_members']); ?></td>
                                     <td><?php echo isset($user['balance']) ? htmlspecialchars($user['balance']) : 'N/A'; ?></td>
                                     <td>
-                                        <select name="agricultural_products" id="agricultural_products">
-                                        <option value=""></option>
+                                        <select name="agricultural_products_<?= $user['id'] ?>" id="agricultural_products_<?= $user['id'] ?>">
+                                            <option value="">Select</option>
                                             <option value="rice1">Rice 5 kg</option>
                                             <option value="rice2">Rice 8 kg</option>
-                                            <option value="rice3">Rice 10 kg</option>
                                             <option value="wheat">Wheat 1 kg</option>
-                                            <option value="wheat">Wheat 2 kg</option>
-                                            <option value="wheat">Wheat 3 kg</option>
-                                            <option value="chicken">Chicken 3 Pieces</option>
-                                            <option value="duck">Duck 4 Pieces</option>
-                                            <option value="goat">Goat 2 Pieces</option>
-                                            <option value="cow">Cow 1 Piece</option>
                                         </select>
                                     </td>
                                     <td>
-                                    <select name="agricultural_products" id="agricultural_products">
-                                    <option value=""></option>
-                                            <option value="rice">Rice 1 Packet</option>
-                                            <option value="wheat">Wheat 1 Packet</option>
+                                        <select name="product_<?= $user['id'] ?>" id="product_<?= $user['id'] ?>">
+                                            <option value="">Select</option>
+                                            <option value="rice_packet">Rice 1 Packet</option>
+                                            <option value="wheat_packet">Wheat 1 Packet</option>
                                         </select>
                                     </td>
                                     <td>
-                                        <select name="agricultural_products" id="agricultural_products">
-                                            <option value=""></option>
-                                            <option value="home">Home</option>
+                                        <select name="vehicles_<?= $user['id'] ?>" id="vehicles_<?= $user['id'] ?>">
+                                            <option value="">Select</option>
                                             <option value="car">Car</option>
                                             <option value="bike">Bike</option>
-                                            <option value="rickshaw">Rickshaw</option>
-                                            <option value="ban">Ban</option>
                                         </select>
                                     </td>
-                                    <td><button type="submit" class="btn btn-primary">Gift</button></td>
-                            </tr>
-                    <?php endforeach; 
-                    } else {
-                        // Handle the case where no users were fetched or $users is not defined
-                        echo "<tr><td colspan='11'>No users found.</td></tr>";
-                    }
-                    ?>
-                        
-                    <!-- <?php if ($products && $products->num_rows > 0): ?>
-                        <?php while ($row = $products->fetch_assoc()): ?>
+                                    <td>
+                                        <button type="submit" name="gift[<?= $user['id'] ?>]" value="gift" class="btn btn-primary">Gift</button>
+                                    </td>
+                                </tr>
+                            <?php endforeach; 
+                        } else { ?>
                             <tr>
-                                <td><?= htmlspecialchars($row['id']) ?></td>
-                                <td><?= htmlspecialchars($row['family_name']) ?></td>
-                                <td><img src="<?= htmlspecialchars($row['profile_image']) ?>" alt="Profile Image" style="width: 50px; height: 50px;"></td>
-                                <td><?= htmlspecialchars($row['family_card_number']) ?></td>
-                                <td><?= htmlspecialchars($row['agricultural_product'] ?? 'N/A') ?></td>
-                                <td><?= htmlspecialchars($row['product_name'] ?? 'N/A') ?></td>
-                                <td><?= htmlspecialchars($row['vehicle'] ?? 'N/A') ?></td>
-                                <td><?= number_format($row['balance'], 2) ?></td>
+                                <td colspan="10" class="text-center text-muted">No users found. Please try again later.</td>
                             </tr>
-                        <?php endwhile; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="8" class="text-center">No products available or access denied.</td>
-                        </tr>
-                    <?php endif; ?> -->
-                </tbody>
-                </table>
+                        <?php } ?>
+                        </tbody>
+                    </table>
+                </form>
             </div>
         </div>
     </div>
 </div>
 <!-- Star Products End -->
+
+
 </div>
 
 <!-- Back to Top -->

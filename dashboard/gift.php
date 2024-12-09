@@ -75,6 +75,30 @@ if ($stmt->execute()) {
 }
 
 $stmt->close();
+
+// Initialize variables for search and pagination
+$limit = 10; // Rows per page
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $limit;
+$search = $_POST['search'] ?? '';
+
+// Prepare SQL with filtering and pagination
+$query = "SELECT id, family_name, full_name, family_image, family_members, mobile_number, nid_number, family_card_number, job, job_type, job_salary, balance, gold, asset, family_member_asset, family_member_salary, balance, zakat
+          FROM users 
+          WHERE family_name LIKE ? 
+          LIMIT ? OFFSET ?";
+$stmt = $conn->prepare($query);
+$search_param = "%$search%";
+$stmt->bind_param("sii", $search_param, $limit, $offset);
+
+// Execute and fetch results
+if ($stmt->execute()) {
+    $result = $stmt->get_result();
+    $users = $result->fetch_all(MYSQLI_ASSOC);
+} else {
+    $message = "Error fetching users: " . $stmt->error;
+}
+
 $conn->close(); // Close the database connection
 ?>
 
@@ -226,6 +250,10 @@ $conn->close(); // Close the database connection
                     <thead>
                         <tr class="text-dark">
                             <th scope="col">ID</th>
+                            <th scope="col">Family Name</th>
+                            <th scope="col">Full Name</th>
+                            <th scope="col">Family Members</th>
+                            <th scope="col">Family Card Number</th>
                             <th scope="col">Gift Name</th>
                             <th scope="col">Family Card Number</th>
                             <th scope="col">Agricultural Product</th>
@@ -240,6 +268,10 @@ $conn->close(); // Close the database connection
                             <?php foreach ($gifts as $gift): ?>
                                 <tr>
                                     <td><?php echo htmlspecialchars($gift['id']); ?></td>
+                                    <td><?php echo htmlspecialchars($user['family_name']); ?></td>
+                                    <td><?php echo htmlspecialchars(string: $user['full_name']); ?></td>
+                                    <td><?php echo isset($user['family_members']) ? htmlspecialchars($user['family_members']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['family_card_number']) ? htmlspecialchars(string: $user['family_card_number']) : 'N/A'; ?></td>
                                     <td><?php echo htmlspecialchars($gift['gift_name']); ?></td>
                                     <td><?php echo htmlspecialchars($gift['family_card_number']); ?></td>
                                     <td><?php echo htmlspecialchars($gift['agricultural_product'] ?? '-'); ?></td>

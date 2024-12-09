@@ -39,22 +39,27 @@ if ($stmt->execute()) {
 
 $stmt->close();
 
-// Fetch family products
-$stmt = $conn->prepare("
-    SELECT fp.*, u.family_name 
-    FROM family_products fp
-    JOIN users u ON fp.family_id = u.id
-    WHERE fp.family_id = ?
-");
-$stmt->bind_param("i", $user_id);
+// Fetch family gifts based on family card number
+if (!empty($family_data['family_card_number'])) {
+    $stmt = $conn->prepare("
+        SELECT id, full_name, family_card_number, agricultural_product, product_name, vehicle, created_at 
+        FROM gift 
+        WHERE family_card_number = ?
+    ");
+    $stmt->bind_param("s", $family_data['family_card_number']);
 
-if ($stmt->execute()) {
-    $products = $stmt->get_result();
+    if ($stmt->execute()) {
+        $gift = $stmt->get_result();
+    } else {
+        $gift = [];
+        $message .= "Error retrieving gift data: " . $stmt->error;
+    }
+    $stmt->close();
 } else {
-    $message = "Error executing query: " . $stmt->error;
+    $gift = [];
+    $message .= "Family card number not found.";
 }
 
-$stmt->close();
 
 // Function to generate a random family card number
 function generateFamilyCardNumber() {
@@ -62,48 +67,28 @@ function generateFamilyCardNumber() {
     return mt_rand(1000000000, 9999999999);
 }
 
-// Function to update family card number in the database
 function updateFamilyCardNumberOnce($conn, $user_id) {
-    // চেক করুন যদি ব্যবহারকারীর ফ্যামিলি কার্ড নাম্বার ইতিমধ্যে বিদ্যমান থাকে
     $stmt = $conn->prepare("SELECT family_card_number FROM users WHERE id = ? AND (family_card_number IS NULL OR family_card_number = 0)");
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result && $result->num_rows > 0) {
-        // যদি ফ্যামিলি কার্ড নাম্বার না থাকে, তাহলে নতুন একটি জেনারেট করুন
         $family_card_number = mt_rand(1000000000, 9999999999);
-
-        // ফ্যামিলি কার্ড নাম্বার আপডেট করুন
         $update_stmt = $conn->prepare("UPDATE users SET family_card_number = ? WHERE id = ?");
         $update_stmt->bind_param("ii", $family_card_number, $user_id);
-
-        if ($update_stmt->execute()) {
-            return "Family card number created successfully: " . $family_card_number;
-        } else {
-            return "Error updating family card number: " . $update_stmt->error;
-        }
-
+        $success = $update_stmt->execute();
         $update_stmt->close();
-    } else {
-        return "Family card number already exists or user not found.";
+        return $success ? "Family card number created: $family_card_number" : "Failed to update card number.";
     }
 
     $stmt->close();
+    return "Family card number exists or user not found.";
 }
+
 
 // ফ্যামিলি কার্ড নাম্বার আপডেট করার চেষ্টা করুন
 $message .= updateFamilyCardNumberOnce($conn, $user_id);
-
-$created_at = date("Y-m-d");
-$expered_at = date("Y-m-d", strtotime("+30 days"));
-
-$stmt = $conn->prepare("
-    INSERT INTO family_products 
-    (family_id, family_card_number, full_name, product_name, agricultural_product, vehicle, balance, profile_image, created_at, expered_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-");
-$stmt->bind_param("iissssdsss", $family_id, $family_card_number, $full_name, $product_name, $agricultural_product, $vehicle, $balance, $profile_image, $created_at, $expered_at);
 
 $conn->close(); // Close the connection after all queries are executed
 
@@ -195,7 +180,6 @@ $conn->close(); // Close the connection after all queries are executed
                     <thead>
                         <tr class="text-dark">
                             <th scope="col">ID</th>
-                            <th scope="col">Family Name</th>
                             <th scope="col">Full Name</th>
                             <th scope="col">Family Card Number</th>
                             <th scope="col">Agricultural Product</th>
@@ -203,30 +187,27 @@ $conn->close(); // Close the connection after all queries are executed
                             <th scope="col">Vehicles</th>
                             <!-- <th scope="col">Balance</th> -->
                             <th scope="col">Issued Date</th>
-                            <th scope="col">Expered Date</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($row = $products->fetch_assoc()): {
-                                $days_remaining = (strtotime($row['expered_at']) - time()) / (60 * 60 * 24);
-                            } ?>
-                        <tr>
-                            <td><?= htmlspecialchars($row['id']) ?></td>
-                            <td><?= htmlspecialchars($row['family_name']) ?></td>
-                            <td><?= htmlspecialchars($row['full_name']) ?></td>
-                            <td><?= htmlspecialchars($row['family_card_number']) ?></td>
-                            <td><?= htmlspecialchars($row['agricultural_product'] ?? 'N/A') ?></td>
-                            <td><?= htmlspecialchars($row['product_name'] ?? 'N/A') ?></td>
-                            <td><?= htmlspecialchars($row['vehicle'] ?? 'N/A') ?></td>
-                            <!-- <td><?= number_format($row['balance'], 0) ?></td> -->
-                            <td><?= htmlspecialchars($row['created_at'] ?? 'N/A') ?></td>
-                            <td>
-                                <?= $days_remaining > 0 
-                                    ? "$days_remaining days remaining" 
-                                    : "Expired" ?>
-                            </td>
-                        </tr>
+                     <?php if ($gift && $gift->num_rows > 0): ?>
+                        <?php while ($row = $gift->fetch_assoc()): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($row['id']) ?></td>
+                                <td><?= htmlspecialchars($row['full_name']) ?></td>
+                                <td><?= htmlspecialchars($row['family_card_number']) ?></td>
+                                <td><?= htmlspecialchars($row['agricultural_product'] ?? 'N/A') ?></td>
+                                <td><?= htmlspecialchars($row['product_name'] ?? 'N/A') ?></td>
+                                <td><?= htmlspecialchars($row['vehicle'] ?? 'N/A') ?></td>
+                                <td><?= htmlspecialchars($row['created_at'] ?? 'N/A') ?></td>
+                            </tr>
                         <?php endwhile; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="7">No gifts found for this family card number.</td>
+                        </tr>
+                    <?php endif; ?>
+
                     </tbody>
                 </table>
             </div>

@@ -10,22 +10,32 @@ $family_data = [];
 $products = null; // Set to null initially
 $message = "";
 $role = null; // Initialize $role to avoid undefined variable errors
+$user = null; // Initialize $user to avoid undefined variable errors
 
 // Check if user is logged in and session contains a valid user ID
-if (isset($_SESSION['user_id'])) {
-    $user_id = $_SESSION['user_id']; // Retrieve user ID from session
-} else {
+if (!isset($_SESSION['user_id'])) {
     // Redirect to login page if no user ID in session
     header("Location: login.php");
     exit;
+} else {
+    $user_id = $_SESSION['user_id']; // Retrieve user ID from session
 }
 
 // Create a Database instance
 $DB = new Database();
 $conn = $DB->connect(); // Assuming `connect` is a method in your `Database` class
 
+// Check database connection
+if ($conn->connect_error) {
+    die("Database connection failed: " . $conn->connect_error);
+}
+
 // Fetch user data based on the user ID
 $stmt = $conn->prepare("SELECT * FROM leader WHERE id = ?");
+if (!$stmt) {
+    die("SQL Prepare Error: " . $conn->error);
+}
+
 $stmt->bind_param("i", $user_id); // Bind the user ID as an integer
 
 if ($stmt->execute()) {
@@ -40,44 +50,35 @@ if ($stmt->execute()) {
 
         // Example role-based logic
         if ($role == 'Admin') {
-            // Admin-specific content or actions
             $message = "Welcome, Admin. You have full access.";
         } elseif ($role == 'Editor') {
-            // Editor-specific content or actions
             $message = "Welcome, Editor. You can edit family data.";
         } elseif ($role == 'User') {
-            // User-specific content or actions
             $message = "Welcome, User. You have limited access.";
         }
     } else {
         $message = "No user data found.";
     }
 } else {
-    $message = "Error executing query: " . $stmt->error;
+    // Error in SQL execution
+    die("Error executing query: " . $stmt->error);
 }
 
 $stmt->close();
 
-if (isset($user['role'])) {
-    $role = $user['role'];
-} else {
-    $role = null; // Default value if role is not set
-}
-
 // Ensure $role is defined
 $role = $family_data['role'] ?? null;
 
-// Fetch products if the user has the correct role
+// Fetch products if user is Admin or Editor
 if ($role === 'Admin' || $role === 'Editor') {
     $stmt = $conn->prepare("
-        SELECT fp.*, u.family_name 
-        FROM family_products fp
-        JOIN users u ON fp.family_id = u.id
-        WHERE fp.family_id = ?
+    SELECT g.*, u.family_name 
+    FROM gift g
+    JOIN users u ON g.family_id = u.id
+    WHERE u.id = ?
     ");
-
     if (!$stmt) {
-        die("SQL Prepare Error: " . $conn->error); // Debugging: Check for prepare errors
+        die("SQL Prepare Error: " . $conn->error);
     }
 
     $stmt->bind_param("i", $user_id);
@@ -85,14 +86,13 @@ if ($role === 'Admin' || $role === 'Editor') {
     if ($stmt->execute()) {
         $products = $stmt->get_result();
     } else {
-        die("Query Execution Error: " . $stmt->error); // Debugging: Output execution errors
+        die("Query Execution Error: " . $stmt->error);
     }
 
     $stmt->close();
 } else {
-    $products = null; // Set to null for unauthorized roles
+    $products = null;
 }
-
 
 // Initialize variables for search and pagination
 $limit = 10; // Rows per page
@@ -106,6 +106,10 @@ $query = "SELECT id, family_name, full_name, family_image, family_members, mobil
           WHERE family_name LIKE ? 
           LIMIT ? OFFSET ?";
 $stmt = $conn->prepare($query);
+if (!$stmt) {
+    die("SQL Prepare Error: " . $conn->error);
+}
+
 $search_param = "%$search%";
 $stmt->bind_param("sii", $search_param, $limit, $offset);
 
@@ -117,88 +121,58 @@ if ($stmt->execute()) {
     $message = "Error fetching users: " . $stmt->error;
 }
 
-// Check if the form is submitted
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Loop through each gift selection and insert data for each user
-    if (isset($_POST['gift'])) {
-        foreach ($_POST['gift'] as $userId => $giftAction) {
-            
-            // Fetch the selected values for agricultural products, products, and vehicles
-            $agriculturalProduct = isset($_POST["agricultural_products_$userId"]) ? $_POST["agricultural_products_$userId"] : null;
-            $product = isset($_POST["product_$userId"]) ? $_POST["product_$userId"] : null;
-            $vehicle = isset($_POST["vehicles_$userId"]) ? $_POST["vehicles_$userId"] : null;
+// Create an array to store success or error messages
+$gift_messages = [];
 
-            // Fetch user data from the database
-            $query = "SELECT * FROM users WHERE id = ?";
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    foreach ($_POST['gift'] as $userId => $giftAction) {
+        $agriculturalProduct = $_POST['agricultural_products_' . $userId] ?? null;
+        $product = $_POST['product_' . $userId] ?? null;
+        $vehicle = $_POST['vehicles_' . $userId] ?? null;
+
+        // Fetch the correct user data
+        $user = array_filter($users, function ($u) use ($userId) {
+            return $u['id'] == $userId;
+        });
+        $user = reset($user); // Get the first matching user
+        
+        // Ensure full_name is not null
+        $fullName = $user['full_name'] ?? null;
+        if (!$fullName) {
+            $gift_messages[$userId] = "Error: Full name is missing for user ID $userId.";
+            continue;
+        }
+
+        if ($giftAction === 'gift') {
+            $query = "INSERT INTO gift (family_id, full_name, family_card_number, gift_name, agricultural_product, product_name, vehicle, value, description, issued_date) 
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($query);
+
             if ($stmt) {
-                $stmt->bind_param("i", $userId);
-                $stmt->execute();
-                $result = $stmt->get_result();
-                $user = $result->fetch_assoc();
-                
-                if ($user) {
-                    // Prepare data for insertion
-                    $giftName = "Gift Selection";
-                    $value = 0.00; // Default value, adjust as needed
-                    $description = "Gifted products";
-                    $issuedDate = date('Y-m-d'); // Today's date
+                $familyId = $user['id']; // Assuming the user's ID is the family_id
+                $familyCardNumber = $user['family_card_number'] ?? '';
+                $giftName = "Custom Gift"; // Define a default or dynamic gift name
+                $value = 0; // Assign appropriate values
+                $description = "Gift Description";
+                $issuedDate = date('Y-m-d H:i:s');
 
-                    // Insert into the gift table
-                    $insertQuery = "INSERT INTO gift (
-                        full_name, 
-                        family_card_number, 
-                        gift_name, 
-                        agricultural_product, 
-                        product_name, 
-                        vehicle, 
-                        value, 
-                        description, 
-                        issued_date, 
-                        created_at, 
-                        updated_at
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
+                $stmt->bind_param("issssssdsd", $familyId, $fullName, $familyCardNumber, $giftName, $agriculturalProduct, $product, $vehicle, $value, $description, $issuedDate);
 
-                    $insertStmt = $conn->prepare($insertQuery);
-
-                    if ($insertStmt) {
-                        $insertStmt->bind_param(
-                            "sssssssss", 
-                            $user['full_name'], // full_name from users table
-                            $user['family_card_number'], // family_card_number from users table
-                            $giftName,
-                            $agriculturalProduct,
-                            $product,
-                            $vehicle,
-                            $value,
-                            $description,
-                            $issuedDate
-                        );
-
-                        // Execute the insert query
-                        if ($insertStmt->execute()) {
-                            echo "Gift successfully added for " . htmlspecialchars($user['full_name']) . "<br>";
-                        } else {
-                            echo "Error inserting gift for " . htmlspecialchars($user['full_name']) . ": " . $insertStmt->error . "<br>";
-                        }
-                    } else {
-                        echo "Error preparing the insert query: " . $conn->error . "<br>";
-                    }
+                if ($stmt->execute()) {
+                    $gift_messages[$userId] = "Gift successfully added for " . htmlspecialchars($fullName);
                 } else {
-                    echo "User not found for ID: $userId<br>";
+                    $gift_messages[$userId] = "Error inserting gift for " . htmlspecialchars($fullName) . ": " . $stmt->error;
                 }
             } else {
-                echo "Error preparing the select query: " . $conn->error . "<br>";
+                $gift_messages[$userId] = "Error preparing the insert query: " . $conn->error;
             }
         }
-    } else {
-        echo "No gift selected.<br>";
     }
-} 
+}
 
 
-$conn->close(); // Close the connection after all queries are executed
 ?>
+
 
 
 <!DOCTYPE html>
@@ -439,8 +413,8 @@ $conn->close(); // Close the connection after all queries are executed
                         <th scope="col">Family Card Number</th>
                         <th scope="col">Gold</th>
                         <th scope="col">Assets</th>
-                        <th scope="col">Job/Commpany</th>
-                        <th scope="col">Job/Commpany Designation</th>
+                        <!-- <th scope="col">Job/Commpany</th>
+                        <th scope="col">Job/Commpany Designation</th> -->
                         <th scope="col">Job/Commpany Salary</th>
                         <th scope="col">Balance</th>
                         <!-- <th scope="col">Zakat</th> -->
@@ -459,8 +433,8 @@ $conn->close(); // Close the connection after all queries are executed
                                     <td><?php echo isset($user['family_card_number']) ? htmlspecialchars(string: $user['family_card_number']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['gold']) ? htmlspecialchars($user['gold']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['asset']) ? htmlspecialchars($user['asset']) : 'N/A'; ?></td>
-                                    <td><?php echo isset($user['job']) ? htmlspecialchars($user['job']) : 'N/A'; ?></td>
-                                    <td><?php echo isset($user['job_type']) ? htmlspecialchars($user['job_type']) : 'N/A'; ?></td>
+                                    <!-- <td><?php echo isset($user['job']) ? htmlspecialchars($user['job']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['job_type']) ? htmlspecialchars($user['job_type']) : 'N/A'; ?></td> -->
                                     <td><?php echo isset($user['job_salary']) ? htmlspecialchars($user['job_salary']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['balance']) ? htmlspecialchars($user['balance']) : 'N/A'; ?></td>
                                     <!-- <td><?php echo isset($user['zakat']) ? htmlspecialchars($user['zakat']) : 'N/A'; ?></td> -->
@@ -479,7 +453,7 @@ $conn->close(); // Close the connection after all queries are executed
 <!-- Family assets End -->
 </div>
 
-<!-- Star Products Start -->
+<!-- Start Products Section -->
 <div class="container">
     <div class="container-fluid pt-4 px-4">
         <div class="bg-light text-center rounded p-4">
@@ -501,6 +475,7 @@ $conn->close(); // Close the connection after all queries are executed
                                 <th scope="col">Product</th>
                                 <th scope="col">Vehicles</th>
                                 <th scope="col">Action</th>
+                                <th scope="col">Messages</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -510,34 +485,43 @@ $conn->close(); // Close the connection after all queries are executed
                                 <tr>
                                     <td><?php echo htmlspecialchars($user['id']); ?></td>
                                     <td><?php echo htmlspecialchars($user['family_name']); ?></td>
-                                    <td><?php echo htmlspecialchars($user['full_name']); ?></td>
+                                    <td><?php echo isset($user['full_name']) ? htmlspecialchars($user['full_name']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['family_card_number']) ? htmlspecialchars($user['family_card_number']) : 'N/A'; ?></td>
                                     <td><?php echo htmlspecialchars($user['family_members']); ?></td>
                                     <td><?php echo isset($user['balance']) ? htmlspecialchars($user['balance']) : 'N/A'; ?></td>
                                     <td>
                                         <select name="agricultural_products_<?= $user['id'] ?>" id="agricultural_products_<?= $user['id'] ?>">
                                             <option value="">Select</option>
-                                            <option value="rice1">Rice 5 kg</option>
-                                            <option value="rice2">Rice 8 kg</option>
-                                            <option value="wheat">Wheat 1 kg</option>
+                                            <option value="Rice 5 kg">Rice 5 kg</option>
+                                            <option value="Rice 8 kg">Rice 8 kg</option>
+                                            <option value="Wheat 1 kg">Wheat 1 kg</option>
                                         </select>
                                     </td>
                                     <td>
                                         <select name="product_<?= $user['id'] ?>" id="product_<?= $user['id'] ?>">
                                             <option value="">Select</option>
-                                            <option value="rice_packet">Rice 1 Packet</option>
-                                            <option value="wheat_packet">Wheat 1 Packet</option>
+                                            <option value="Rice 1 Packet">Rice 1 Packet</option>
+                                            <option value="Wheat 1 Packet">Wheat 1 Packet</option>
                                         </select>
                                     </td>
                                     <td>
                                         <select name="vehicles_<?= $user['id'] ?>" id="vehicles_<?= $user['id'] ?>">
                                             <option value="">Select</option>
-                                            <option value="car">Car</option>
-                                            <option value="bike">Bike</option>
+                                            <option value="Home">Home</option>
+                                            <option value="Car">Car</option>
+                                            <option value="Bike">Bike</option>
                                         </select>
                                     </td>
                                     <td>
                                         <button type="submit" name="gift[<?= $user['id'] ?>]" value="gift" class="btn btn-primary">Gift</button>
+                                    </td>
+                                    <td>
+                                        <?php 
+                                        // Display the success or error message for the user
+                                        if (isset($gift_messages[$user['id']])) {
+                                            echo htmlspecialchars($gift_messages[$user['id']]);
+                                        }
+                                        ?>
                                     </td>
                                 </tr>
                             <?php endforeach; 
@@ -553,7 +537,8 @@ $conn->close(); // Close the connection after all queries are executed
         </div>
     </div>
 </div>
-<!-- Star Products End -->
+<!-- End Products Section -->
+
 
 
 </div>

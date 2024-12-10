@@ -10,22 +10,32 @@ $family_data = [];
 $products = null; // Set to null initially
 $message = "";
 $role = null; // Initialize $role to avoid undefined variable errors
+$user = null; // Initialize $user to avoid undefined variable errors
 
 // Check if user is logged in and session contains a valid user ID
-if (isset($_SESSION['user_id'])) {
-    $user_id = $_SESSION['user_id']; // Retrieve user ID from session
-} else {
+if (!isset($_SESSION['user_id'])) {
     // Redirect to login page if no user ID in session
     header("Location: login.php");
     exit;
+} else {
+    $user_id = $_SESSION['user_id']; // Retrieve user ID from session
 }
 
 // Create a Database instance
 $DB = new Database();
 $conn = $DB->connect(); // Assuming `connect` is a method in your `Database` class
 
+// Check database connection
+if ($conn->connect_error) {
+    die("Database connection failed: " . $conn->connect_error);
+}
+
 // Fetch user data based on the user ID
 $stmt = $conn->prepare("SELECT * FROM leader WHERE id = ?");
+if (!$stmt) {
+    die("SQL Prepare Error: " . $conn->error);
+}
+
 $stmt->bind_param("i", $user_id); // Bind the user ID as an integer
 
 if ($stmt->execute()) {
@@ -40,44 +50,35 @@ if ($stmt->execute()) {
 
         // Example role-based logic
         if ($role == 'Admin') {
-            // Admin-specific content or actions
             $message = "Welcome, Admin. You have full access.";
         } elseif ($role == 'Editor') {
-            // Editor-specific content or actions
             $message = "Welcome, Editor. You can edit family data.";
         } elseif ($role == 'User') {
-            // User-specific content or actions
             $message = "Welcome, User. You have limited access.";
         }
     } else {
         $message = "No user data found.";
     }
 } else {
-    $message = "Error executing query: " . $stmt->error;
+    // Error in SQL execution
+    die("Error executing query: " . $stmt->error);
 }
 
 $stmt->close();
 
-if (isset($user['role'])) {
-    $role = $user['role'];
-} else {
-    $role = null; // Default value if role is not set
-}
-
 // Ensure $role is defined
 $role = $family_data['role'] ?? null;
 
-// Fetch products if the user has the correct role
+// Fetch products if user is Admin or Editor
 if ($role === 'Admin' || $role === 'Editor') {
     $stmt = $conn->prepare("
-        SELECT fp.*, u.family_name 
-        FROM family_products fp
-        JOIN users u ON fp.family_id = u.id
-        WHERE fp.family_id = ?
+    SELECT g.*, u.family_name 
+    FROM gift g
+    JOIN users u ON g.family_id = u.id
+    WHERE u.id = ?
     ");
-
     if (!$stmt) {
-        die("SQL Prepare Error: " . $conn->error); // Debugging: Check for prepare errors
+        die("SQL Prepare Error: " . $conn->error);
     }
 
     $stmt->bind_param("i", $user_id);
@@ -85,12 +86,12 @@ if ($role === 'Admin' || $role === 'Editor') {
     if ($stmt->execute()) {
         $products = $stmt->get_result();
     } else {
-        die("Query Execution Error: " . $stmt->error); // Debugging: Output execution errors
+        die("Query Execution Error: " . $stmt->error);
     }
 
     $stmt->close();
 } else {
-    $products = null; // Set to null for unauthorized roles
+    $products = null;
 }
 
 

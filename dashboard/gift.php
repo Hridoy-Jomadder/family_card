@@ -243,54 +243,49 @@ $conn->close(); // Close the database connection
             <!-- Star End -->    
 
  <!-- Gifts Table -->
- <div class="bg-light text-center rounded p-4">
-            <h6 class="mb-4">Gifts</h6>
-            <div class="table-responsive">
-                <table class="table text-start align-middle table-bordered table-hover mb-0">
-                    <thead>
-                        <tr class="text-dark">
-                            <th scope="col">ID</th>
-                            <th scope="col">Family Name</th>
-                            <th scope="col">Full Name</th>
-                            <th scope="col">Family Members</th>
-                            <th scope="col">Family Card Number</th>
-                            <th scope="col">Gift Name</th>
-                            <th scope="col">Family Card Number</th>
-                            <th scope="col">Agricultural Product</th>
-                            <th scope="col">Product Name</th>
-                            <th scope="col">Vehicle</th>
-                            <th scope="col">Value</th>
-                            <th scope="col">Issued Date</th>
+ <!-- Gifts Table -->
+<div class="bg-light text-center rounded p-4">
+    <h6 class="mb-4">Family Gifts</h6>
+    <div class="table-responsive">
+        <table class="table text-start align-middle table-bordered table-hover mb-0">
+            <thead>
+                <tr class="text-dark">
+                    <th scope="col">ID</th>
+                    <th scope="col">Full Name</th>
+                    <th scope="col">Family Card Number</th>
+                    <th scope="col">Gift Name</th>
+                    <th scope="col">Agricultural Product</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Vehicle</th>
+                    <th scope="col">Value</th>
+                    <th scope="col">Issued Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($gifts)): ?>
+                    <?php foreach ($gifts as $gift): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($gift['id']); ?></td>
+                            <td><?php echo htmlspecialchars($gift['full_name'] ?? 'N/A'); ?></td>
+                            <td><?php echo htmlspecialchars($gift['family_card_number'] ?? 'N/A'); ?></td>
+                            <td><?php echo htmlspecialchars($gift['gift_name'] ?? 'N/A'); ?></td>
+                            <td><?php echo htmlspecialchars($gift['agricultural_product'] ?? 'N/A'); ?></td>
+                            <td><?php echo htmlspecialchars($gift['product_name'] ?? 'N/A'); ?></td>
+                            <td><?php echo htmlspecialchars($gift['vehicle'] ?? 'N/A'); ?></td>
+                            <td><?php echo htmlspecialchars(number_format($gift['value'] ?? 0, 2)); ?></td>
+                            <td><?php echo htmlspecialchars($gift['created_at'] ?? 'N/A'); ?></td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (!empty($gifts)): ?>
-                            <?php foreach ($gifts as $gift): ?>
-                                <tr>
-                                    <td><?php echo htmlspecialchars($gift['id']); ?></td>
-                                    <td><?php echo htmlspecialchars($user['family_name']); ?></td>
-                                    <td><?php echo htmlspecialchars(string: $user['full_name']); ?></td>
-                                    <td><?php echo isset($user['family_members']) ? htmlspecialchars($user['family_members']) : 'N/A'; ?></td>
-                                    <td><?php echo isset($user['family_card_number']) ? htmlspecialchars(string: $user['family_card_number']) : 'N/A'; ?></td>
-                                    <td><?php echo htmlspecialchars($gift['gift_name']); ?></td>
-                                    <td><?php echo htmlspecialchars($gift['family_card_number']); ?></td>
-                                    <td><?php echo htmlspecialchars($gift['agricultural_product'] ?? '-'); ?></td>
-                                    <td><?php echo htmlspecialchars($gift['product_name'] ?? '-'); ?></td>
-                                    <td><?php echo htmlspecialchars($gift['vehicle'] ?? '-'); ?></td>
-                                    <td><?php echo htmlspecialchars(number_format($gift['value'], 2)); ?></td>
-                                    <td><?php echo htmlspecialchars($gift['issued_date']); ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="8" class="text-center">No gifts available.</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="11" class="text-center">No gifts available.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
     </div>
+</div>
+
 
 <!-- Back to Top -->
 <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>

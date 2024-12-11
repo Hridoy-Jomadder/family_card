@@ -169,11 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
-
-
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -208,7 +204,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
     <link href="css/stylel.css" rel="stylesheet">
-
 
     <!-- Replace HTTP with HTTPS in the CDN links -->
         <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -302,15 +297,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <i class="fa fa-chart-bar fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">All Family Card</p>
-                                <h6 class="mb-0">3 crore 93 lakh thirty thousand</h6>
+                                <h6 class="mb-0">3 crore 93 lakh 30 thousand</h6>
                             </div>
                         </div>
                     </div> 
-
                 </div>
             </div>
-            </div>
-            <!-- Star End -->
+        </div>
+     <!-- Star End -->
            
            
  <div class="container">
@@ -327,11 +321,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     <?php endif; ?>
     <br>
-    <div style="width: 35%;">
+    <div style="width: 42%; padding-left: 50px;">
     <form method="POST" action="profile.php">
-            <label for="nidnumber">Enter NID Number/Search:</label>
+            <label for="nidnumber">Enter NID Number Search:</label>
             <input type="text" name="nidnumber" id="nidnumber" required>
             <button type="submit">View Profile</button>
+    </form>
+    </div>
+    <div style="width: 54%; padding-left: 210px;">
+    <form method="" action="">
+            <label for="search">Top or Low Amount Search:</label>
+            <input type="text" name="search" id="search" required>
+            <button type="submit">Amount Search</button>
     </form>
     </div>
     </div>
@@ -469,11 +470,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <th scope="col">Family Name</th>
                                 <th scope="col">Full Name</th>
                                 <th scope="col">Family Card Number</th>
-                                <th scope="col">Family Members</th>
+                                <th scope="col">Family<br> Members</th>
                                 <th scope="col">Balance</th>
                                 <th scope="col">Agricultural Product</th>
                                 <th scope="col">Product</th>
-                                <th scope="col">Vehicles</th>
+                                <th scope="col">Home/Vehicles</th>
                                 <th scope="col">Action</th>
                                 <th scope="col">Messages</th>
                             </tr>

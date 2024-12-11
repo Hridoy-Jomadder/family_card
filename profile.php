@@ -1,130 +1,54 @@
 <?php
 include "classes/connection.php";
-
-// Start the session to access session variables
 session_start();
 
-// Initialize variables
-$family_data = [];
-$message = "";
-
-// Check if user is logged in and session contains a valid user ID
-if (isset($_SESSION['user_id'])) {
-    $user_id = $_SESSION['user_id']; // Retrieve user ID from session
-} else {
-    // Redirect to login page if no user ID in session
+// Redirect to login if user not logged in
+if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
 }
 
-// Create a Database instance
+$user_id = $_SESSION['user_id'];
 $DB = new Database();
-$conn = $DB->connect(); // Assuming `connect` is a method in your `Database` class
+$conn = $DB->connect();
+$message = "";
 
-// Fetch family data based on the user ID
-$stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
-$stmt->bind_param("i", $user_id); // Bind the user ID as an integer
-
-if ($stmt->execute()) {
-    $result = $stmt->get_result();
-
-    if ($result && $result->num_rows > 0) {
-        $family_data = $result->fetch_assoc(); // Fetch user data
-    } else {
-        $message = "No family data found in the database.";
-    }
-} else {
-    $message = "Error executing query: " . $stmt->error;
-}
-
-$stmt->close();
-
-// Update profile data when form is submitted
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $family_name = $_POST['family_name'];
-    $nid_number = $_POST['nid_number'];
-    $full_name = $_POST['full_name'];
-    $father_name = $_POST['father_name'];
-    $mother_name = $_POST['mother_name'];
-    $son_name_all = $_POST['son_name_all'];
-    $dau_name_all = $_POST['dau_name_all'];
-    $mobile_number = $_POST['mobile_number'];
-    $family_members = $_POST['family_members'];
-
-    $stmt = $conn->prepare("UPDATE users SET family_name = ?, nid_number = ?, full_name = ?, father_name = ?, mother_name = ?, son_name_all = ?, dau_name_all = ?,  mobile_number = ?, family_members = ? WHERE id = ?");
-    $stmt->bind_param("sssssssssi", $family_name, $nid_number, $full_name, $father_name, $mother_name, $son_name_all, $dau_name_all, $mobile_number, $family_members, $user_id);
-
-    if ($stmt->execute()) {
-        $message = "Profile updated successfully!";
-    } else {
-        $message = "Error updating profile: " . $stmt->error;
-    }
-
+try {
+    // Fetch user data
+    $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $family_data = $stmt->get_result()->fetch_assoc();
     $stmt->close();
-}
 
-// Update profile data when form is submitted
-     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve and sanitize POST data
-    $gold = htmlspecialchars($_POST['gold']);
-    $asset = htmlspecialchars($_POST['asset']);
-    $family_member_asset = htmlspecialchars($_POST['family_member_asset']);
-    $family_member_salary = htmlspecialchars($_POST['family_member_salary']);
+    // Handle form submission
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $updateFields = [
+            'family_name', 'nid_number', 'full_name', 'father_name', 'mother_name',
+            'son_name_all', 'dau_name_all', 'mobile_number', 'family_members', 'family_address'
+        ];
+        $query = "UPDATE users SET " . implode(" = ?, ", $updateFields) . " = ? WHERE id = ?";
+        $stmt = $conn->prepare($query);
 
-    // Assume $user_id is available from session or URL
-    $user_id = $_SESSION['user_id'];
+        $values = [];
+        foreach ($updateFields as $field) {
+            $values[] = $_POST[$field] ?? '';
+        }
+        $values[] = $user_id;
 
-    // Update query
-    $query = "UPDATE users SET gold=?, asset=?, family_member_asset=?, family_member_salary=? WHERE id=?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param('ssssi', $gold, $asset, $family_member_asset, $family_member_salary, $user_id);
-
-    if ($stmt->execute()) {
-        $message1 = "Family assets updated successfully!";
-    } else {
-        $message1 = "Failed to update family assets.";
+        $stmt->bind_param(str_repeat('s', count($values) - 1) . 'i', ...$values);
+        if ($stmt->execute()) {
+            $message = "Profile updated successfully!";
+        } else {
+            $message = "Error updating profile.";
+        }
+        $stmt->close();
     }
-    $stmt->close();
-     }
-
-// Update profile data when form is submitted
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $fields = [
-        'job', 'job_type', 'job_salary', 'family_jc_members',
-        'father_job', 'father_salary', 'mother_job', 'mother_salary',
-        'wife_job', 'wife_salary', 'son_job', 'son_salary',
-        'son_job1', 'son_salary1', 'son_job2', 'son_salary2',
-        'dau_job', 'dau_salary', 'dau_job1', 'dau_salary1',
-        'dau_job2', 'dau_salary2', 'family_other_members', 'family_other_members_salary'
-    ];
-
-    // Prepare dynamic query
-    $updateFields = [];
-    $values = [];
-    foreach ($fields as $field) {
-        $updateFields[] = "$field = ?";
-        $values[] = $_POST[$field] ?? '';
-    }
-    $values[] = $_SESSION['user_id']; // Assuming user_id is stored in the session
-
-    $query = "UPDATE users SET " . implode(', ', $updateFields) . " WHERE id = ?";
-    $stmt = $conn->prepare($query);
-
-    // Bind dynamic values
-    $types = str_repeat('s', count($values) - 1) . 'i'; // Strings and final integer for user_id
-    $stmt->bind_param($types, ...$values);
-
-    if ($stmt->execute()) {
-        $message2 = "Job details updated successfully!";
-    } else {
-        $message2 = "Failed to update job details.";
-    }
-    $stmt->close();
-    $conn->close();
-    header("Location: profile.php");
-    exit;
+} catch (Exception $e) {
+    $message = "An unexpected error occurred.";
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -195,6 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <p style="color:white;"><strong>Family Card Number:</strong> <?= htmlspecialchars(string: $family_data['family_card_number'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Mobile Number:</strong> <?= htmlspecialchars($family_data['mobile_number'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p>
+                    <p style="color:white;"><strong>Family Address:</strong> <?= htmlspecialchars($family_data['family_address'] ?? 'Not Available') ?></p>
                 </div>
             <?php else: ?>
                 <p style="color:white;"><?= htmlspecialchars($message) ?></p>
@@ -203,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php if (!empty($family_data)): ?>
                 <div><br>
                     <p style="color:white;"><strong>Gold:</strong> <?= htmlspecialchars($family_data['gold'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Assets:</strong> <?= htmlspecialchars(string: $family_data['asset'] ?? 'Not Available') ?></p>
+                    <p style="color:white;"><strong>Asset:</strong> <?= htmlspecialchars(string: $family_data['asset'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Family Members Assets:</strong> <?= htmlspecialchars($family_data['family_member_asset'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Family Members Salary:</strong> <?= htmlspecialchars($family_data['family_member_salary'] ?? 'Not Available') ?></p>
                     <!-- <p style="color:white;"><strong>Family Card Number:</strong> <?= htmlspecialchars(string: $family_data['family_card_number'] ?? 'Not Available') ?></p>
@@ -260,6 +185,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-group">
                 <label for="dau_name_all">Daughter's Name:</label>
                 <input type="text" class="form-control" id="dau_name_all" name="dau_name_all" value="<?= htmlspecialchars($family_data['dau_name_all'] ?? '') ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="family_address">Family Address:</label>
+                <input type="text" class="form-control" id="family_address" name="family_address" value="<?= htmlspecialchars($family_data['family_address'] ?? '') ?>" required>
             </div>
             <button type="submit" class="btn btn-primary">Save Changes</button>
         </form>

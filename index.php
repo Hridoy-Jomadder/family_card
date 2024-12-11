@@ -159,6 +159,7 @@ $conn->close(); // Close the connection after all queries are executed
                     <p style="color:white;"><strong>Mother's Name:</strong> <?= htmlspecialchars($family_data['mother_name'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Mobile Number:</strong> <?= htmlspecialchars($family_data['mobile_number'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p>
+                    <p style="color:white;"><strong>Family Address:</strong> <?= htmlspecialchars($family_data['family_address'] ?? 'Not Available') ?></p>
                     <img src="<?= htmlspecialchars($family_data['family_image'] ?? 'uploads/default-image.jpg') ?>" alt="Family Image" style="width: 800px; height: 300px;">
                 </div>
             <?php else: ?>
@@ -184,7 +185,7 @@ $conn->close(); // Close the connection after all queries are executed
                             <th scope="col">Family Card Number</th>
                             <th scope="col">Agricultural Product</th>
                             <th scope="col">Product</th>
-                            <th scope="col">Vehicles</th>
+                            <th scope="col">Home/Vehicles</th>
                             <!-- <th scope="col">Balance</th> -->
                             <th scope="col">Issued Date</th>
                         </tr>

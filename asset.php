@@ -125,7 +125,7 @@ $stmt->close();
             <?php if (!empty($family_data)): ?>
                 <div><br>
                     <p style="color:white;"><strong>Gold:</strong> <?= htmlspecialchars($family_data['gold'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Assets:</strong> <?= htmlspecialchars(string: $family_data['asset'] ?? 'Not Available') ?></p>
+                    <p style="color:white;"><strong>Asset:</strong> <?= htmlspecialchars(string: $family_data['asset'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Family Members Assets:</strong> <?= htmlspecialchars($family_data['family_member_asset'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Family Members Salary:</strong> <?= htmlspecialchars($family_data['family_member_salary'] ?? 'Not Available') ?></p>
                     <!-- <p style="color:white;"><strong>Family Card Number:</strong> <?= htmlspecialchars(string: $family_data['family_card_number'] ?? 'Not Available') ?></p>
@@ -154,12 +154,12 @@ $stmt->close();
                     value="<?= htmlspecialchars($family_data['gold'] ?? '') ?>" required>
             </div>            
             <div class="form-group">
-                <label for="asset">Asset (e.g., 1, 100 Karats):</label>
+                <label for="asset">Asset (e.g., 1 শতাংশ , 1 কাটা):</label>
                 <input type="text" class="form-control" id="asset" name="asset" 
                     value="<?= htmlspecialchars($family_data['asset'] ?? '') ?>" required>
             </div>
             <div class="form-group">
-                <label for="family_member_asset">Family Members Asset:</label>
+                <label for="family_member_asset">Family Members Assets:</label>
                 <input type="text" class="form-control" id="family_member_asset" name="family_member_asset" 
                     value="<?= htmlspecialchars($family_data['family_member_asset'] ?? '') ?>" required>
             </div>

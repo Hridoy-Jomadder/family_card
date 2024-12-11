@@ -207,26 +207,73 @@ $conn->close(); // Close the connection after all queries are executed
         </div>
 </div>
 <div class="container">
-<div style="width: 100%; text-align: center; padding: 50px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
-    <h3 style="color:white;"><?= htmlspecialchars($message) ?></h3>
-        <h3 style="color:black;">Family Profile</h3><br>
-        <p style="color:black;">Username: <?php echo htmlspecialchars($family_data['username']); ?></p>
-        <p style="color:black;">Email: <?php echo htmlspecialchars($family_data['email']); ?></p>
-        <p style="color:black;">Role: <?php echo htmlspecialchars($family_data['role']); ?></p>
-</div>
-    </div>
+           <!-- Star Start -->
+           <div class="container-fluid pt-4 px-4">
+                <div class="row g-4">
+                <?php if (!empty($message)): ?>
+                        <p style="color: black;text-align: center; font-size: 22px;"><?php echo htmlspecialchars($message); ?></p>
+                    <?php endif; ?>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-male fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Male Family</p>
+                                <h6 class="mb-0">123 </h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-female fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Female Family</p>
+                                <h6 class="mb-0">123 </h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-area fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Right Information</p>
+                                <h6 class="mb-0">100%</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-city fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">City</p>
+                                <h6 class="mb-0">2 crore 82 lakh 60 thousand</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-tree fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Village</p>
+                                <h6 class="mb-0">1 crore 10 lakh 70 thousand</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-id-card fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Family Card</p>
+                                <h6 class="mb-0">3 crore 93 lakh 30 thousand</h6>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+     <!-- Star End -->
     <br><br>
-    <div class="container">
-            <div class="mt-4">
-        <form method="POST" action="profile.php">
-            <label for="nidnumber">Enter NID Number:</label>
-            <input type="text" name="nidnumber" id="nidnumber" required>
-            <button type="submit">View Profile</button>
-        </form>
-        <br>
-           </div>
            <div class="container">           
-        <h3>Family Details: </h3>
+        <h3>Details: </h3>
         <div style="color:black; margin: 25px;">
         <?php if (!empty($familyData)): ?>
             <div class="family-profile">
@@ -242,9 +289,9 @@ $conn->close(); // Close the connection after all queries are executed
         <?php else: ?>
             <!-- <p><?= htmlspecialchars($message) ?></p> -->
         <?php endif; ?>
-        </div>
     </div>
 </div>   
+
 
 <!-- Back to Top -->
 <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>

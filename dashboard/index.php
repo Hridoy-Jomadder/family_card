@@ -329,12 +329,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
     </div>
     <div style="width: 54%; padding-left: 210px;">
-    <form method="" action="">
-            <label for="search">Top or Low Amount Search:</label>
-            <input type="text" name="search" id="search" required>
-            <button type="submit">Amount Search</button>
+    <form method="POST" action="amount.php">
+        <label for="search">Top or Low Amount Search:</label>
+        <input type="text" name="search" id="search" required>
+        <button type="submit">Amount Search</button>
     </form>
-    </div>
+</div>
+
     </div>
 
     <!-- Family Account Start -->

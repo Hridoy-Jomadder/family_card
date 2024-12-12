@@ -149,12 +149,12 @@ $stmt->close();
         <?php endif; ?>
         <form action="" method="POST">
             <div class="form-group">
-                <label for="gold">Gold (e.g., 1 Gram, 1 Karat):</label>
+                <label for="gold">Gold (e.g., 1 Grams - 1 Kilograms, 18K, 22K, 24 Karat):</label>
                 <input type="text" class="form-control" id="gold" name="gold" 
                     value="<?= htmlspecialchars($family_data['gold'] ?? '') ?>" required>
             </div>            
             <div class="form-group">
-                <label for="asset">Asset (e.g., 1 শতাংশ , 1 কাটা):</label>
+                <label for="asset">Asset (e.g., Decimal, Katha, Bigha, Acre, Hectare, Square Feet, Square Meter):</label>
                 <input type="text" class="form-control" id="asset" name="asset" 
                     value="<?= htmlspecialchars($family_data['asset'] ?? '') ?>" required>
             </div>

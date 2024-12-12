@@ -1,157 +1,73 @@
 <?php
 include "classes/connection.php";
-include "classes/product.php";
-
-// Start the session to access session variables
 session_start();
 
-// Initialize variables
-$family_data = [];
-$products = null; // Set to null initially
-$message = "";
-$role = null; // Initialize $role to avoid undefined variable errors
-$user = null; // Initialize $user to avoid undefined variable errors
-
-// Check if user is logged in and session contains a valid user ID
+// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    // Redirect to login page if no user ID in session
     header("Location: login.php");
     exit;
-} else {
-    $user_id = $_SESSION['user_id']; // Retrieve user ID from session
 }
 
-// Create a Database instance
-$DB = new Database();
-$conn = $DB->connect(); // Assuming `connect` is a method in your `Database` class
+$user_id = $_SESSION['user_id'];
 
-// Check database connection
+// Create a database connection
+$DB = new Database();
+$conn = $DB->connect();
 if ($conn->connect_error) {
     die("Database connection failed: " . $conn->connect_error);
 }
 
-// Fetch user data based on the user ID
-$stmt = $conn->prepare("SELECT * FROM leader WHERE id = ?");
+// Initialize variables
+$message = "";
+$users = [];
+$search = $_POST['search'] ?? '';
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$limit = 10;
+$offset = ($page - 1) * $limit;
+$sort_by = $_GET['sort_by'] ?? 'balance';
+$order_by = ($sort_by === 'total_amount') ? 'total_amount' : 'balance';
+
+// Prepare query
+$query = "
+    SELECT id, family_name, full_name, family_image, family_members, nid_number, mobile_number, 
+           family_card_number, job, job_type, job_salary, total_amount
+    FROM users
+    WHERE balance >= ?
+    ORDER BY $order_by DESC
+    LIMIT ? OFFSET ?
+";
+
+$stmt = $conn->prepare($query);
 if (!$stmt) {
     die("SQL Prepare Error: " . $conn->error);
 }
 
-$stmt->bind_param("i", $user_id); // Bind the user ID as an integer
+$search_param = (int)$search; // Cast to integer for security
+$stmt->bind_param("iii", $search_param, $limit, $offset);
 
-if ($stmt->execute()) {
-    $result = $stmt->get_result();
-
-    if ($result && $result->num_rows > 0) {
-        $user = $result->fetch_assoc(); // Fetch user data
-        $family_data = $user;
-
-        // Check user role to determine access level
-        $role = $user['role']; // Get the user's role
-
-        // Example role-based logic
-        if ($role == 'Admin') {
-            $message = "Welcome, Admin. You have full access.";
-        } elseif ($role == 'Editor') {
-            $message = "Welcome, Editor. You can edit family data.";
-        } elseif ($role == 'User') {
-            $message = "Welcome, User. You have limited access.";
-        }
-    } else {
-        $message = "No user data found.";
-    }
-} else {
-    // Error in SQL execution
-    die("Error executing query: " . $stmt->error);
-}
-
-$stmt->close();
-
-// Ensure $role is defined
-$role = $family_data['role'] ?? null;
-
-// Fetch products if user is Admin or Editor
-if ($role === 'Admin' || $role === 'Editor') {
-    $stmt = $conn->prepare("
-    SELECT g.*, u.family_name 
-    FROM gift g
-    JOIN users u ON g.family_id = u.id
-    WHERE u.id = ?
-    ");
-    if (!$stmt) {
-        die("SQL Prepare Error: " . $conn->error);
-    }
-
-    $stmt->bind_param("i", $user_id);
-
-    if ($stmt->execute()) {
-        $products = $stmt->get_result();
-    } else {
-        die("Query Execution Error: " . $stmt->error);
-    }
-
-    $stmt->close();
-} else {
-    $products = null;
-}
-
-
-// Initialize variables for search and pagination
-$limit = 10; // Rows per page
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$offset = ($page - 1) * $limit;
-$search = $_POST['search'] ?? '';
-
-// Prepare SQL with filtering and pagination
-$query = "SELECT id, family_name, full_name, family_image, family_members, nid_number, mobile_number, family_card_number, gold, asset, family_member_asset, family_member_salary balance, zakat
-          FROM users 
-          WHERE family_name LIKE ? 
-          LIMIT ? OFFSET ?";
-$stmt = $conn->prepare($query);
-$search_param = "%$search%";
-$stmt->bind_param("sii", $search_param, $limit, $offset);
-
-// Execute and fetch results
 if ($stmt->execute()) {
     $result = $stmt->get_result();
     $users = $result->fetch_all(MYSQLI_ASSOC);
 } else {
-    $message = "Error fetching users: " . $stmt->error;
+    $message = "Error fetching data: " . $stmt->error;
 }
 
+$stmt->close();
 
-// Initialize variables
-$familyData = [];
-$message = "";
-
-// Check if NID number is set in form submission
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nidnumber'])) {
-    $nidNumber = $_POST['nidnumber'];
-
-    // Query to fetch family data by NID Number
-    $query = "SELECT * FROM users WHERE nid_number = ?";
-    $stmt = $conn->prepare($query);
-
-    if ($stmt) {
-        $stmt->bind_param("s", $nidNumber);
-        
-        if ($stmt->execute()) {
-            $result = $stmt->get_result();
-            if ($result->num_rows > 0) {
-                $familyData = $result->fetch_assoc();
-            } else {
-                $message = "No family found with the specified NID Number.";
-            }
-            $result->close();
-        } else {
-            $message = "Error fetching family data: " . $stmt->error;
-        }
-        $stmt->close();
-    } else {
-        $message = "Error preparing the statement: " . $conn->error;
-    }
+// Count total rows for pagination
+$count_query = "SELECT COUNT(*) as total_rows FROM users WHERE balance >= ?";
+$count_stmt = $conn->prepare($count_query);
+$count_stmt->bind_param("i", $search_param);
+if ($count_stmt->execute()) {
+    $count_result = $count_stmt->get_result();
+    $total_rows = $count_result->fetch_assoc()['total_rows'] ?? 0;
+} else {
+    $total_rows = 0;
 }
+$count_stmt->close();
 
-$conn->close(); // Close the connection after all queries are executed
+$total_pages = ceil($total_rows / $limit);
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -159,7 +75,7 @@ $conn->close(); // Close the connection after all queries are executed
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Family Profile</title>
+    <title>Family Profile - Amount Search</title>
     <meta content="" name="keywords">
     <meta content="" name="description">
     <meta content="Hridoy Jomadder" name="author">
@@ -271,28 +187,82 @@ $conn->close(); // Close the connection after all queries are executed
             </div>
         </div>
      <!-- Star End -->
-    <br><br>
-           <div class="container">           
-        <h3>Details: </h3>
-        <div style="color:black; margin: 25px;">
-        <?php if (!empty($familyData)): ?>
-            <div class="family-profile">
-                <p><strong>Family Name:</strong> <?= htmlspecialchars($familyData['family_name'] ?? 'Not Available') ?></p>
-                <p><strong>NID Number:</strong> <?= htmlspecialchars($familyData['nid_number'] ?? 'Not Available') ?></p>
-                <p><strong>Full Name:</strong> <?= htmlspecialchars($familyData['full_name'] ?? 'Not Available') ?></p>
-                <p><strong>Father's Name:</strong> <?= htmlspecialchars($familyData['father_name'] ?? 'Not Available') ?></p>
-                <p><strong>Mother's Name:</strong> <?= htmlspecialchars($familyData['mother_name'] ?? 'Not Available') ?></p>
-                <p><strong>Mobile Number:</strong> <?= htmlspecialchars($familyData['mobile_number'] ?? 'Not Available') ?></p>
-                <p><strong>Number of Family Members:</strong> <?= htmlspecialchars($familyData['family_members'] ?? 'Not Available') ?></p><br>
-                <img src="<?= htmlspecialchars($familyData['family_image'] ?? 'uploads/default-image.jpg') ?>" alt="Family Image" style="max-width: 100%; height: auto;">
-            </div>
-        <?php else: ?>
-            <!-- <p><?= htmlspecialchars($message) ?></p> -->
-        <?php endif; ?>
+    <h1 class="text-center">Top or Low Amount Search</h1>
+    <div class="container">
+    <div style="width: 100%;">
+    <form method="POST" action="" class="mb-4">
+        <label for="search">Enter Amount:</label>
+        <input type="text" name="search" id="search" class="form-control" placeholder="Enter amount" value="<?php echo htmlspecialchars($search); ?>" required>
+        <button type="submit" class="btn btn-primary mt-2">Search</button>
+    </form>
     </div>
-</div>   
+</div>
+    <div class="container">
 
+    <?php if (!empty($message)): ?>
+        <p class="message"><?php echo htmlspecialchars($message); ?></p>
+    <?php endif; ?>
 
+    <?php if (!empty($users)): ?>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Family Name</th>
+                    <th>Full Name</th>
+                    <th>Profile Image</th>
+                    <th>Family Members</th>
+                    <th>Mobile</th>
+                    <th>NID Card</th>
+                    <th>Family Card Number</th>
+                    <th>Job/Company Name</th>
+                    <th>Job/Company Designation</th>
+                    <th>Salary</th>
+                    <th>Total Amount (Taka)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($users as $user): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($user['id']); ?></td>
+                        <td><?php echo htmlspecialchars($user['family_name']); ?></td>
+                        <td><?php echo htmlspecialchars($user['full_name']); ?></td>
+                        <td>
+                            <?php if (!empty($user['family_image'])): ?>
+                                <img src="<?php echo htmlspecialchars($user['family_image']); ?>" alt="Profile Image" width="50">
+                            <?php else: ?>
+                                No Image
+                            <?php endif; ?>
+                        </td>
+                        <td><?php echo htmlspecialchars($user['family_members']); ?></td>
+                        <td><?php echo htmlspecialchars($user['mobile_number']); ?></td>
+                        <td><?php echo htmlspecialchars($user['nid_number']); ?></td>
+                        <td><?php echo htmlspecialchars($user['family_card_number']); ?></td>
+                        <td><?php echo htmlspecialchars($user['job']); ?></td>
+                        <td><?php echo htmlspecialchars($user['job_type']); ?></td>
+                        <td><?php echo number_format((float)$user['job_salary']); ?> Taka</td>
+                        <td><?php echo number_format((float)$user['total_amount']); ?> Taka</td>
+
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+</div>
+        <!-- Pagination -->
+        <nav>
+            <ul class="pagination justify-content-center">
+                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                    <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
+                        <a class="page-link" href="?page=<?php echo $i; ?>&sort_by=<?php echo $sort_by; ?>"><?php echo $i; ?></a>
+                    </li>
+                <?php endfor; ?>
+            </ul>
+        </nav>
+    <?php else: ?>
+        <p>No results found for "<?php echo htmlspecialchars($search); ?>".</p>
+    <?php endif; ?>
+    
+</div>
 <!-- Back to Top -->
 <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>

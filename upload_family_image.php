@@ -138,8 +138,8 @@ $conn->close();
         <a href="logout.php">Logout</a>
     </div>
 
-    <div class="container">
-    <!-- <div style="padding: 50px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);"> -->
+    <!-- <div class="container"> -->
+    <div style="padding: 50px; background-color: #0f7aff; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
     <div style="width: 100%;">         
         <h2 style="color:black;">Family Profile</h2>
    <p style="color:black;"><?= htmlspecialchars($message) ?></p>
@@ -151,8 +151,8 @@ $conn->close();
             <button type="submit">Upload</button>
         </form>
         </div>
-    <!-- </div> -->
-</div>
+    </div>
+<!-- </div> -->
 
 </body>
 </html>

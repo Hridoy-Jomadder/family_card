@@ -211,7 +211,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 <div class="header">
-    <h1>Welcome to Family Card</h1>
+    <h1 style="color:white;">Welcome to Family Card</h1>
     <h4 style="color:white;">Hand in hand, the country of pride is Shahid Zia's Bangladesh.</h4>
 </div>
 
@@ -227,7 +227,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
            <div class="container-fluid pt-4 px-4">
                 <div class="row g-4">
                 <?php if (!empty($message)): ?>
-                        <p style="color: black;text-align: center; font-size: 22px;"><?php echo htmlspecialchars($message); ?></p>
+                        <p style="color: black;text-align: center; font-size: 22px; margin-top: 0px;"><?php echo htmlspecialchars($message); ?></p>
                     <?php endif; ?>
                     <div class="col-sm-6 col-xl-3">
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">

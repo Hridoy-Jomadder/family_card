@@ -102,10 +102,10 @@ try {
     </div>
 
     <div class="container">
-    <div style="width: 100%;padding: 50px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex;">
+    <div style="width: 100%;padding: 50px; background-color: #0072ff; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex;">
         <div>
             <h2 style="color:white;">Family Profile</h2>
-            <img src="<?= htmlspecialchars($family_data['family_image'] ?? 'uploads/default-image.jpg') ?>" style="width: 800px; height: 300px;" alt="Family Image">
+            <img src="<?= htmlspecialchars($family_data['family_image'] ?? 'uploads/default-image.jpg') ?>" style="width: 800px; height: 300px; border-radius: 10px;" alt="Family Image">
 
             <?php if (!empty($family_data)): ?>
                 <div><br>
@@ -124,9 +124,11 @@ try {
             <?php else: ?>
                 <p style="color:white;"><?= htmlspecialchars($message) ?></p>
             <?php endif; ?>
+            <br>
+            <br>
             <h2 style="color:white;">Family Assets Information</h2>
             <?php if (!empty($family_data)): ?>
-                <div><br>
+                <div>
                     <p style="color:white;"><strong>Gold:</strong> <?= htmlspecialchars($family_data['gold'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Asset:</strong> <?= htmlspecialchars(string: $family_data['asset'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Family Members Assets:</strong> <?= htmlspecialchars($family_data['family_member_asset'] ?? 'Not Available') ?></p>
@@ -142,9 +144,9 @@ try {
     </div>
 
     <div class="container">
-    <div style="width: 100%;padding: 50px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex;">
+    <div style="width: 100%;padding: 50px; background-color: #0072ff; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex;">
         <div>
-    <h2>Edit Profile</h2>
+    <h2 style="color:white;">Edit Profile</h2>
         <?php if (!empty($message)): ?>
             <p style="color: green;"><?= htmlspecialchars($message) ?></p>
         <?php endif; ?>

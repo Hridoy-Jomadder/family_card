@@ -139,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div> -->
 
     <div class="container">
-    <div style="width: 100%; padding: 50px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex; margin: 5px;">
+    <div style="width: 100%; padding: 50px; background-color: #0072ff; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex; margin: 5px;">
     <div>
         <h2>Job/Company Edit</h2>
         <?php if (!empty($message2)): ?>

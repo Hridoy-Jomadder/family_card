@@ -147,7 +147,7 @@ $conn->close(); // Close the connection after all queries are executed
         <a href="logout.php">Logout</a>
     </div>
     <div class="container">
-    <div style="width: 100%;padding: 50px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex;">
+    <div style="width: 100%;padding: 50px; background-color: #0072ff; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex;">
         <div>
             <h2 style="color:white;">Family Information</h2>
             <?php if (!empty($family_data)): ?>
@@ -159,8 +159,8 @@ $conn->close(); // Close the connection after all queries are executed
                     <p style="color:white;"><strong>Mother's Name:</strong> <?= htmlspecialchars($family_data['mother_name'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Mobile Number:</strong> <?= htmlspecialchars($family_data['mobile_number'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Family Address:</strong> <?= htmlspecialchars($family_data['family_address'] ?? 'Not Available') ?></p>
-                    <img src="<?= htmlspecialchars($family_data['family_image'] ?? 'uploads/default-image.jpg') ?>" alt="Family Image" style="width: 800px; height: 300px;">
+                    <p style="color:white;"><strong>Family Address:</strong> <?= htmlspecialchars($family_data['family_address'] ?? 'Not Available') ?></p><br>
+                    <img src="<?= htmlspecialchars($family_data['family_image'] ?? 'uploads/default-image.jpg') ?>" alt="Family Image" style="width: 800px; height: 300px;border-radius: 10px;">
                 </div>
             <?php else: ?>
                 <p style="color:white;"><?= htmlspecialchars($message) ?></p>

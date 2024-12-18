@@ -138,10 +138,10 @@ $conn->close();
         <a href="logout.php">Logout</a>
     </div>
 
-    <!-- <div class="container"> -->
     <div style="padding: 50px; background-color: #0f7aff; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
-    <div style="width: 100%;">         
-        <h2 style="color:black;">Family Profile</h2>
+        <div class="container">
+<div style="width: 100%;">         
+        <h2 style="color:black;">Family image change</h2>
    <p style="color:black;"><?= htmlspecialchars($message) ?></p>
         <form action="upload_family_image.php" method="post" enctype="multipart/form-data">
             <label for="nidnumber">NID Number:</label>
@@ -152,7 +152,7 @@ $conn->close();
         </form>
         </div>
     </div>
-<!-- </div> -->
+</div>
 
 </body>
 </html>

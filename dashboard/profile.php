@@ -297,16 +297,13 @@ $conn->close();
 <div class="container">
 <div style="width: 100%; text-align: center; padding: 50px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
     <div class="profile-container">
-        <h2>Welcome, <?= htmlspecialchars($username) ?></h2>
-        <img src="<?= htmlspecialchars($profile_image) ?>" alt="Profile Image" class="profile-image" style="">
+        <h2>Welcome to <?= htmlspecialchars($username) ?></h2>
+        <img src="<?= htmlspecialchars($profile_image) ?>" alt="Profile Image" class="profile-image">
+        <br>
+        <br>
         <p>Email: <?= htmlspecialchars($email) ?></p>
         <p>Role: <?= htmlspecialchars($role) ?></p>
 
-        <form action="" method="POST" enctype="multipart/form-data">
-            <label for="profile_image">Update Profile Image:</label>
-            <input type="file" name="profile_image" id="profile_image" accept="image/*" required>
-            <button type="submit">Upload</button>
-        </form>
 
         <?php if ($message): ?>
             <p class="message"><?= htmlspecialchars($message) ?></p>
@@ -342,9 +339,18 @@ $conn->close();
         <?php else: ?>
             <!-- <p><?= htmlspecialchars($message) ?></p> -->
         <?php endif; ?>
+
         </div>
     </div>
 </div>   
+
+        <div class="profile-container">
+        <form action="" method="POST" enctype="multipart/form-data">
+            <label for="profile_image">Update Profile Image:</label>
+            <input type="file" name="profile_image" id="profile_image" accept="image/*" required>
+            <button type="submit">Upload</button>
+        </form>
+        </div>
 
 <!-- Back to Top -->
 <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>

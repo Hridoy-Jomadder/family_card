@@ -7,121 +7,111 @@ session_start();
 
 // Initialize variables
 $family_data = [];
-$products = null; // Set to null initially
+$products = null;
 $message = "";
-$role = null; // Initialize $role to avoid undefined variable errors
-$user = null; // Initialize $user to avoid undefined variable errors
+$role = null;
+$user = null;
 
-// Check if user is logged in and session contains a valid user ID
+// Pagination parameters
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1; // Ensure page is at least 1
+$limit = 10;
+$offset = ($page - 1) * $limit; // Calculate the offset once
+
+// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    // Redirect to login page if no user ID in session
     header("Location: login.php");
     exit;
-} else {
-    $user_id = $_SESSION['user_id']; // Retrieve user ID from session
 }
 
-// Create a Database instance
-$DB = new Database();
-$conn = $DB->connect(); // Assuming `connect` is a method in your `Database` class
+$user_id = $_SESSION['user_id']; // Retrieve user ID
 
-// Check database connection
+// Create a Database instance and connect
+$DB = new Database();
+$conn = $DB->connect();
+
 if ($conn->connect_error) {
     die("Database connection failed: " . $conn->connect_error);
 }
 
-// Fetch user data based on the user ID
+// Fetch user data
 $stmt = $conn->prepare("SELECT * FROM leader WHERE id = ?");
 if (!$stmt) {
     die("SQL Prepare Error: " . $conn->error);
 }
 
-$stmt->bind_param("i", $user_id); // Bind the user ID as an integer
+$stmt->bind_param("i", $user_id);
 
 if ($stmt->execute()) {
     $result = $stmt->get_result();
 
     if ($result && $result->num_rows > 0) {
-        $user = $result->fetch_assoc(); // Fetch user data
+        $user = $result->fetch_assoc();
         $family_data = $user;
+        $role = $user['role'];
 
-        // Check user role to determine access level
-        $role = $user['role']; // Get the user's role
-
-        // Example role-based logic
-        if ($role == 'Admin') {
+        // Role-based message
+        if ($role === 'Admin') {
             $message = "Welcome, Admin. You have full access.";
-        } elseif ($role == 'Editor') {
+        } elseif ($role === 'Editor') {
             $message = "Welcome, Editor. You can edit family data.";
-        } elseif ($role == 'User') {
+        } elseif ($role === 'User') {
             $message = "Welcome, User. You have limited access.";
         }
     } else {
         $message = "No user data found.";
     }
 } else {
-    // Error in SQL execution
     die("Error executing query: " . $stmt->error);
 }
 
 $stmt->close();
 
-// Ensure $role is defined
-$role = $family_data['role'] ?? null;
-
 // Fetch products if user is Admin or Editor
 if ($role === 'Admin' || $role === 'Editor') {
     $stmt = $conn->prepare("
-    SELECT g.*, u.family_name 
-    FROM gift g
-    JOIN users u ON g.family_id = u.id
-    WHERE u.id = ?
+        SELECT g.*, u.family_name 
+        FROM gift g
+        JOIN users u ON g.family_id = u.id
+        WHERE u.id = ?
     ");
-    if (!$stmt) {
+
+    if ($stmt) {
+        $stmt->bind_param("i", $user_id);
+        if ($stmt->execute()) {
+            $products = $stmt->get_result();
+        } else {
+            die("Query Execution Error: " . $stmt->error);
+        }
+        $stmt->close();
+    } else {
         die("SQL Prepare Error: " . $conn->error);
     }
-
-    $stmt->bind_param("i", $user_id);
-
-    if ($stmt->execute()) {
-        $products = $stmt->get_result();
-    } else {
-        die("Query Execution Error: " . $stmt->error);
-    }
-
-    $stmt->close();
-} else {
-    $products = null;
 }
 
-// Initialize variables for search and pagination
-$limit = 10; // Rows per page
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$offset = ($page - 1) * $limit;
+// Handle search input and fetch users
 $search = $_POST['search'] ?? '';
-
-// Prepare SQL with filtering and pagination
-$query = "SELECT id, family_name, full_name, family_image, family_members, mobile_number, nid_number, family_card_number, job, job_type, job_salary, balance, gold, asset, family_member_asset, family_member_salary, balance, zakat
-          FROM users 
-          WHERE family_name LIKE ? 
-          LIMIT ? OFFSET ?";
+$query = "
+    SELECT id, family_name, full_name, family_image, family_members, mobile_number, nid_number, family_card_number, job, job_type, job_salary, balance, gold, asset, family_member_asset, family_member_salary, balance, zakat
+    FROM users 
+    WHERE family_name LIKE ? 
+    LIMIT ? OFFSET ?";
 $stmt = $conn->prepare($query);
-if (!$stmt) {
+
+if ($stmt) {
+    $search_param = "%$search%";
+    $stmt->bind_param("sii", $search_param, $limit, $offset);
+
+    if ($stmt->execute()) {
+        $result = $stmt->get_result();
+        $users = $result->fetch_all(MYSQLI_ASSOC);
+    } else {
+        $message = "Error fetching users: " . $stmt->error;
+    }
+} else {
     die("SQL Prepare Error: " . $conn->error);
 }
 
-$search_param = "%$search%";
-$stmt->bind_param("sii", $search_param, $limit, $offset);
-
-// Execute and fetch results
-if ($stmt->execute()) {
-    $result = $stmt->get_result();
-    $users = $result->fetch_all(MYSQLI_ASSOC);
-} else {
-    $message = "Error fetching users: " . $stmt->error;
-}
-
-// Create an array to store success or error messages
+// Handle gift submissions
 $gift_messages = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -130,29 +120,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $product = $_POST['product_' . $userId] ?? null;
         $vehicle = $_POST['vehicles_' . $userId] ?? null;
 
-        // Fetch the correct user data
         $user = array_filter($users, function ($u) use ($userId) {
             return $u['id'] == $userId;
         });
-        $user = reset($user); // Get the first matching user
-        
-        // Ensure full_name is not null
+
+        $user = reset($user);
         $fullName = $user['full_name'] ?? null;
+
         if (!$fullName) {
             $gift_messages[$userId] = "Error: Full name is missing for user ID $userId.";
             continue;
         }
 
         if ($giftAction === 'gift') {
-            $query = "INSERT INTO gift (family_id, full_name, family_card_number, gift_name, agricultural_product, product_name, vehicle, value, description, issued_date) 
-                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $query = "
+                INSERT INTO gift (family_id, full_name, family_card_number, gift_name, agricultural_product, product_name, vehicle, value, description, issued_date) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($query);
 
             if ($stmt) {
-                $familyId = $user['id']; // Assuming the user's ID is the family_id
+                $familyId = $user['id'];
                 $familyCardNumber = $user['family_card_number'] ?? '';
-                $giftName = "Custom Gift"; // Define a default or dynamic gift name
-                $value = 0; // Assign appropriate values
+                $giftName = "Custom Gift";
+                $value = 0;
                 $description = "Gift Description";
                 $issuedDate = date('Y-m-d H:i:s');
 
@@ -170,6 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -397,6 +388,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </div>
 
+
 <!-- Family assets Start -->
 <div class="container">
 <div class="container-fluid pt-4 px-4">
@@ -540,6 +532,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </div>
 <!-- End Products Section -->
+
+<!-- Pagination Logic Start -->
+<div class="container">
+    <div class="pagination">
+        <?php
+        // Fetch total number of records
+        $count_query = "SELECT COUNT(*) as total_records FROM users WHERE family_name LIKE ?";
+        $stmt = $conn->prepare($count_query);
+        if ($stmt) {
+            $stmt->bind_param("s", $search_param);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $total_records = $result->fetch_assoc()['total_records'];
+            $stmt->close();
+
+            // Calculate total pages
+            $total_pages = ceil($total_records / $limit);
+
+            // Display pagination links
+            if ($total_pages > 1) {
+                echo '<nav aria-label="Page navigation">';
+                echo '<ul class="pagination justify-content-center">';
+
+                // Previous page link
+                if ($page > 1) {
+                    $prev_page = $page - 1;
+                    echo "<li class='page-item'><a class='page-link' href='?page=$prev_page'>Previous</a></li>";
+                }
+
+                // Page number links
+                for ($i = 1; $i <= $total_pages; $i++) {
+                    $active = $i == $page ? 'active' : '';
+                    echo "<li class='page-item $active'><a class='page-link' href='?page=$i'>$i</a></li>";
+                }
+
+                // Next page link
+                if ($page < $total_pages) {
+                    $next_page = $page + 1;
+                    echo "<li class='page-item'><a class='page-link' href='?page=$next_page'>Next</a></li>";
+                }
+
+                echo '</ul>';
+                echo '</nav>';
+            }
+        } else {
+            echo "Error fetching total records: " . $conn->error;
+        }
+        ?>
+    </div>
+</div>
+<!-- Pagination Logic End -->
 
 
 

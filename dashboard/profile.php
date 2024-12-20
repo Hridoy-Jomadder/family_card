@@ -151,7 +151,72 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nidnumber'])) {
     }
 }
 
-$conn->close(); // Close the connection after all queries are executed
+
+// Database connection
+$DB = new Database();
+$conn = $DB->connect();
+
+// Fetch user data
+$stmt = $conn->prepare("SELECT * FROM leader WHERE id = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
+$stmt->close();
+
+// Display profile data
+$profile_image = $user['profile_image'] ?? 'uploads/default-profile.jpg';
+$username = $user['username'] ?? 'N/A';
+$email = $user['email'] ?? 'N/A';
+$role = $user['role'] ?? 'N/A';
+
+// Handle profile image upload
+$message = "";
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile_image'])) {
+    $upload_dir = "uploads/";
+    $file = $_FILES['profile_image'];
+
+    // Ensure the uploads directory exists
+    if (!is_dir($upload_dir)) {
+        mkdir($upload_dir, 0755, true);
+    }
+
+    // Check for upload errors
+    if ($file['error'] === UPLOAD_ERR_OK) {
+        $file_ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $allowed_types = ['jpg', 'jpeg', 'png', 'gif'];
+
+        if (in_array($file_ext, $allowed_types)) {
+            $new_file_name = "profile_" . $user_id . "." . $file_ext;
+            $file_path = $upload_dir . $new_file_name;
+
+            // Move uploaded file to the server directory
+            if (move_uploaded_file($file['tmp_name'], $file_path)) {
+                // Update database with new profile image path
+                $stmt = $conn->prepare("UPDATE leader SET profile_image = ? WHERE id = ?");
+                $stmt->bind_param("si", $file_path, $user_id);
+
+                if ($stmt->execute()) {
+                    $profile_image = $file_path; // Update displayed image
+                    $message = "Image updated successfully!";
+                } else {
+                    $message = "Failed to update the database: " . $stmt->error;
+                }
+
+                $stmt->close();
+            } else {
+                $message = "Failed to move uploaded file. Check directory permissions.";
+            }
+        } else {
+            $message = "Invalid file type. Only JPG, PNG, and GIF are allowed.";
+        }
+    } else {
+        $message = "Error uploading file. Error code: " . $file['error'];
+    }
+}
+
+// Close database connection
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -191,6 +256,29 @@ $conn->close(); // Close the connection after all queries are executed
     <!-- Replace HTTP with HTTPS in the CDN links -->
         <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+        <style>
+        .profile-container {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            margin: 20px auto;
+            border-radius: 10px;
+            width: 80%;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .profile-image {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            border: 3px solid #4CAF50;
+        }
+        .message {
+            margin: 10px 0;
+            color: green;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 <div class="header">
@@ -208,11 +296,23 @@ $conn->close(); // Close the connection after all queries are executed
 </div>
 <div class="container">
 <div style="width: 100%; text-align: center; padding: 50px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
-    <h3 style="color:white;"><?= htmlspecialchars($message) ?></h3>
-        <h3 style="color:black;">Family Profile</h3><br>
-        <p style="color:black;">Username: <?php echo htmlspecialchars($family_data['username']); ?></p>
-        <p style="color:black;">Email: <?php echo htmlspecialchars($family_data['email']); ?></p>
-        <p style="color:black;">Role: <?php echo htmlspecialchars($family_data['role']); ?></p>
+    <div class="profile-container">
+        <h2>Welcome, <?= htmlspecialchars($username) ?></h2>
+        <img src="<?= htmlspecialchars($profile_image) ?>" alt="Profile Image" class="profile-image" style="">
+        <p>Email: <?= htmlspecialchars($email) ?></p>
+        <p>Role: <?= htmlspecialchars($role) ?></p>
+
+        <form action="" method="POST" enctype="multipart/form-data">
+            <label for="profile_image">Update Profile Image:</label>
+            <input type="file" name="profile_image" id="profile_image" accept="image/*" required>
+            <button type="submit">Upload</button>
+        </form>
+
+        <?php if ($message): ?>
+            <p class="message"><?= htmlspecialchars($message) ?></p>
+        <?php endif; ?>
+    </div>
+    
 </div>
     </div>
     <br><br>

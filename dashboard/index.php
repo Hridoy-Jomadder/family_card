@@ -389,6 +389,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 
+<div class="container">
+    <div class="container-fluid pt-4 px-4">
+        <div class="bg-light text-center rounded p-4">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h6 class="mb-0">Family Information</h6>
+            </div>
+            <div class="table-responsive">
+                <table class="table text-start align-middle table-bordered table-hover mb-0">
+                    <thead>
+                        <tr class="text-dark">
+                            <th scope="col">ID</th>
+                            <th scope="col">Family Name</th>
+                            <th scope="col">Full Name</th>
+                            <th scope="col">Profile Image</th>
+                            <th scope="col">Family Members</th>
+                            <th scope="col">Mobile</th>
+                            <th scope="col">NID Card</th>
+                            <th scope="col">Family Card Number</th>
+                            <th scope="col">Job/Company Name</th>
+                            <th scope="col">Job/Company Designation</th>
+                            <th scope="col">Salary</th>
+                            <th scope="col">Balance</th>
+                            <th scope="col">Total Taka (Balance + Salary)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        if (!empty($users)) {
+                            foreach ($users as $user): 
+                                $family_id = $user['id'];
+                                
+                                // Calculate total family balance and salary
+                                $stmt = $conn->prepare("SELECT SUM(balance) + SUM(job_salary) AS total_sum FROM users WHERE family_card_number = ?");
+                                $stmt->bind_param("s", $user['family_card_number']);
+                                $stmt->execute();
+                                $result = $stmt->get_result();
+                                $family_total = $result->fetch_assoc()['total_sum'] ?? 0;
+                                ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($user['id']); ?></td>
+                                    <td><?php echo htmlspecialchars($user['family_name']); ?></td>
+                                    <td><?php echo htmlspecialchars($user['full_name']); ?></td>
+                                    <td>
+                                        <img src="<?= htmlspecialchars($user['family_image'] ?? 'uploads/default-image.jpg') ?>" alt="" style="width: 60px; height: 80px;">
+                                    </td>
+                                    <td><?php echo isset($user['family_members']) ? htmlspecialchars($user['family_members']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['mobile_number']) ? htmlspecialchars($user['mobile_number']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['nid_number']) ? htmlspecialchars($user['nid_number']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['family_card_number']) ? htmlspecialchars($user['family_card_number']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['job']) ? htmlspecialchars($user['job']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['job_type']) ? htmlspecialchars($user['job_type']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['job_salary']) ? htmlspecialchars($user['job_salary']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['balance']) ? htmlspecialchars($user['balance']) : 'N/A'; ?></td>
+                                    <td><?php echo htmlspecialchars(number_format($family_total, 0)); ?>TK</td>
+                                </tr>
+                        <?php endforeach; 
+                        } else {
+                            echo "<tr><td colspan='13'>No family data available.</td></tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Family assets Start -->
 <div class="container">
 <div class="container-fluid pt-4 px-4">
@@ -409,8 +476,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <th scope="col">Assets</th>
                         <!-- <th scope="col">Job/Commpany</th>
                         <th scope="col">Job/Commpany Designation</th> -->
-                        <th scope="col">Job/Commpany Salary</th>
-                        <th scope="col">Balance</th>
+                        <!-- <th scope="col">Job/Commpany Salary</th> -->
+                        <th scope="col">Total Amount(Taka)</th>
                         <!-- <th scope="col">Zakat</th> -->
                     </tr>
                 </thead>
@@ -429,7 +496,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <td><?php echo isset($user['asset']) ? htmlspecialchars($user['asset']) : 'N/A'; ?></td>
                                     <!-- <td><?php echo isset($user['job']) ? htmlspecialchars($user['job']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['job_type']) ? htmlspecialchars($user['job_type']) : 'N/A'; ?></td> -->
-                                    <td><?php echo isset($user['job_salary']) ? htmlspecialchars($user['job_salary']) : 'N/A'; ?></td>
+                                    <!-- <td><?php echo isset($user['job_salary']) ? htmlspecialchars($user['job_salary']) : 'N/A'; ?></td> -->
                                     <td><?php echo isset($user['balance']) ? htmlspecialchars($user['balance']) : 'N/A'; ?></td>
                                     <!-- <td><?php echo isset($user['zakat']) ? htmlspecialchars($user['zakat']) : 'N/A'; ?></td> -->
                             </tr>

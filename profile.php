@@ -25,7 +25,7 @@ try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $updateFields = [
             'family_name', 'nid_number', 'full_name', 'father_name', 'mother_name',
-            'son_name_all', 'dau_name_all', 'mobile_number', 'family_members', 'family_address'
+            'son_name_all', 'dau_name_all', 'mobile_number', 'family_members', 'family_address','balance'
         ];
         $query = "UPDATE users SET " . implode(" = ?, ", $updateFields) . " = ? WHERE id = ?";
         $stmt = $conn->prepare($query);
@@ -120,6 +120,7 @@ try {
                     <p style="color:white;"><strong>Mobile Number:</strong> <?= htmlspecialchars($family_data['mobile_number'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Family Address:</strong> <?= htmlspecialchars($family_data['family_address'] ?? 'Not Available') ?></p>
+                    <p style="color:white;"><strong>Balance:</strong> <?= htmlspecialchars($family_data['balance'] ?? 'Not Available') ?> TK</p>
                 </div>
             <?php else: ?>
                 <p style="color:white;"><?= htmlspecialchars($message) ?></p>
@@ -132,7 +133,7 @@ try {
                     <p style="color:white;"><strong>Gold:</strong> <?= htmlspecialchars($family_data['gold'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Asset:</strong> <?= htmlspecialchars(string: $family_data['asset'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Family Members Assets:</strong> <?= htmlspecialchars($family_data['family_member_asset'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Family Members Salary:</strong> <?= htmlspecialchars($family_data['family_member_salary'] ?? 'Not Available') ?></p>
+                    <p style="color:white;"><strong>Family Members Salary:</strong> <?= htmlspecialchars($family_data['family_member_salary'] ?? 'Not Available') ?> TK</p>
                     <!-- <p style="color:white;"><strong>Family Card Number:</strong> <?= htmlspecialchars(string: $family_data['family_card_number'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p> -->
                 </div>
@@ -191,6 +192,10 @@ try {
             <div class="form-group">
                 <label for="family_address">Family Address:</label>
                 <input type="text" class="form-control" id="family_address" name="family_address" value="<?= htmlspecialchars($family_data['family_address'] ?? '') ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="balance">Balance(TK):</label>
+                <input type="text" class="form-control" id="balance" name="balance" value="<?= htmlspecialchars($family_data['balance'] ?? '') ?>" required>
             </div>
             <button type="submit" class="btn btn-primary">Save Changes</button>
         </form>

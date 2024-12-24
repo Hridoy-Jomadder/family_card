@@ -127,7 +127,7 @@ $stmt->close();
                     <p style="color:white;"><strong>Gold:</strong> <?= htmlspecialchars($family_data['gold'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Asset:</strong> <?= htmlspecialchars(string: $family_data['asset'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Family Members Assets:</strong> <?= htmlspecialchars($family_data['family_member_asset'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Family Members Salary:</strong> <?= htmlspecialchars($family_data['family_member_salary'] ?? 'Not Available') ?></p>
+                    <p style="color:white;"><strong>Family Members Salary:</strong> <?= htmlspecialchars($family_data['family_member_salary'] ?? 'Not Available') ?> TK</p>
                     <!-- <p style="color:white;"><strong>Family Card Number:</strong> <?= htmlspecialchars(string: $family_data['family_card_number'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p> -->
                 </div>
@@ -159,12 +159,12 @@ $stmt->close();
                     value="<?= htmlspecialchars($family_data['asset'] ?? '') ?>" required>
             </div>
             <div class="form-group">
-                <label for="family_member_asset">Family Members Assets:</label>
+                <label for="family_member_asset">Family Members Assets<br> (e.g., Decimal, Katha, Bigha, Acre, Hectare, Square Feet, Square Meter):</label>
                 <input type="text" class="form-control" id="family_member_asset" name="family_member_asset" 
                     value="<?= htmlspecialchars($family_data['family_member_asset'] ?? '') ?>" required>
             </div>
             <div class="form-group">
-                <label for="family_member_salary">Family Members Salary:</label>
+                <label for="family_member_salary">Family Members Salary(TK):</label>
                 <input type="text" class="form-control" id="family_member_salary" name="family_member_salary" 
                     value="<?= htmlspecialchars($family_data['family_member_salary'] ?? '') ?>" required>
             </div>

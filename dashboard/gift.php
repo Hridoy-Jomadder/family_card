@@ -257,7 +257,7 @@ $conn->close(); // Close the database connection
                     <th scope="col">Agricultural Product</th>
                     <th scope="col">Product Name</th>
                     <th scope="col">Vehicle</th>
-                    <th scope="col">Value</th>
+                    <!-- <th scope="col">Value</th> -->
                     <th scope="col">Issued Date</th>
                 </tr>
             </thead>
@@ -272,7 +272,7 @@ $conn->close(); // Close the database connection
                             <td><?php echo htmlspecialchars($gift['agricultural_product'] ?? 'N/A'); ?></td>
                             <td><?php echo htmlspecialchars($gift['product_name'] ?? 'N/A'); ?></td>
                             <td><?php echo htmlspecialchars($gift['vehicle'] ?? 'N/A'); ?></td>
-                            <td><?php echo htmlspecialchars(number_format($gift['value'] ?? 0, 2)); ?></td>
+                            <!-- <td><?php echo htmlspecialchars(number_format($gift['value'] ?? 0, 2)); ?></td> -->
                             <td><?php echo htmlspecialchars($gift['created_at'] ?? 'N/A'); ?></td>
                         </tr>
                     <?php endforeach; ?>

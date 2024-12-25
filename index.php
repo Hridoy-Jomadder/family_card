@@ -42,7 +42,7 @@ $stmt->close();
 // Fetch family gifts based on family card number
 if (!empty($family_data['family_card_number'])) {
     $stmt = $conn->prepare("
-        SELECT id, full_name, family_card_number, agricultural_product, product_name, vehicle, created_at 
+        SELECT id, full_name, family_card_number, agricultural_product, product_name, vehicle, gift_image, created_at 
         FROM gift 
         WHERE family_card_number = ?
     ");
@@ -181,6 +181,7 @@ $conn->close(); // Close the connection after all queries are executed
         <a href="profile.php">Profile</a>
         <a href="asset.php">Asset</a>
         <a href="jobcompany.php">Job/Company</a>
+        <a href="gift.php">Gift</a>
         <a href="upload_family_image.php">Upload Image</a>
         <a href="logout.php">Logout</a>
     </div>
@@ -240,16 +241,10 @@ $conn->close(); // Close the connection after all queries are executed
                                 <td><?= htmlspecialchars($row['product_name'] ?? 'N/A') ?></td>
                                 <td><?= htmlspecialchars($row['vehicle'] ?? 'N/A') ?></td>
                                 <td><?= htmlspecialchars($row['created_at'] ?? 'N/A') ?></td>
-                                <td>
-                                    <form method="POST" enctype="multipart/form-data">
-                                        <input type="file" name="gift_image" accept="image/*" required>
-                                        <input type="hidden" name="gift_id" value="<?= htmlspecialchars($row['id']) ?>">
-                                        <button type="submit" class="btn btn-sm btn-primary">Upload</button>
-                                    </form>
-                                    <?php if (!empty($row['image_path'])): ?>
-                                        <img src="<?= htmlspecialchars($row['image_path']) ?>" alt="Gift Image" style="max-width: 100px; max-height: 100px; margin-top: 10px;">
-                                    <?php endif; ?>
-                                </td>
+                                <td><?php if (!empty($row['gift_image'])): ?>
+                                    <img src="<?= htmlspecialchars($row['gift_image']) ?>" alt="Gift Image" style="max-width: 100px; max-height: 100px; margin-top: 10px;">
+                                <?php endif; ?>
+                            </td>
                             </tr>
                         <?php endwhile; ?>
                     <?php else: ?>

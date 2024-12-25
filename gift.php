@@ -42,7 +42,7 @@ $stmt->close();
 // Fetch family gifts based on family card number
 if (!empty($family_data['family_card_number'])) {
     $stmt = $conn->prepare("
-        SELECT id, full_name, family_card_number, agricultural_product, product_name, vehicle, created_at 
+        SELECT id, full_name, family_card_number, agricultural_product, product_name, vehicle, gift_image, created_at 
         FROM gift 
         WHERE family_card_number = ?
     ");
@@ -89,6 +89,40 @@ function updateFamilyCardNumberOnce($conn, $user_id) {
 
 // ফ্যামিলি কার্ড নাম্বার আপডেট করার চেষ্টা করুন
 $message .= updateFamilyCardNumberOnce($conn, $user_id);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['gift_image'])) {
+    $upload_dir = "uploads/";
+    $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
+    $max_file_size = 2 * 1024 * 1024; // 2MB
+
+    $gift_id = $_POST['gift_id']; // ID of the gift to update
+    $file = $_FILES['gift_image'];
+
+    if ($file['error'] === UPLOAD_ERR_OK) {
+        $file_type = mime_content_type($file['tmp_name']);
+        if (in_array($file_type, $allowed_types) && $file['size'] <= $max_file_size) {
+            $file_name = uniqid() . "_" . basename($file['name']);
+            $file_path = $upload_dir . $file_name;
+
+            if (move_uploaded_file($file['tmp_name'], $file_path)) {
+                $stmt = $conn->prepare("UPDATE gift SET gift_image = ? WHERE id = ?");
+                $stmt->bind_param("si", $file_path, $gift_id);
+                if ($stmt->execute()) {
+                    $message = "Image uploaded and updated successfully.";
+                } else {
+                    $message = "Failed to update image in the database: " . $stmt->error;
+                }
+                $stmt->close();
+            } else {
+                $message = "Failed to upload the image.";
+            }
+        } else {
+            $message = "Invalid file type or file size exceeded.";
+        }
+    } else {
+        $message = "Error during file upload: " . $file['error'];
+    }
+}
 
 $conn->close(); // Close the connection after all queries are executed
 
@@ -143,6 +177,7 @@ $conn->close(); // Close the connection after all queries are executed
         <a href="profile.php">Profile</a>
         <a href="asset.php">Asset</a>
         <a href="jobcompany.php">Job/Company</a>
+        <a href="gift.php">Gift</a>
         <a href="upload_family_image.php">Upload Image</a>
         <a href="logout.php">Logout</a>
     </div>
@@ -169,24 +204,42 @@ $conn->close(); // Close the connection after all queries are executed
                         </tr>
                     </thead>
                     <tbody>
-                     <?php if ($gift && $gift->num_rows > 0): ?>
-                        <?php while ($row = $gift->fetch_assoc()): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($row['id']) ?></td>
-                                <td><?= htmlspecialchars($row['full_name']) ?></td>
-                                <td><?= htmlspecialchars($row['family_card_number']) ?></td>
-                                <td><?= htmlspecialchars($row['agricultural_product'] ?? 'N/A') ?></td>
-                                <td><?= htmlspecialchars($row['product_name'] ?? 'N/A') ?></td>
-                                <td><?= htmlspecialchars($row['vehicle'] ?? 'N/A') ?></td>
-                                <td><?= htmlspecialchars($row['created_at'] ?? 'N/A') ?></td>
-                                <td><input></td>
-                            </tr>
-                        <?php endwhile; ?>
-                    <?php else: ?>
+                    <?php if ($gift && $gift->num_rows > 0): ?>
+                    <?php while ($row = $gift->fetch_assoc()): ?>
                         <tr>
-                            <td colspan="7">No gifts found for this family card number.</td>
+                            <td><?= htmlspecialchars($row['id']) ?></td>
+                            <td><?= htmlspecialchars($row['full_name']) ?></td>
+                            <td><?= htmlspecialchars($row['family_card_number']) ?></td>
+                            <td><?= htmlspecialchars($row['agricultural_product'] ?? 'N/A') ?></td>
+                            <td><?= htmlspecialchars($row['product_name'] ?? 'N/A') ?></td>
+                            <td><?= htmlspecialchars($row['vehicle'] ?? 'N/A') ?></td>
+                            <td><?= htmlspecialchars($row['created_at'] ?? 'N/A') ?></td>
+                            <td>
+                                <form method="POST" enctype="multipart/form-data">
+                                    <input type="file" name="gift_image" accept="image/*" required>
+                                    <input type="hidden" name="gift_id" value="<?= htmlspecialchars($row['id']) ?>">
+                                    <button type="submit" class="btn btn-sm btn-primary">Upload</button>
+                                </form>
+                                <?php if (!empty($row['gift_image'])): ?>
+                                <!-- Display the thumbnail -->
+                                <a href="<?= htmlspecialchars($row['gift_image']) ?>" target="_blank">
+                                    <img src="<?= htmlspecialchars($row['gift_image']) ?>" alt="Gift Image" style="max-width: 100px; max-height: 100px; margin-top: 10px;">
+                                </a>
+                                <!-- Button to open the image -->
+                                <br>
+                                <a href="<?= htmlspecialchars($row['gift_image']) ?>" target="_blank" class="btn btn-sm btn-secondary mt-2">View Full Image</a>
+                            <?php else: ?>
+                                <p>No image available</p>
+                            <?php endif; ?>
+
+                            </td>
                         </tr>
-                    <?php endif; ?>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="8">No gifts found for this family card number.</td>
+                    </tr>
+                <?php endif; ?>
 
                     </tbody>
                 </table>

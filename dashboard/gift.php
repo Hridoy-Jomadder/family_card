@@ -268,6 +268,7 @@ $conn->close(); // Close the database connection
                     <th scope="col">Vehicle</th>
                     <!-- <th scope="col">Value</th> -->
                     <th scope="col">Issued Date</th>
+                    <th scope="col">Picture</th>
                 </tr>
             </thead>
             <tbody>
@@ -283,6 +284,11 @@ $conn->close(); // Close the database connection
                             <td><?php echo htmlspecialchars($gift['vehicle'] ?? 'N/A'); ?></td>
                             <!-- <td><?php echo htmlspecialchars(number_format($gift['value'] ?? 0, 2)); ?></td> -->
                             <td><?php echo htmlspecialchars($gift['created_at'] ?? 'N/A'); ?></td>
+                            <td>
+                            <?php if (!empty($row['gift_image'])): ?>
+                                    <img src="<?= htmlspecialchars($row['gift_image']) ?>" alt="Gift Image" style="max-width: 100px; max-height: 100px; margin-top: 10px;">
+                                <?php endif; ?>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>

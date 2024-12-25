@@ -134,6 +134,7 @@ $conn->close();
         <a href="profile.php">Profile</a>
         <a href="asset.php">Asset</a>
         <a href="jobcompany.php">Job/Company</a>
+        <a href="gift.php">Gift</a>
         <a href="upload_family_image.php">Upload Image</a>
         <a href="logout.php">Logout</a>
     </div>

@@ -411,7 +411,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <th scope="col">Job/Company Designation</th>
                             <th scope="col">Salary</th>
                             <th scope="col">Balance</th>
-                            <th scope="col">Total Taka (Balance + Salary)</th>
+                            <th scope="col">Total Balance (Balance + Salary)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -442,7 +442,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <td><?php echo isset($user['job_type']) ? htmlspecialchars($user['job_type']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['job_salary']) ? htmlspecialchars($user['job_salary']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['balance']) ? htmlspecialchars($user['balance']) : 'N/A'; ?></td>
-                                    <td><?php echo htmlspecialchars(number_format($family_total, 0)); ?>TK</td>
+                                    <td><?php echo htmlspecialchars(number_format($family_total, 0)); ?> TK</td>
                                 </tr>
                         <?php endforeach; 
                         } else {

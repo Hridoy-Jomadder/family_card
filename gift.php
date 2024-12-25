@@ -90,44 +90,6 @@ function updateFamilyCardNumberOnce($conn, $user_id) {
 // ফ্যামিলি কার্ড নাম্বার আপডেট করার চেষ্টা করুন
 $message .= updateFamilyCardNumberOnce($conn, $user_id);
 
-// Handle image upload if the form is submitted
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['gift_image'])) {
-    $upload_dir = "uploads/"; // Directory to save images
-    $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
-    $max_file_size = 2 * 1024 * 1024; // 2MB
-
-    $gift_id = $_POST['gift_id']; // ID of the gift to update
-    $file = $_FILES['gift_image'];
-
-    // Validate the uploaded file
-    if ($file['error'] === UPLOAD_ERR_OK) {
-        $file_type = mime_content_type($file['tmp_name']);
-        if (in_array($file_type, $allowed_types) && $file['size'] <= $max_file_size) {
-            $file_name = uniqid() . "_" . basename($file['name']);
-            $file_path = $upload_dir . $file_name;
-
-            // Move the uploaded file to the desired directory
-            if (move_uploaded_file($file['tmp_name'], $file_path)) {
-                // Update the database with the image path
-                $stmt = $conn->prepare("UPDATE gift SET image_path = ? WHERE id = ?");
-                $stmt->bind_param("si", $file_path, $gift_id);
-                if ($stmt->execute()) {
-                    $message = "Image uploaded and updated successfully.";
-                } else {
-                    $message = "Failed to update image in the database: " . $stmt->error;
-                }
-                $stmt->close();
-            } else {
-                $message = "Failed to upload the image.";
-            }
-        } else {
-            $message = "Invalid file type or file size exceeded.";
-        }
-    } else {
-        $message = "Error during file upload: " . $file['error'];
-    }
-}
-
 $conn->close(); // Close the connection after all queries are executed
 
 ?>
@@ -184,29 +146,6 @@ $conn->close(); // Close the connection after all queries are executed
         <a href="upload_family_image.php">Upload Image</a>
         <a href="logout.php">Logout</a>
     </div>
-    <div class="container">
-    <div style="width: 100%;padding: 50px; background-color: #0072ff; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex;">
-        <div>
-            <h2 style="color:white;">Family Information</h2>
-            <?php if (!empty($family_data)): ?>
-                <div>
-                    <p style="color:white;"><strong>Family Name:</strong> <?= htmlspecialchars($family_data['family_name'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>NID Number:</strong> <?= htmlspecialchars($family_data['nid_number'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Full Name:</strong> <?= htmlspecialchars($family_data['full_name'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Father's Name:</strong> <?= htmlspecialchars($family_data['father_name'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Mother's Name:</strong> <?= htmlspecialchars($family_data['mother_name'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Mobile Number:</strong> <?= htmlspecialchars($family_data['mobile_number'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Family Address:</strong> <?= htmlspecialchars($family_data['family_address'] ?? 'Not Available') ?></p><br>
-                    <img src="<?= htmlspecialchars($family_data['family_image'] ?? 'uploads/default-image.jpg') ?>" alt="Family Image" style="width: 800px; height: 300px;border-radius: 10px;">
-                </div>
-            <?php else: ?>
-                <p style="color:white;"><?= htmlspecialchars($message) ?></p>
-            <?php endif; ?>
-        </div>
-     </div>
-    </div>
-
 <!-- Star Products Start -->
 <div class="container">
     <div class="container-fluid pt-4 px-4">
@@ -240,16 +179,7 @@ $conn->close(); // Close the connection after all queries are executed
                                 <td><?= htmlspecialchars($row['product_name'] ?? 'N/A') ?></td>
                                 <td><?= htmlspecialchars($row['vehicle'] ?? 'N/A') ?></td>
                                 <td><?= htmlspecialchars($row['created_at'] ?? 'N/A') ?></td>
-                                <td>
-                                    <form method="POST" enctype="multipart/form-data">
-                                        <input type="file" name="gift_image" accept="image/*" required>
-                                        <input type="hidden" name="gift_id" value="<?= htmlspecialchars($row['id']) ?>">
-                                        <button type="submit" class="btn btn-sm btn-primary">Upload</button>
-                                    </form>
-                                    <?php if (!empty($row['image_path'])): ?>
-                                        <img src="<?= htmlspecialchars($row['image_path']) ?>" alt="Gift Image" style="max-width: 100px; max-height: 100px; margin-top: 10px;">
-                                    <?php endif; ?>
-                                </td>
+                                <td><input></td>
                             </tr>
                         <?php endwhile; ?>
                     <?php else: ?>

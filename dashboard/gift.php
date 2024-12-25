@@ -109,7 +109,7 @@ $conn->close(); // Close the database connection
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Family Profile</title>
+    <title>Family Gifts</title>
 
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -243,10 +243,19 @@ $conn->close(); // Close the database connection
             <!-- Star End -->    
 
  <!-- Gifts Table -->
- <!-- Gifts Table -->
+  <div class="container">
+           <div class="container-fluid pt-4 px-4">
+                <div class="row g-4">
 <div class="bg-light text-center rounded p-4">
     <h6 class="mb-4">Family Gifts</h6>
     <div class="table-responsive">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+            <h6 class="mb-0">Family Gifts</h6>
+            <span class="text-primary mb-0" onclick="window.print()" style="cursor: pointer;">
+    <i class="fa fa-print"> Print</i>
+</span>
+
+        </div>
         <table class="table text-start align-middle table-bordered table-hover mb-0">
             <thead>
                 <tr class="text-dark">
@@ -284,6 +293,8 @@ $conn->close(); // Close the database connection
             </tbody>
         </table>
     </div>
+</div>
+</div>
 </div>
 
 

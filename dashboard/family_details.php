@@ -215,65 +215,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile_image'])) {
     }
 }
 
-
-
-// Fetch all user data for Admin Dashboard (This is to display the list of users)
-$query = "SELECT id, username, email, role, is_active FROM leader";
-$result = $conn->query($query); // Run the query to get all users
-
-if ($result) {
-    echo "Query executed successfully.";
-} else {
-    echo "Error executing query: " . $conn->error;
-}
-
-// Handle profile image upload
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile_image'])) {
-    $upload_dir = "uploads/";
-    $file = $_FILES['profile_image'];
-
-    // Ensure the uploads directory exists
-    if (!is_dir($upload_dir)) {
-        mkdir($upload_dir, 0755, true);
-    }
-
-    // Check for upload errors
-    if ($file['error'] === UPLOAD_ERR_OK) {
-        $file_ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-        $allowed_types = ['jpg', 'jpeg', 'png', 'gif'];
-
-        if (in_array($file_ext, $allowed_types)) {
-            $new_file_name = "profile_" . $user_id . "." . $file_ext;
-            $file_path = $upload_dir . $new_file_name;
-
-            // Move uploaded file to the server directory
-            if (move_uploaded_file($file['tmp_name'], $file_path)) {
-                // Update database with new profile image path
-                $stmt = $conn->prepare("UPDATE leader SET profile_image = ? WHERE id = ?");
-                $stmt->bind_param("si", $file_path, $user_id);
-
-                if ($stmt->execute()) {
-                    $profile_image = $file_path; // Update displayed image
-                    $message = "Image updated successfully!";
-                } else {
-                    $message = "Failed to update the database: " . $stmt->error;
-                }
-
-                $stmt->close();
-            } else {
-                $message = "Failed to move uploaded file. Check directory permissions.";
-            }
-        } else {
-            $message = "Invalid file type. Only JPG, PNG, and GIF are allowed.";
-        }
-    } else {
-        $message = "Error uploading file. Error code: " . $file['error'];
-    }
-}
-?>
-
-<!-- Close the database connection -->
-<?php
+// Close database connection
 $conn->close();
 ?>
 
@@ -352,69 +294,37 @@ $conn->close();
         <a href="logout.php" onclick="return confirm('Are you sure you want to log out?');">Logout</a>
         </div>
 </div>
-<div class="container">
-<div style="width: 100%; text-align: center; padding: 50px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
-    <div class="profile-container">
-        <h2>Welcome to <?= htmlspecialchars($username) ?></h2>
-        <img src="<?= htmlspecialchars($profile_image) ?>" alt="Profile Image" class="profile-image">
-        <br>
-        <br>
-        <p>Email: <?= htmlspecialchars($email) ?></p>
-        <p>Role: <?= htmlspecialchars($role) ?></p>
-
-
-        <?php if ($message): ?>
-            <p class="message"><?= htmlspecialchars($message) ?></p>
-        <?php endif; ?>
-    </div>
- </div>
-</div>
-
-<!-- Admin Dashboard HTML -->
-<div class="container">
-<div style="width: 100%; text-align: center; padding: 50px; background-color:rgb(9, 66, 136);color:rgb(253, 250, 251);">  
-    <h2 style="color:rgb(253, 250, 251);">Admin Dashboard</h2>
-    <table class="table table-bordered">
-        <thead style="color:rgb(253, 250, 251);">
-                <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Status</th>
-                </tr>
-        </thead>
-        <tbody style="color:rgb(253, 250, 251);">
-                <?php while ($row = $result->fetch_assoc()) : ?>
-                    <tr>
-                        <td><?= htmlspecialchars($row['id']) ?></td>
-                        <td><?= htmlspecialchars($row['username']) ?></td>
-                        <td><?= htmlspecialchars($row['email']) ?></td>
-                        <td><?= htmlspecialchars($row['role']) ?></td>
-                        <td>
-                            <?php if ($row['is_active']) : ?>
-                                <span class="badge badge-success">Active</span>
-                            <?php else : ?>
-                                <span class="badge badge-secondary">Inactive</span>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                <?php endwhile; ?>
-            </tbody>
-
-    </table>
-</div>
-</div>
-
-    <br><br>
+    
     <div class="container">
-        <div class="profile-container">
-        <form action="" method="POST" enctype="multipart/form-data">
-            <label for="profile_image">Update Profile Image:</label>
-            <input type="file" name="profile_image" id="profile_image" accept="image/*" required>
-            <button type="submit">Upload</button>
+            <div class="mt-4">
+        <form method="POST" action="">
+            <label for="nidnumber">Enter NID Number:</label>
+            <input type="text" name="nidnumber" id="nidnumber" required>
+            <button type="submit">View Profile</button>
         </form>
+        <br>
+           </div>
+           <div class="container">           
+        <h3>Family Details: </h3>
+        <div style="color:black; margin: 25px;">
+        <?php if (!empty($familyData)): ?>
+            <div class="family-profile">
+                <p><strong>Family Name:</strong> <?= htmlspecialchars($familyData['family_name'] ?? 'Not Available') ?></p>
+                <p><strong>NID Number:</strong> <?= htmlspecialchars($familyData['nid_number'] ?? 'Not Available') ?></p>
+                <p><strong>Full Name:</strong> <?= htmlspecialchars($familyData['full_name'] ?? 'Not Available') ?></p>
+                <p><strong>Father's Name:</strong> <?= htmlspecialchars($familyData['father_name'] ?? 'Not Available') ?></p>
+                <p><strong>Mother's Name:</strong> <?= htmlspecialchars($familyData['mother_name'] ?? 'Not Available') ?></p>
+                <p><strong>Mobile Number:</strong> <?= htmlspecialchars($familyData['mobile_number'] ?? 'Not Available') ?></p>
+                <p><strong>Number of Family Members:</strong> <?= htmlspecialchars($familyData['family_members'] ?? 'Not Available') ?></p><br>
+                <img src="<?= htmlspecialchars($familyData['family_image'] ?? 'uploads/default-image.jpg') ?>" alt="Family Image" style="max-width: 100%; height: auto;">
+            </div>
+        <?php else: ?>
+            <!-- <p><?= htmlspecialchars($message) ?></p> -->
+        <?php endif; ?>
+
         </div>
+    </div>
+</div>   
 
 <!-- Back to Top -->
 <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>

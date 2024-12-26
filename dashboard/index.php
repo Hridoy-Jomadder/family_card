@@ -313,7 +313,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endif; ?>
     <br>
     <div style="width: 42%; padding-left: 50px;">
-    <form method="POST" action="profile.php">
+    <form method="POST" action="family_details.php">
             <label for="nidnumber">Enter NID Number Search:</label>
             <input type="text" name="nidnumber" id="nidnumber" required>
             <button type="submit">View Profile</button>

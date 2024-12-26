@@ -110,6 +110,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <input type="text" id="number" name="number" required>
 
             <button type="submit">Register</button>
+
+            <p>Do have an account? <a href="login.php">Login</a>.</p>
         </form>
     </div>
 </body>

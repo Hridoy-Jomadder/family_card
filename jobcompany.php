@@ -141,6 +141,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="container">
     <div style="width: 100%; padding: 50px; background-color: #0072ff; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex; margin: 5px;">
+        <div>
+            <h2 style="color: white;">Job/Company Information</h2>
+            <?php if (!empty($family_data)): ?>
+                <div><br>
+                    <p style="color:white;"><strong>Job/Company:</strong> <?= htmlspecialchars($family_data['job'] ?? 'Not Available') ?></p>
+                    <p style="color:white;"><strong>Designation:</strong> <?= htmlspecialchars($family_data['job_type'] ?? 'Not Available') ?></p>
+                    <p style="color:white;"><strong>Annual Salary:</strong> <?= htmlspecialchars($family_data['job_salary'] ?? 'Not Available') ?> TK</p>
+                    <p style="color:white;"><strong>Family Members in Job/Company:</strong> <?= htmlspecialchars($family_data['family_jc_members'] ?? 'Not Available') ?></p>
+
+                    <!-- Dynamically handle family members' jobs/salaries -->
+                    <?php
+                    $roles = [
+                        'Father' => ['father_job', 'father_salary'],
+                        'Mother' => ['mother_job', 'mother_salary'],
+                        'Wife' => ['wife_job', 'wife_salary'],
+                        'Son' => ['son_job', 'son_salary'],
+                        'Son1' => ['son_job1', 'son_salary1'],
+                        'Son2' => ['son_job2', 'son_salary2'],
+                        'Daughter' => ['dau_job', 'dau_salary'],
+                        'Daughter1' => ['dau_job1', 'dau_salary1'],
+                        'Daughter2' => ['dau_job2', 'dau_salary2'],
+                        'Other Members' => ['family_other_members', 'family_other_members_salary']
+                    ];
+
+                    foreach ($roles as $label => [$jobField, $salaryField]) {
+                        echo "<p style='color:white;'><strong>{$label}'s Job:</strong> " . htmlspecialchars($family_data[$jobField] ?? 'Not Available') . "</p>";
+                        echo "<p style='color:white;'><strong>{$label}'s Salary:</strong> " . htmlspecialchars($family_data[$salaryField] ?? 'Not Available') . " TK</p>";
+                    }
+                    ?>
+                </div>
+            <?php else: ?>
+                <p style="color:white;"><?= htmlspecialchars($message) ?></p>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+
+    <div class="container">
+    <div style="width: 100%; padding: 50px; background-color: #0072ff; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex; margin: 5px;">
     <div>
         <h2>Job/Company Edit</h2>
         <?php if (!empty($message2)): ?>

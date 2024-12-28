@@ -1,3 +1,4 @@
+
 <?php
 include "classes/connection.php";
 
@@ -177,7 +178,7 @@ $conn->close(); // Close the connection after all queries are executed
     <h4 style="color:white;">Hand in hand, the country of pride is Shahid Zia's Bangladesh.</h4>
 </div>    
 <div class="navbar">
-        <a href="index.php" active>Home</a>
+        <a href="index.php">Home</a>
         <a href="profile.php">Profile</a>
         <a href="asset.php">Asset</a>
         <a href="jobcompany.php">Job/Company</a>
@@ -188,78 +189,13 @@ $conn->close(); // Close the connection after all queries are executed
     <div class="container">
     <div style="width: 100%;padding: 50px; background-color: #0072ff; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex;">
         <div>
-            <h2 style="color:white;">Family Information</h2>
-            <?php if (!empty($family_data)): ?>
-                <div>
-                    <p style="color:white;"><strong>Family Name:</strong> <?= htmlspecialchars($family_data['family_name'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>NID Number:</strong> <?= htmlspecialchars($family_data['nid_number'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Full Name:</strong> <?= htmlspecialchars($family_data['full_name'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Father's Name:</strong> <?= htmlspecialchars($family_data['father_name'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Mother's Name:</strong> <?= htmlspecialchars($family_data['mother_name'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Mobile Number:</strong> <?= htmlspecialchars($family_data['mobile_number'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Family Address:</strong> <?= htmlspecialchars($family_data['family_address'] ?? 'Not Available') ?></p><br>
-                    <img src="<?= htmlspecialchars($family_data['family_image'] ?? 'uploads/default-image.jpg') ?>" alt="Family Image" style="width: 800px; height: 300px;border-radius: 10px;">
-                </div>
-            <?php else: ?>
-                <p style="color:white;"><?= htmlspecialchars($message) ?></p>
-            <?php endif; ?>
+            <h2 style="color:white;">Note</h2>
+            <p></p>
         </div>
      </div>
     </div>
 
-<!-- Star Products Start -->
-<div class="container">
-    <div class="container-fluid pt-4 px-4">
-        <div class="bg-light text-center rounded p-4">
-            <div class="d-flex align-items-center justify-content-between mb-4">
-                <h6 class="mb-0">Family Gifts</h6>
-            </div>
-            <div class="table-responsive">
-                <table class="table text-start align-middle table-bordered table-hover mb-0">
-                    <thead>
-                        <tr class="text-dark">
-                            <th scope="col">ID</th>
-                            <th scope="col">Full Name</th>
-                            <th scope="col">Family Card Number</th>
-                            <th scope="col">Agricultural Product</th>
-                            <th scope="col">Product</th>
-                            <th scope="col">Home/Vehicles</th>
-                            <!-- <th scope="col">Balance</th> -->
-                            <th scope="col">Issued Date</th>
-                            <th scope="col">Picture</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                     <?php if ($gift && $gift->num_rows > 0): ?>
-                        <?php while ($row = $gift->fetch_assoc()): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($row['id']) ?></td>
-                                <td><?= htmlspecialchars($row['full_name']) ?></td>
-                                <td><?= htmlspecialchars($row['family_card_number']) ?></td>
-                                <td><?= htmlspecialchars($row['agricultural_product'] ?? 'N/A') ?></td>
-                                <td><?= htmlspecialchars($row['product_name'] ?? 'N/A') ?></td>
-                                <td><?= htmlspecialchars($row['vehicle'] ?? 'N/A') ?></td>
-                                <td><?= htmlspecialchars($row['created_at'] ?? 'N/A') ?></td>
-                                <td><?php if (!empty($row['gift_image'])): ?>
-                                    <img src="<?= htmlspecialchars($row['gift_image']) ?>" alt="Gift Image" style="max-width: 100px; max-height: 100px; margin-top: 10px;">
-                                <?php endif; ?>
-                            </td>
-                            </tr>
-                        <?php endwhile; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="7">No gifts found for this family card number.</td>
-                        </tr>
-                    <?php endif; ?>
 
-                    </tbody>
-                </table>
-            </div>
-        </div>
-      </div>
-    </div>
-</div>
 
 <!-- Back to Top -->
 <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>

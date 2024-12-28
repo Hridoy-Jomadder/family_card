@@ -221,11 +221,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile_image'])) {
 $query = "SELECT id, username, email, role, is_active FROM leader";
 $result = $conn->query($query); // Run the query to get all users
 
-if ($result) {
-    echo "Query executed successfully.";
-} else {
-    echo "Error executing query: " . $conn->error;
-}
+// if ($result) {
+//     echo "Query executed successfully.";
+// } else {
+//     echo "Error executing query: " . $conn->error;
+// }
 
 // Handle profile image upload
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile_image'])) {

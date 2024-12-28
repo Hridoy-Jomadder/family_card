@@ -91,7 +91,7 @@ if ($role === 'Admin' || $role === 'Editor') {
 // Handle search input and fetch users
 $search = $_POST['search'] ?? '';
 $query = "
-    SELECT id, family_name, full_name, family_image, family_members, mobile_number, nid_number, family_card_number, job, job_type, job_salary, balance, gold, asset, family_member_asset, family_member_salary, balance, zakat
+    SELECT id, family_name, full_name, family_image, family_members, mobile_number, nid_number, family_card_number, job, job_type, job_salary, balance, gold, asset, family_member_asset, family_member_salary, balance, family_address, zakat
     FROM users 
     WHERE family_name LIKE ? 
     LIMIT ? OFFSET ?";
@@ -330,7 +330,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <!-- Family Account Start -->
-<div class="container">
+<!-- <div class="container">
     <div class="container-fluid pt-4 px-4">
         <div class="bg-light text-center rounded p-4">
             <div class="d-flex align-items-center justify-content-between mb-4">
@@ -352,7 +352,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <th scope="col">Job/Commpany Designation</th>
                             <th scope="col">Salary</th>
                             <th scope="col">Total Amount(Taka)</th>
-                            <!-- <th scope="col">Zakat</th> -->
                         </tr>
                     </thead>
                       <tbody>
@@ -374,7 +373,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <td><?php echo isset($user['job_type']) ? htmlspecialchars($user['job_type']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['job_salary']) ? htmlspecialchars($user['job_salary']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['balance']) ? htmlspecialchars($user['balance']) : 'N/A'; ?></td>
-                                    <!-- <td><?php echo isset($user['zakat']) ? htmlspecialchars($user['zakat']) : 'N/A'; ?></td> -->
                                 </tr>
                         <?php endforeach; 
                         } else {
@@ -386,14 +384,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 
 <div class="container">
     <div class="container-fluid pt-4 px-4">
         <div class="bg-light text-center rounded p-4">
             <div class="d-flex align-items-center justify-content-between mb-4">
-                <h6 class="mb-0">Family Information</h6>
+                <h3 class="mb-0">Family Information</h3>
+                <form method="POST" action="search.php">
+                    <input type="text" name="search" id="search" required><button type="submit">Address Search</button>
+                </form>
             </div>
             <div class="table-responsive">
                 <table class="table text-start align-middle table-bordered table-hover mb-0">
@@ -405,6 +406,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <th scope="col">Profile Image</th>
                             <th scope="col">Family Members</th>
                             <th scope="col">Mobile</th>
+                            <th scope="col">Family Address</th>
                             <th scope="col">NID Card</th>
                             <th scope="col">Family Card Number</th>
                             <th scope="col">Job/Company Name</th>
@@ -436,6 +438,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     </td>
                                     <td><?php echo isset($user['family_members']) ? htmlspecialchars($user['family_members']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['mobile_number']) ? htmlspecialchars($user['mobile_number']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['family_address']) ? htmlspecialchars($user['family_address']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['nid_number']) ? htmlspecialchars($user['nid_number']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['family_card_number']) ? htmlspecialchars($user['family_card_number']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['job']) ? htmlspecialchars($user['job']) : 'N/A'; ?></td>

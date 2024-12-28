@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container0">
         <h1>Welcome to Family Card</h1><br>
         <h4>Hand in hand, the country of pride is Shahid Zia's Bangladesh.</h4><br>
-        <h2>Login</h2>
+        <h2>Admin Login</h2>
 
         <?php if (!empty($error_message)): ?>
             <p style="color: red;"><?php echo htmlspecialchars($error_message); ?></p>

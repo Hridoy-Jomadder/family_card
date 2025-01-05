@@ -93,14 +93,15 @@ $search = $_POST['search'] ?? '';
 $query = "
     SELECT id, family_name, full_name, family_image, family_members, mobile_number, nid_number, family_card_number, job, job_type, job_salary, balance, gold, asset, family_member_asset, family_member_salary, balance, family_address, zakat
     FROM users 
-    WHERE family_name LIKE ? OR family_address LIKE ?  
+    WHERE family_name LIKE ? 
+       OR family_address LIKE ?  
+       OR nid_number LIKE ? 
     LIMIT ? OFFSET ?";
 
 $stmt = $conn->prepare($query);
-
 if ($stmt) {
     $search_param = "%$search%";
-    $stmt->bind_param("ssii", $search_param, $search_param, $limit, $offset);
+    $stmt->bind_param("sssii", $search_param, $search_param, $search_param, $limit, $offset);
 
     if ($stmt->execute()) {
         $result = $stmt->get_result();
@@ -108,18 +109,21 @@ if ($stmt) {
     } else {
         $message = "Error fetching users: " . $stmt->error;
     }
+    $stmt->close();
 } else {
     die("SQL Prepare Error: " . $conn->error);
 }
 
-$count_query = "SELECT COUNT(*) as total_records FROM users WHERE family_name LIKE ? OR family_address LIKE ?";
+$count_query = "SELECT COUNT(*) as total_records FROM users WHERE family_name LIKE ? OR family_address LIKE ? OR nid_number LIKE ?";
 $stmt = $conn->prepare($count_query);
 if ($stmt) {
-    $stmt->bind_param("ss", $search_param, $search_param);
+    $stmt->bind_param("sss", $search_param, $search_param, $search_param);
     $stmt->execute();
     $result = $stmt->get_result();
     $total_records = $result->fetch_assoc()['total_records'];
     $stmt->close();
+
+    $total_pages = ceil($total_records / $limit);
 }
 
 ?>
@@ -179,9 +183,11 @@ if ($stmt) {
     <div class="container-fluid pt-4 px-4">
         <div class="bg-light text-center rounded p-4">
         <div class="d-flex align-items-center justify-content-between mb-4">
+        <div style="width: 100%;">
                 <form method="POST" action="search.php">
                     <input type="text" name="search" id="search" required><button type="submit">Address Search</button>
                 </form>
+                </div>
             </div>
             <div class="table-responsive">
                 <table class="table text-start align-middle table-bordered table-hover mb-0">

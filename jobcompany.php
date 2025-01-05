@@ -76,6 +76,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: profile.php");
     exit;
 }
+$total_salary = 0;
+
+// List of salary fields to sum up
+$salary_fields = [
+    'job_salary', 
+    'father_salary', 
+    'mother_salary', 
+    'wife_salary', 
+    'son_salary', 
+    'son_salary1', 
+    'son_salary2', 
+    'dau_salary', 
+    'dau_salary1', 
+    'dau_salary2', 
+    'family_other_members_salary'
+];
+
+foreach ($salary_fields as $field) {
+    $total_salary += (int)($family_data[$field] ?? 0); // Add salary values, defaulting to 0 if not set
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -174,6 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php else: ?>
                 <p style="color:white;"><?= htmlspecialchars($message) ?></p>
             <?php endif; ?>
+            <p style="color:white;"><strong>Total Annual Salary:</strong> <?= htmlspecialchars($total_salary) ?> TK</p>
         </div>
     </div>
 </div>

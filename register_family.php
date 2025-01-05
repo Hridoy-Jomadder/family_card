@@ -72,6 +72,10 @@ $conn->close();
 <body>
     <div class="container0">
         <h2>Register Family Card</h2>
+            <!-- Display message (success or error) -->
+            <?php if (!empty($message)): ?>
+            <p><?php echo htmlspecialchars($message); ?></p>
+        <?php endif; ?>
         <form action="" method="POST">
             <label for="family_name">Family Name:</label>
             <input type="text" id="family_name" name="family_name" required>

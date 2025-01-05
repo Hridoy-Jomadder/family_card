@@ -5,6 +5,34 @@ include "classes/product.php";
 // Start the session to access session variables
 session_start();
 
+
+// Check if session exists and user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit;
+}
+$user_id = $_SESSION['user_id']; // Retrieve user ID from session
+
+// Database connection
+$DB = new Database();
+$conn = $DB->connect(); 
+
+// Query user information
+$stmt = $conn->prepare("SELECT * FROM leader WHERE id = ?");
+$stmt->bind_param("i", $user_id);
+if (!$stmt->execute()) {
+    die("Error fetching user data: " . $stmt->error);
+}
+$user = $stmt->get_result()->fetch_assoc();
+$stmt->close();
+
+// Display profile details
+$profile_image = $user['profile_image'] ?? 'uploads/default-profile.jpg';
+$username = $user['username'] ?? 'N/A';
+$email = $user['email'] ?? 'N/A';
+$role = $user['role'] ?? 'N/A';
+
+
 // Initialize variables
 $family_data = [];
 $products = null; // Set to null initially
@@ -401,7 +429,6 @@ $conn->close();
                     </tr>
                 <?php endwhile; ?>
             </tbody>
-
     </table>
 </div>
 </div>

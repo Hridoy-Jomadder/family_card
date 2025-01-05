@@ -225,7 +225,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <i class="fa fa-id-card fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">Family Card</p>
-                                <h6 class="mb-0">Need 2 Crore </h6>
+                                <h6 class="mb-0">Need 3 Crore </h6>
                             </div>
                         </div>
                     </div>
@@ -501,7 +501,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <td><?php echo isset($user['job_type']) ? htmlspecialchars($user['job_type']) : 'N/A'; ?></td> -->
                                     <!-- <td><?php echo isset($user['job_salary']) ? htmlspecialchars($user['job_salary']) : 'N/A'; ?></td> -->
                                     <td><?php echo isset($user['balance']) ? htmlspecialchars($user['balance']) : 'N/A'; ?></td>
-                                    <!-- <td><?php echo isset($user['zakat']) ? htmlspecialchars($user['zakat']) : 'N/A'; ?></td> -->
+                                    <!-- <td><?php echo isset($user['family_total']) ? htmlspecialchars($user['family_total']) : 'N/A'; ?></td> -->
                             </tr>
                     <?php endforeach; 
                     } else {

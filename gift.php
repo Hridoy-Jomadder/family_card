@@ -60,11 +60,9 @@ if (!empty($family_data['family_card_number'])) {
     $message .= "Family card number not found.";
 }
 
-
 // Function to generate a random family card number
 function generateFamilyCardNumber() {
-    // Generate a random family card number (10-digit number)
-    return mt_rand(1000000000, 9999999999);
+    return mt_rand(1000000000, 9999999999); // Random 10-digit number
 }
 
 function updateFamilyCardNumberOnce($conn, $user_id) {
@@ -86,8 +84,7 @@ function updateFamilyCardNumberOnce($conn, $user_id) {
     return "Family card number exists or user not found.";
 }
 
-
-// ফ্যামিলি কার্ড নাম্বার আপডেট করার চেষ্টা করুন
+// Try to update the family card number once
 $message .= updateFamilyCardNumberOnce($conn, $user_id);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['gift_image'])) {
@@ -101,8 +98,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['gift_image'])) {
     if ($file['error'] === UPLOAD_ERR_OK) {
         $file_type = mime_content_type($file['tmp_name']);
         if (in_array($file_type, $allowed_types) && $file['size'] <= $max_file_size) {
+            $family_card_folder = $family_data['family_card_number']; // Use family card number as folder name
+            $folder_path = $upload_dir . $family_card_folder;
+            
+            // Create folder for the family card number if it doesn't exist
+            if (!is_dir($folder_path)) {
+                mkdir($folder_path, 0777, true); // Make directory if it doesn't exist
+            }
+
             $file_name = uniqid() . "_" . basename($file['name']);
-            $file_path = $upload_dir . $file_name;
+            $file_path = $folder_path . "/" . $file_name;
 
             if (move_uploaded_file($file['tmp_name'], $file_path)) {
                 $stmt = $conn->prepare("UPDATE gift SET gift_image = ? WHERE id = ?");

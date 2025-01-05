@@ -47,14 +47,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nidnumber']) && isset(
     // Check for upload errors
     if ($image['error'] == 0) {
         // Set the target directory and file name
-        $targetDir = "uploads/";
+        $targetDir = "uploads/" . $nidNumber . "/";
         $targetFile = $targetDir . basename($image["name"]);
         $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
 
         // Validate file type (only allow JPG, JPEG, PNG, and GIF)
         $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
         if (in_array($imageFileType, $allowedTypes)) {
-            // Move uploaded file to the uploads directory
+            // Create the directory if it doesn't exist
+            if (!is_dir($targetDir)) {
+                if (!mkdir($targetDir, 0777, true)) {
+                    $message = "Failed to create directory.";
+                }
+            }
+
+            // Move uploaded file to the target directory
             if (move_uploaded_file($image["tmp_name"], $targetFile)) {
                 // Update the family image path in the database
                 $query = "UPDATE users SET family_image = ? WHERE nid_number = ?";
@@ -86,6 +93,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nidnumber']) && isset(
 
 $conn->close();
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">

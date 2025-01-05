@@ -225,7 +225,6 @@ $conn->close(); // Close the connection after all queries are executed
                             <th scope="col">Agricultural Product</th>
                             <th scope="col">Product</th>
                             <th scope="col">Home/Vehicles</th>
-                            <!-- <th scope="col">Balance</th> -->
                             <th scope="col">Issued Date</th>
                             <th scope="col">Picture</th>
                         </tr>
@@ -241,9 +240,17 @@ $conn->close(); // Close the connection after all queries are executed
                                 <td><?= htmlspecialchars($row['product_name'] ?? 'N/A') ?></td>
                                 <td><?= htmlspecialchars($row['vehicle'] ?? 'N/A') ?></td>
                                 <td><?= htmlspecialchars($row['created_at'] ?? 'N/A') ?></td>
-                                <td><?php if (!empty($row['gift_image'])): ?>
-                                    <img src="<?= htmlspecialchars($row['gift_image']) ?>" alt="Gift Image" style="max-width: 100px; max-height: 100px; margin-top: 10px;">
-                                <?php endif; ?>
+                                <td>
+                                <?php if (!empty($row['gift_image'])) {
+                                    $image_paths = explode(",", $row['gift_image']);
+                                    foreach ($image_paths as $image_path) {
+                                        echo "<a href='$image_path' target='_blank'><img src='$image_path' alt='Gift Image' style='max-width: 100px; max-height: 100px; margin-top: 10px;'></a><br>";
+                                    }
+                                } else {
+                                    echo "No images available";
+                                }
+                                ?>
+
                             </td>
                             </tr>
                         <?php endwhile; ?>

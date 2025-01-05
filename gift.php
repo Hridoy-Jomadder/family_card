@@ -44,7 +44,7 @@ if (!empty($family_data['family_card_number'])) {
     $stmt = $conn->prepare("
         SELECT id, full_name, family_card_number, agricultural_product, product_name, vehicle, gift_image, created_at 
         FROM gift 
-        WHERE family_card_number = ?
+        WHERE family_card_number = ? 
     ");
     $stmt->bind_param("s", $family_data['family_card_number']);
 
@@ -65,6 +65,7 @@ function generateFamilyCardNumber() {
     return mt_rand(1000000000, 9999999999); // Random 10-digit number
 }
 
+// Try to update the family card number once
 function updateFamilyCardNumberOnce($conn, $user_id) {
     $stmt = $conn->prepare("SELECT family_card_number FROM users WHERE id = ? AND (family_card_number IS NULL OR family_card_number = 0)");
     $stmt->bind_param("i", $user_id);
@@ -84,7 +85,6 @@ function updateFamilyCardNumberOnce($conn, $user_id) {
     return "Family card number exists or user not found.";
 }
 
-// Try to update the family card number once
 $message .= updateFamilyCardNumberOnce($conn, $user_id);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['gift_image'])) {
@@ -93,39 +93,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['gift_image'])) {
     $max_file_size = 2 * 1024 * 1024; // 2MB
 
     $gift_id = $_POST['gift_id']; // ID of the gift to update
-    $file = $_FILES['gift_image'];
+    $files = $_FILES['gift_image']; // $_FILES will contain multiple files
 
-    if ($file['error'] === UPLOAD_ERR_OK) {
-        $file_type = mime_content_type($file['tmp_name']);
-        if (in_array($file_type, $allowed_types) && $file['size'] <= $max_file_size) {
-            $family_card_folder = $family_data['family_card_number']; // Use family card number as folder name
-            $folder_path = $upload_dir . $family_card_folder;
-            
-            // Create folder for the family card number if it doesn't exist
-            if (!is_dir($folder_path)) {
-                mkdir($folder_path, 0777, true); // Make directory if it doesn't exist
-            }
+    $uploaded_files = [];
 
-            $file_name = uniqid() . "_" . basename($file['name']);
-            $file_path = $folder_path . "/" . $file_name;
+    // Loop through all the uploaded files
+    foreach ($files['name'] as $key => $file_name) {
+        $file = [
+            'name' => $file_name,
+            'type' => $files['type'][$key],
+            'tmp_name' => $files['tmp_name'][$key],
+            'error' => $files['error'][$key],
+            'size' => $files['size'][$key],
+        ];
 
-            if (move_uploaded_file($file['tmp_name'], $file_path)) {
-                $stmt = $conn->prepare("UPDATE gift SET gift_image = ? WHERE id = ?");
-                $stmt->bind_param("si", $file_path, $gift_id);
-                if ($stmt->execute()) {
-                    $message = "Image uploaded and updated successfully.";
-                } else {
-                    $message = "Failed to update image in the database: " . $stmt->error;
+        if ($file['error'] === UPLOAD_ERR_OK) {
+            $file_type = mime_content_type($file['tmp_name']);
+            if (in_array($file_type, $allowed_types) && $file['size'] <= $max_file_size) {
+                $family_card_folder = $family_data['family_card_number']; // Use family card number as folder name
+                $folder_path = $upload_dir . $family_card_folder;
+                
+                // Create folder for the family card number if it doesn't exist
+                if (!is_dir($folder_path)) {
+                    mkdir($folder_path, 0777, true); // Make directory if it doesn't exist
                 }
-                $stmt->close();
+
+                $unique_file_name = uniqid() . "_" . basename($file['name']);
+                $file_path = $folder_path . "/" . $unique_file_name;
+
+                if (move_uploaded_file($file['tmp_name'], $file_path)) {
+                    // Store the uploaded file path in the array
+                    $uploaded_files[] = $file_path;
+                } else {
+                    $message .= "Failed to upload the image: " . $file['name'] . "<br>";
+                }
             } else {
-                $message = "Failed to upload the image.";
+                $message .= "Invalid file type or file size exceeded: " . $file['name'] . "<br>";
             }
         } else {
-            $message = "Invalid file type or file size exceeded.";
+            $message .= "Error during file upload: " . $file['error'] . " for file: " . $file['name'] . "<br>";
         }
+    }
+
+    if (count($uploaded_files) > 0) {
+        // Store the uploaded image paths as a comma-separated string
+        $image_paths = implode(",", $uploaded_files);
+
+        // Update the database with the multiple image paths
+        $stmt = $conn->prepare("UPDATE gift SET gift_image = ? WHERE id = ?");
+        $stmt->bind_param("si", $image_paths, $gift_id);
+        if ($stmt->execute()) {
+            $message = "Images uploaded and updated successfully.";
+        } else {
+            $message = "Failed to update images in the database: " . $stmt->error;
+        }
+        $stmt->close();
     } else {
-        $message = "Error during file upload: " . $file['error'];
+        $message .= "No valid images were uploaded.";
     }
 }
 
@@ -220,23 +244,24 @@ $conn->close(); // Close the connection after all queries are executed
                             <td><?= htmlspecialchars($row['vehicle'] ?? 'N/A') ?></td>
                             <td><?= htmlspecialchars($row['created_at'] ?? 'N/A') ?></td>
                             <td>
-                                <form method="POST" enctype="multipart/form-data">
-                                    <input type="file" name="gift_image" accept="image/*" required>
-                                    <input type="hidden" name="gift_id" value="<?= htmlspecialchars($row['id']) ?>">
-                                    <button type="submit" class="btn btn-sm btn-primary">Upload</button>
-                                </form>
-                                <?php if (!empty($row['gift_image'])): ?>
-                                <!-- Display the thumbnail -->
-                                <a href="<?= htmlspecialchars($row['gift_image']) ?>" target="_blank">
-                                    <img src="<?= htmlspecialchars($row['gift_image']) ?>" alt="Gift Image" style="max-width: 100px; max-height: 100px; margin-top: 10px;">
-                                </a>
+                            <form method="POST" enctype="multipart/form-data">
+                                <input type="file" name="gift_image[]" accept="image/*" multiple required>
+                                <input type="hidden" name="gift_id" value="<?= htmlspecialchars($row['id']) ?>">
+                                <button type="submit" class="btn btn-sm btn-primary">Upload</button>
+                            </form>
+
+                                <?php if (!empty($row['gift_image'])) {
+                                    $image_paths = explode(",", $row['gift_image']);
+                                    foreach ($image_paths as $image_path) {
+                                        echo "<a href='$image_path' target='_blank'><img src='$image_path' alt='Gift Image' style='max-width: 100px; max-height: 100px; margin-top: 10px;'></a><br>";
+                                    }
+                                } else {
+                                    echo "No images available";
+                                }
+                                ?>
+
                                 <!-- Button to open the image -->
                                 <br>
-                                <a href="<?= htmlspecialchars($row['gift_image']) ?>" target="_blank" class="btn btn-sm btn-secondary mt-2">View Full Image</a>
-                            <?php else: ?>
-                                <p>No image available</p>
-                            <?php endif; ?>
-
                             </td>
                         </tr>
                     <?php endwhile; ?>

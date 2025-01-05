@@ -21,29 +21,70 @@ try {
     $family_data = $stmt->get_result()->fetch_assoc();
     $stmt->close();
 
-    // Handle form submission
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $updateFields = [
-            'family_name', 'nid_number', 'full_name', 'father_name', 'mother_name',
-            'son_name_all', 'dau_name_all', 'mobile_number', 'family_members', 'family_address','balance'
+            'family_name' => $_POST['family_name'] ?? '',
+            'nid_number' => $_POST['nid_number'] ?? '',
+            'full_name' => $_POST['full_name'] ?? '',
+            'father_name' => $_POST['father_name'] ?? '',
+            'mother_name' => $_POST['mother_name'] ?? '',
+            'son_name_all' => $_POST['son_name_all'] ?? '',
+            'dau_name_all' => $_POST['dau_name_all'] ?? '',
+            'mobile_number' => $_POST['mobile_number'] ?? '',
+            'family_members' => $_POST['family_members'] ?? '',
+            'family_address' => $_POST['family_address'] ?? '',
+            'balance' => $_POST['balance'] ?? ''
         ];
-        $query = "UPDATE users SET " . implode(" = ?, ", $updateFields) . " = ? WHERE id = ?";
-        $stmt = $conn->prepare($query);
-
-        $values = [];
-        foreach ($updateFields as $field) {
-            $values[] = $_POST[$field] ?? '';
+    
+        $errors = [];
+        $imagePath = $family_data['family_image'] ?? 'uploads/default-image.jpg'; // Default image path
+    
+        // Handle file upload
+        if (isset($_FILES['family_image']) && $_FILES['family_image']['error'] === UPLOAD_ERR_OK) {
+            $nidFolder = 'uploads/' . $updateFields['nid_number'];
+            if (!is_dir($nidFolder)) {
+                mkdir($nidFolder, 0755, true);
+            }
+    
+            $fileTmpPath = $_FILES['family_image']['tmp_name'];
+            $fileName = basename($_FILES['family_image']['name']);
+            $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
+    
+            // Validate file type
+            $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+            if (!in_array(strtolower($fileExt), $allowedExtensions)) {
+                $errors[] = "Invalid file type. Only JPG, JPEG, PNG, and GIF are allowed.";
+            } else {
+                $newFileName = uniqid() . '.' . $fileExt;
+                $imagePath = $nidFolder . '/' . $newFileName;
+    
+                if (!move_uploaded_file($fileTmpPath, $imagePath)) {
+                    $errors[] = "Error uploading the file. Please try again.";
+                }
+            }
         }
-        $values[] = $user_id;
-
-        $stmt->bind_param(str_repeat('s', count($values) - 1) . 'i', ...$values);
-        if ($stmt->execute()) {
-            $message = "Profile updated successfully!";
+    
+        if (empty($errors)) {
+            // Include the image path in the update query
+            $updateFields['family_image'] = $imagePath;
+    
+            $query = "UPDATE users SET " . implode(" = ?, ", array_keys($updateFields)) . " = ? WHERE id = ?";
+            $stmt = $conn->prepare($query);
+    
+            $values = array_values($updateFields);
+            $values[] = $user_id;
+    
+            $stmt->bind_param(str_repeat('s', count($updateFields)) . 'i', ...$values);
+            if ($stmt->execute()) {
+                $message = "Profile updated successfully!";
+            } else {
+                $message = "Error updating profile: " . $stmt->error;
+            }
+            $stmt->close();
         } else {
-            $message = "Error updating profile.";
+            $message = implode('<br>', $errors);
         }
-        $stmt->close();
-    }
+    }    
 } catch (Exception $e) {
     $message = "An unexpected error occurred.";
 }

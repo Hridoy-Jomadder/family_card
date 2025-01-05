@@ -201,45 +201,52 @@ $role = $user['role'] ?? 'N/A';
 // Handle profile image upload
 $message = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile_image'])) {
-    $upload_dir = "uploads/";
-    $file = $_FILES['profile_image'];
+    $upload_base_dir = "uploads/"; // Base directory for uploads
+    $nid_number = $user['nid_number'] ?? null; // Ensure NID number is available
 
-    // Ensure the uploads directory exists
-    if (!is_dir($upload_dir)) {
-        mkdir($upload_dir, 0755, true);
-    }
+    if (!$nid_number) {
+        $message = "NID number is missing. Cannot upload image.";
+    } else {
+        $upload_dir = $upload_base_dir . $nid_number . "/"; // Folder named after NID number
+        $file = $_FILES['profile_image'];
 
-    // Check for upload errors
-    if ($file['error'] === UPLOAD_ERR_OK) {
-        $file_ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-        $allowed_types = ['jpg', 'jpeg', 'png', 'gif'];
+        // Ensure the uploads directory exists
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0755, true); // Create the NID folder with permissions
+        }
 
-        if (in_array($file_ext, $allowed_types)) {
-            $new_file_name = "profile_" . $user_id . "." . $file_ext;
-            $file_path = $upload_dir . $new_file_name;
+        // Check for upload errors
+        if ($file['error'] === UPLOAD_ERR_OK) {
+            $file_ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+            $allowed_types = ['jpg', 'jpeg', 'png', 'gif'];
 
-            // Move uploaded file to the server directory
-            if (move_uploaded_file($file['tmp_name'], $file_path)) {
-                // Update database with new profile image path
-                $stmt = $conn->prepare("UPDATE leader SET profile_image = ? WHERE id = ?");
-                $stmt->bind_param("si", $file_path, $user_id);
+            if (in_array($file_ext, $allowed_types)) {
+                $new_file_name = "profile_" . $user_id . "." . $file_ext;
+                $file_path = $upload_dir . $new_file_name;
 
-                if ($stmt->execute()) {
-                    $profile_image = $file_path; // Update displayed image
-                    $message = "Image updated successfully!";
+                // Move uploaded file to the server directory
+                if (move_uploaded_file($file['tmp_name'], $file_path)) {
+                    // Update database with new profile image path
+                    $stmt = $conn->prepare("UPDATE leader SET profile_image = ? WHERE id = ?");
+                    $stmt->bind_param("si", $file_path, $user_id);
+
+                    if ($stmt->execute()) {
+                        $profile_image = $file_path; // Update displayed image
+                        $message = "Image updated successfully!";
+                    } else {
+                        $message = "Failed to update the database: " . $stmt->error;
+                    }
+
+                    $stmt->close();
                 } else {
-                    $message = "Failed to update the database: " . $stmt->error;
+                    $message = "Failed to move uploaded file. Check directory permissions.";
                 }
-
-                $stmt->close();
             } else {
-                $message = "Failed to move uploaded file. Check directory permissions.";
+                $message = "Invalid file type. Only JPG, PNG, and GIF are allowed.";
             }
         } else {
-            $message = "Invalid file type. Only JPG, PNG, and GIF are allowed.";
+            $message = "Error uploading file. Error code: " . $file['error'];
         }
-    } else {
-        $message = "Error uploading file. Error code: " . $file['error'];
     }
 }
 
@@ -298,10 +305,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile_image'])) {
         $message = "Error uploading file. Error code: " . $file['error'];
     }
 }
-?>
 
-<!-- Close the database connection -->
-<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['current_password'], $_POST['new_password'], $_POST['confirm_password'])) {
+    $current_password = $_POST['current_password'];
+    $new_password = $_POST['new_password'];
+    $confirm_password = $_POST['confirm_password'];
+
+    if ($new_password !== $confirm_password) {
+        die('New passwords do not match.');
+    }
+
+    // Retrieve current password from database
+    $stmt = $conn->prepare("SELECT password FROM users WHERE id = ?");
+    if (!$stmt) {
+        die("Error preparing query: " . $conn->error);
+    }
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+    $stmt->close();
+
+    // Verify current password
+    if (!$user || !password_verify($current_password, $user['password'])) {
+        die('Current password is incorrect.');
+    }
+
+    // Hash the new password
+    $new_password_hashed = password_hash($new_password, PASSWORD_DEFAULT);
+
+    // Update password in database
+    $stmt = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
+    if (!$stmt) {
+        die("Error preparing update query: " . $conn->error);
+    }
+    $stmt->bind_param("si", $new_password_hashed, $user_id);
+    if ($stmt->execute()) {
+        echo 'Password successfully updated.';
+    } else {
+        echo 'An error occurred. Please try again.';
+    }
+    $stmt->close();
+}
 $conn->close();
 ?>
 
@@ -430,6 +475,7 @@ $conn->close();
                 <?php endwhile; ?>
             </tbody>
     </table>
+    
 </div>
 </div>
 
@@ -441,6 +487,22 @@ $conn->close();
             <input type="file" name="profile_image" id="profile_image" accept="image/*" required>
             <button type="submit">Upload</button>
         </form>
+<br>
+<br>
+<br>
+        <form action="" method="post">
+    <label for="current_password">Current Password:</label>
+    <input type="password" id="current_password" name="current_password" required><br>
+
+    <label for="new_password">New Password:</label>
+    <input type="password" id="new_password" name="new_password" required><br>
+
+    <label for="confirm_password">Confirm New Password:</label>
+    <input type="password" id="confirm_password" name="confirm_password" required><br>
+
+    <input type="submit" value="Change Password">
+</form>
+
         </div>
 
 <!-- Back to Top -->

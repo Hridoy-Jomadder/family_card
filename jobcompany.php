@@ -261,6 +261,10 @@ foreach ($salary_fields as $field) {
     </div>
 </div>
 
+<!-- Back to Top Button (Right-Aligned) -->
+<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top position-fixed bottom-0 end-0 m-4">
+    <i class="bi bi-arrow-up"></i>
+</a>
 
 </body>
 </html>

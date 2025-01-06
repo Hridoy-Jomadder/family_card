@@ -279,9 +279,10 @@ $conn->close(); // Close the connection after all queries are executed
     </div>
 </div>
 
-<!-- Back to Top -->
-<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-    </div>
+<!-- Back to Top Button (Right-Aligned) -->
+<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top position-fixed bottom-0 end-0 m-4">
+    <i class="bi bi-arrow-up"></i>
+</a>
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

@@ -268,9 +268,21 @@ $conn->close(); // Close the connection after all queries are executed
     </div>
 </div>
 
-<!-- Back to Top -->
-<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-    </div>
+<!-- Left-Aligned Mobile Icon -->
+<div class="d-flex justify-content-start align-items-center bg-light rounded p-4 mt-4">
+    <a href="info.php" class="d-flex align-items-center text-decoration-none">
+        <i class="fa fa-mobile fa-2x text-primary"></i>
+        <span class="ms-2">Info</span> <!-- Optional Text -->
+    </a>
+</div>
+
+<!-- Back to Top Button (Right-Aligned) -->
+<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top position-fixed bottom-0 end-0 m-4">
+    <i class="bi bi-arrow-up"></i>
+</a>
+
+</div>
+
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

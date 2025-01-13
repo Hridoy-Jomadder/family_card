@@ -46,10 +46,11 @@ if ($stmt->execute()) {
 $stmt->close();
 
 // Ensure family ID is available for non-admin users
-if ($role !== 'Admin' && isset($user['family_id']) && !empty($user['family_id'])) {
-    $family_id = $user['family_id'];
-} elseif ($role !== 'Admin') {
-    die("Family ID is missing for this user.");
+if ($role !== 'Admin') {
+    // If the user is not an admin, redirect to index page with a message
+    $_SESSION['message'] = "You do not have permission to view this page.";
+    header("Location: index.php");  // Redirect to index page
+    exit;  // Stop further script execution
 }
 
 // Fetch gifts based on role

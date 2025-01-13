@@ -461,61 +461,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!-- Family assets Start -->
 <div class="container">
-<div class="container-fluid pt-4 px-4">
-    <div class="bg-light text-center rounded p-4">
-        <div class="d-flex align-items-center justify-content-between mb-4">
-            <h6 class="mb-0">Family Assets Information</h6>
-        </div>
-        <div class="table-responsive">
-            <table class="table text-start align-middle table-bordered table-hover mb-0">
-                <thead>
-                    <tr class="text-dark">
-                        <th scope="col">ID</th>
-                        <th scope="col">Family Name</th>
-                        <th scope="col">Full Name</th>
-                        <th scope="col">Family Members</th>
-                        <th scope="col">Family Card Number</th>
-                        <th scope="col">Gold</th>
-                        <th scope="col">Assets</th>
-                        <!-- <th scope="col">Job/Commpany</th>
-                        <th scope="col">Job/Commpany Designation</th> -->
-                        <!-- <th scope="col">Job/Commpany Salary</th> -->
-                        <th scope="col">Total Amount(Taka)</th>
-                        <!-- <th scope="col">Zakat</th> -->
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php 
-                    // Check if $users is defined and not null
-                    if (isset($users) && $users !== false) {
-                        foreach ($users as $user): ?>
-                            <tr>
-                            <td><?php echo htmlspecialchars($user['id']); ?></td>
-                                    <td><?php echo htmlspecialchars($user['family_name']); ?></td>
-                                    <td><?php echo htmlspecialchars(string: $user['full_name']); ?></td>
-                                    <td><?php echo isset($user['family_members']) ? htmlspecialchars($user['family_members']) : 'N/A'; ?></td>
-                                    <td><?php echo isset($user['family_card_number']) ? htmlspecialchars(string: $user['family_card_number']) : 'N/A'; ?></td>
-                                    <td><?php echo isset($user['gold']) ? htmlspecialchars($user['gold']) : 'N/A'; ?></td>
-                                    <td><?php echo isset($user['asset']) ? htmlspecialchars($user['asset']) : 'N/A'; ?></td>
-                                    <!-- <td><?php echo isset($user['job']) ? htmlspecialchars($user['job']) : 'N/A'; ?></td>
-                                    <td><?php echo isset($user['job_type']) ? htmlspecialchars($user['job_type']) : 'N/A'; ?></td> -->
-                                    <!-- <td><?php echo isset($user['job_salary']) ? htmlspecialchars($user['job_salary']) : 'N/A'; ?></td> -->
-                                    <td><?php echo isset($user['balance']) ? htmlspecialchars($user['balance']) : 'N/A'; ?></td>
-                                    <!-- <td><?php echo isset($user['family_total']) ? htmlspecialchars($user['family_total']) : 'N/A'; ?></td> -->
+    <div class="container-fluid pt-4 px-4">
+        <div class="bg-light text-center rounded p-4">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h6 class="mb-0">Family Assets Information</h6>
+            </div>
+            <div class="table-responsive">
+                <?php if ($role === 'Admin'): ?>
+                    <!-- Only allow Admin role to access Family Assets -->
+                    <table class="table text-start align-middle table-bordered table-hover mb-0">
+                        <thead>
+                            <tr class="text-dark">
+                                <th scope="col">ID</th>
+                                <th scope="col">Family Name</th>
+                                <th scope="col">Full Name</th>
+                                <th scope="col">Family Members</th>
+                                <th scope="col">Family Card Number</th>
+                                <th scope="col">Gold</th>
+                                <th scope="col">Assets</th>
+                                <th scope="col">Total Amount (Taka)</th>
                             </tr>
-                    <?php endforeach; 
-                    } else {
-                        // Handle the case where no users were fetched or $users is not defined
-                        echo "<tr><td colspan='11'>No users found.</td></tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
+                        </thead>
+                        <tbody>
+                            <?php 
+                            // Check if $users is defined and not null
+                            if (isset($users) && $users !== false) {
+                                foreach ($users as $user): ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($user['id']); ?></td>
+                                        <td><?php echo htmlspecialchars($user['family_name']); ?></td>
+                                        <td><?php echo htmlspecialchars($user['full_name']); ?></td>
+                                        <td><?php echo isset($user['family_members']) ? htmlspecialchars($user['family_members']) : 'N/A'; ?></td>
+                                        <td><?php echo isset($user['family_card_number']) ? htmlspecialchars($user['family_card_number']) : 'N/A'; ?></td>
+                                        <td><?php echo isset($user['gold']) ? htmlspecialchars($user['gold']) : 'N/A'; ?></td>
+                                        <td><?php echo isset($user['asset']) ? htmlspecialchars($user['asset']) : 'N/A'; ?></td>
+                                        <td><?php echo isset($user['balance']) ? htmlspecialchars($user['balance']) : 'N/A'; ?></td>
+                                    </tr>
+                            <?php endforeach; 
+                            } else {
+                                // Handle the case where no users were fetched or $users is not defined
+                                echo "<tr><td colspan='8'>No users found.</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                <?php else: ?>
+                    <!-- If the user is not Admin, show this message -->
+                    <p>You do not have permission to view the family assets information.</p>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
 </div>
 <!-- Family assets End -->
 </div>
+
 
 <!-- Start Products Section -->
 <div class="container">
@@ -525,83 +525,90 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h6 class="mb-0">Family Products</h6>
             </div>
             <div class="table-responsive">
-                <form method="POST" action="">
-                    <table class="table text-start align-middle table-bordered table-hover mb-0">
-                        <thead>
-                            <tr class="text-dark">
-                                <th scope="col">ID</th>
-                                <th scope="col">Family Name</th>
-                                <th scope="col">Full Name</th>
-                                <th scope="col">Family Card Number</th>
-                                <th scope="col">Family<br> Members</th>
-                                <th scope="col">Balance</th>
-                                <th scope="col">Agricultural Product</th>
-                                <th scope="col">Product</th>
-                                <th scope="col">Home/Vehicles</th>
-                                <th scope="col">Action</th>
-                                <th scope="col">Messages</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        <?php 
-                        if (isset($users) && !empty($users)) {
-                            foreach ($users as $user): ?>
-                                <tr>
-                                    <td><?php echo htmlspecialchars($user['id']); ?></td>
-                                    <td><?php echo htmlspecialchars($user['family_name']); ?></td>
-                                    <td><?php echo isset($user['full_name']) ? htmlspecialchars($user['full_name']) : 'N/A'; ?></td>
-                                    <td><?php echo isset($user['family_card_number']) ? htmlspecialchars($user['family_card_number']) : 'N/A'; ?></td>
-                                    <td><?php echo htmlspecialchars($user['family_members']); ?></td>
-                                    <td><?php echo isset($user['balance']) ? htmlspecialchars($user['balance']) : 'N/A'; ?></td>
-                                    <td>
-                                        <select name="agricultural_products_<?= $user['id'] ?>" id="agricultural_products_<?= $user['id'] ?>">
-                                            <option value="">Select</option>
-                                            <option value="Rice 5 kg">Rice 5 kg</option>
-                                            <option value="Rice 8 kg">Rice 8 kg</option>
-                                            <option value="Wheat 1 kg">Wheat 1 kg</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select name="product_<?= $user['id'] ?>" id="product_<?= $user['id'] ?>">
-                                            <option value="">Select</option>
-                                            <option value="Rice 1 Packet">Rice 1 Packet</option>
-                                            <option value="Wheat 1 Packet">Wheat 1 Packet</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select name="vehicles_<?= $user['id'] ?>" id="vehicles_<?= $user['id'] ?>">
-                                            <option value="">Select</option>
-                                            <option value="Home">Home</option>
-                                            <option value="Car">Car</option>
-                                            <option value="Bike">Bike</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <button type="submit" name="gift[<?= $user['id'] ?>]" value="gift" class="btn btn-primary">Gift</button>
-                                    </td>
-                                    <td>
-                                        <?php 
-                                        // Display the success or error message for the user
-                                        if (isset($gift_messages[$user['id']])) {
-                                            echo htmlspecialchars($gift_messages[$user['id']]);
-                                        }
-                                        ?>
-                                    </td>
+                <?php if ($role !== 'User'): ?>
+                    <!-- Only allow Admin and Editor roles to access family products -->
+                    <form method="POST" action="">
+                        <table class="table text-start align-middle table-bordered table-hover mb-0">
+                            <thead>
+                                <tr class="text-dark">
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Family Name</th>
+                                    <th scope="col">Full Name</th>
+                                    <th scope="col">Family Card Number</th>
+                                    <th scope="col">Family<br> Members</th>
+                                    <th scope="col">Balance</th>
+                                    <th scope="col">Agricultural Product</th>
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Home/Vehicles</th>
+                                    <th scope="col">Action</th>
+                                    <th scope="col">Messages</th>
                                 </tr>
-                            <?php endforeach; 
-                        } else { ?>
-                            <tr>
-                                <td colspan="10" class="text-center text-muted">No users found. Please try again later.</td>
-                            </tr>
-                        <?php } ?>
-                        </tbody>
-                    </table>
-                </form>
+                            </thead>
+                            <tbody>
+                            <?php 
+                            if (isset($users) && !empty($users)) {
+                                foreach ($users as $user): ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($user['id']); ?></td>
+                                        <td><?php echo htmlspecialchars($user['family_name']); ?></td>
+                                        <td><?php echo isset($user['full_name']) ? htmlspecialchars($user['full_name']) : 'N/A'; ?></td>
+                                        <td><?php echo isset($user['family_card_number']) ? htmlspecialchars($user['family_card_number']) : 'N/A'; ?></td>
+                                        <td><?php echo htmlspecialchars($user['family_members']); ?></td>
+                                        <td><?php echo isset($user['balance']) ? htmlspecialchars($user['balance']) : 'N/A'; ?></td>
+                                        <td>
+                                            <select name="agricultural_products_<?= $user['id'] ?>" id="agricultural_products_<?= $user['id'] ?>">
+                                                <option value="">Select</option>
+                                                <option value="Rice 5 kg">Rice 5 kg</option>
+                                                <option value="Rice 8 kg">Rice 8 kg</option>
+                                                <option value="Wheat 1 kg">Wheat 1 kg</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select name="product_<?= $user['id'] ?>" id="product_<?= $user['id'] ?>">
+                                                <option value="">Select</option>
+                                                <option value="Rice 1 Packet">Rice 1 Packet</option>
+                                                <option value="Wheat 1 Packet">Wheat 1 Packet</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select name="vehicles_<?= $user['id'] ?>" id="vehicles_<?= $user['id'] ?>">
+                                                <option value="">Select</option>
+                                                <option value="Home">Home</option>
+                                                <option value="Car">Car</option>
+                                                <option value="Bike">Bike</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <button type="submit" name="gift[<?= $user['id'] ?>]" value="gift" class="btn btn-primary">Gift</button>
+                                        </td>
+                                        <td>
+                                            <?php 
+                                            // Display the success or error message for the user
+                                            if (isset($gift_messages[$user['id']])) {
+                                                echo htmlspecialchars($gift_messages[$user['id']]);
+                                            }
+                                            ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; 
+                            } else { ?>
+                                <tr>
+                                    <td colspan="10" class="text-center text-muted">No users found. Please try again later.</td>
+                                </tr>
+                            <?php } ?>
+                            </tbody>
+                        </table>
+                    </form>
+                <?php else: ?>
+                    <!-- If User role, show a message -->
+                    <p>You do not have permission to view or manage family products.</p>
+                <?php endif; ?>
             </div>
         </div>
     </div>
 </div>
 <!-- End Products Section -->
+
 
 <!-- Pagination Logic Start -->
 <div class="container">

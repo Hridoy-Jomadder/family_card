@@ -26,6 +26,7 @@ try {
             'family_name' => $_POST['family_name'] ?? '',
             'nid_number' => $_POST['nid_number'] ?? '',
             'full_name' => $_POST['full_name'] ?? '',
+            'wife_name' => $_POST['wife_name'] ?? '',
             'father_name' => $_POST['father_name'] ?? '',
             'mother_name' => $_POST['mother_name'] ?? '',
             'son_name_all' => $_POST['son_name_all'] ?? '',
@@ -87,6 +88,27 @@ try {
     }    
 } catch (Exception $e) {
     $message = "An unexpected error occurred.";
+}
+
+$total_salary = 0;
+
+// List of salary fields to sum up
+$salary_fields = [
+    'job_salary', 
+    'father_salary', 
+    'mother_salary', 
+    'wife_salary', 
+    'son_salary', 
+    'son_salary1', 
+    'son_salary2', 
+    'dau_salary', 
+    'dau_salary1', 
+    'dau_salary2', 
+    'family_other_members_salary'
+];
+
+foreach ($salary_fields as $field) {
+    $total_salary += (int)($family_data[$field] ?? 0); // Add salary values, defaulting to 0 if not set
 }
 ?>
 
@@ -153,6 +175,7 @@ try {
                 <div><br>
                     <p style="color:white;"><strong>Family Name:</strong> <?= htmlspecialchars($family_data['family_name'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Full Name:</strong> <?= htmlspecialchars(string: $family_data['full_name'] ?? 'Not Available') ?></p>
+                    <p style="color:white;"><strong>Hasband or Wife Name:</strong> <?= htmlspecialchars($family_data['wife_name'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Father's Name:</strong> <?= htmlspecialchars($family_data['father_name'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Mother's Name:</strong> <?= htmlspecialchars($family_data['mother_name'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Son's Name:</strong> <?= htmlspecialchars($family_data['son_name_all'] ?? 'Not Available') ?></p>
@@ -162,7 +185,7 @@ try {
                     <p style="color:white;"><strong>Mobile Number:</strong> <?= htmlspecialchars($family_data['mobile_number'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Family Address:</strong> <?= htmlspecialchars($family_data['family_address'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Balance:</strong> <?= htmlspecialchars($family_data['balance'] ?? 'Not Available') ?> TK</p>
+                    <p style="color:white;"><strong>Balance (TK):</strong> <?= htmlspecialchars($family_data['balance'] ?? 'Not Available') ?> /-</p>
                 </div>
             <?php else: ?>
                 <p style="color:white;"><?= htmlspecialchars($message) ?></p>
@@ -175,7 +198,7 @@ try {
                     <p style="color:white;"><strong>Gold:</strong> <?= htmlspecialchars($family_data['gold'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Asset:</strong> <?= htmlspecialchars(string: $family_data['asset'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Family Members Assets:</strong> <?= htmlspecialchars($family_data['family_member_asset'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Family Members Salary:</strong> <?= htmlspecialchars($family_data['family_member_salary'] ?? 'Not Available') ?> TK</p>
+                    <p style="color:white;"><strong>Family Members Salary:</strong> <?= htmlspecialchars($family_data['total_salary'] ?? 'Not Available') ?> TK</p>
                     <!-- <p style="color:white;"><strong>Family Card Number:</strong> <?= htmlspecialchars(string: $family_data['family_card_number'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p> -->
                 </div>
@@ -198,10 +221,13 @@ try {
                 <label for="family_name">Family Name:</label>
                 <input type="text" class="form-control" id="family_name" name="family_name" value="<?= htmlspecialchars($family_data['family_name'] ?? '') ?>" required>
             </div>
-
             <div class="form-group">
                 <label for="full_name">Full Name:</label>
                 <input type="text" class="form-control" id="full_name" name="full_name" value="<?= htmlspecialchars($family_data['full_name'] ?? '') ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="wife_name">Hasband or Wife Name:</label>
+                <input type="text" class="form-control" id="wife_name" name="wife_name" value="<?= htmlspecialchars($family_data['wife_name'] ?? '') ?>" required>
             </div>
             <div class="form-group">
                 <label for="father_name">Father's Name:</label>
@@ -252,3 +278,4 @@ try {
 
 </body>
 </html>
+

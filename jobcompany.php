@@ -168,7 +168,7 @@ foreach ($salary_fields as $field) {
                 <div><br>
                     <p style="color:white;"><strong>Job/Company:</strong> <?= htmlspecialchars($family_data['job'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Designation:</strong> <?= htmlspecialchars($family_data['job_type'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Annual Salary:</strong> <?= htmlspecialchars($family_data['job_salary'] ?? 'Not Available') ?> TK</p>
+                    <p style="color:white;"><strong>Annual Salary (TK):</strong> <?= htmlspecialchars($family_data['job_salary'] ?? 'Not Available') ?>/-</p>
                     <p style="color:white;"><strong>Family Members in Job/Company:</strong> <?= htmlspecialchars($family_data['family_jc_members'] ?? 'Not Available') ?></p>
 
                     <!-- Dynamically handle family members' jobs/salaries -->
@@ -188,14 +188,14 @@ foreach ($salary_fields as $field) {
 
                     foreach ($roles as $label => [$jobField, $salaryField]) {
                         echo "<p style='color:white;'><strong>{$label}'s Job:</strong> " . htmlspecialchars($family_data[$jobField] ?? 'Not Available') . "</p>";
-                        echo "<p style='color:white;'><strong>{$label}'s Salary:</strong> " . htmlspecialchars($family_data[$salaryField] ?? 'Not Available') . " TK</p>";
+                        echo "<p style='color:white;'><strong>{$label}'s Salary (TK):</strong> " . htmlspecialchars($family_data[$salaryField] ?? 'Not Available') . "/-</p>";
                     }
                     ?>
                 </div>
             <?php else: ?>
                 <p style="color:white;"><?= htmlspecialchars($message) ?></p>
             <?php endif; ?>
-            <p style="color:white;"><strong>Total Annual Salary:</strong> <?= htmlspecialchars($total_salary) ?> TK</p>
+            <p style="color:white;"><strong>Total Annual Salary (TK):</strong> <?= htmlspecialchars($total_salary) ?>/-</p>
         </div>
     </div>
 </div>

@@ -165,15 +165,7 @@ $conn->close(); // Close the database connection
                 <?php if (!empty($message)): ?>
             <p style="color: black;text-align: center; font-size: 22px;"><?php echo htmlspecialchars($message); ?></p>
         <?php endif; ?>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-users fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Tax</p>
-                                <h6 class="mb-0">Online 6 lakh</h6>
-                            </div>
-                        </div>
-                    </div>
+                    
                     <div class="col-sm-6 col-xl-3">
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-gift fa-3x text-primary"></i>
@@ -197,7 +189,7 @@ $conn->close(); // Close the database connection
                             <i class="fa fa-home fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">Home</p>
-                                <h6 class="mb-0">100%</h6>
+                                <h6 class="mb-0">50,000</h6>
                             </div>
                         </div>
                     </div>
@@ -207,6 +199,15 @@ $conn->close(); // Close the database connection
                             <div class="ms-3">
                                 <p class="mb-2">Eid Gift</p>
                                 <h6 class="mb-0">2</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-users fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Tax</p>
+                                <h6 class="mb-0">Online 6 lakh</h6>
                             </div>
                         </div>
                     </div>

@@ -403,7 +403,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <th scope="col">ID</th>
                             <th scope="col">Family Name</th>
                             <th scope="col">Full Name</th>
-                            <th scope="col">Profile Image</th>
+                            <!-- <th scope="col">Profile Image</th> -->
                             <th scope="col">Family Members</th>
                             <th scope="col">Mobile</th>
                             <th scope="col">Family Address</th>
@@ -433,9 +433,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <td><?php echo htmlspecialchars($user['id']); ?></td>
                                     <td><?php echo htmlspecialchars($user['family_name']); ?></td>
                                     <td><?php echo htmlspecialchars($user['full_name']); ?></td>
-                                    <td>
+                                    <!-- <td>
                                         <img src="<?= htmlspecialchars($user['family_image'] ?? 'uploads/default-image.jpg') ?>" alt="" style="width: 60px; height: 80px;">
-                                    </td>
+                                    </td> -->
                                     <td><?php echo isset($user['family_members']) ? htmlspecialchars($user['family_members']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['mobile_number']) ? htmlspecialchars($user['mobile_number']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['family_address']) ? htmlspecialchars($user['family_address']) : 'N/A'; ?></td>
@@ -443,9 +443,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <td><?php echo isset($user['family_card_number']) ? htmlspecialchars($user['family_card_number']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['job']) ? htmlspecialchars($user['job']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['job_type']) ? htmlspecialchars($user['job_type']) : 'N/A'; ?></td>
-                                    <td><?php echo isset($user['job_salary']) ? htmlspecialchars($user['job_salary']) : 'N/A'; ?></td>
-                                    <td><?php echo isset($user['balance']) ? htmlspecialchars($user['balance']) : 'N/A'; ?></td>
-                                    <td><?php echo htmlspecialchars(number_format($family_total, 0)); ?> TK</td>
+                                    <td><?php echo isset($user['job_salary']) ? htmlspecialchars($user['job_salary']) : 'N/A'; ?>/-</td>
+                                    <td><?php echo isset($user['balance']) ? htmlspecialchars($user['balance']) : 'N/A'; ?>/-</td>
+                                    <td><?php echo htmlspecialchars(number_format($family_total, 0)); ?>/-</td>
                                 </tr>
                         <?php endforeach; 
                         } else {

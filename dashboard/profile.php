@@ -482,6 +482,8 @@ $conn->close();
     <br><br>
     <div class="container">
         <div class="profile-container">
+            <!--  -->
+        <h2>Edit Admin</h2>
         <form action="" method="POST" enctype="multipart/form-data">
             <label for="profile_image">Update Profile Image:</label>
             <input type="file" name="profile_image" id="profile_image" accept="image/*" required>

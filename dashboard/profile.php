@@ -432,6 +432,10 @@ $conn->close();
         <img src="<?= htmlspecialchars($profile_image) ?>" alt="Profile Image" class="profile-image">
         <br>
         <br>
+        <p>Full Name: <?= htmlspecialchars($username) ?></p>
+        <p>Designation: President</p>
+        <!-- <p>Designation: <?= htmlspecialchars($title) ?></p> -->
+
         <p>Email: <?= htmlspecialchars($email) ?></p>
         <p>Role: <?= htmlspecialchars($role) ?></p>
 

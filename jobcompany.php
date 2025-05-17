@@ -163,13 +163,13 @@ foreach ($salary_fields as $field) {
     <div class="container">
     <div style="width: 100%; padding: 50px; background-color: #0072ff; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex; margin: 5px;">
         <div>
-            <h2 style="color: white;">Job/Company Information</h2>
+            <h2 style="color: white;">Government Job/Company Job Information</h2>
             <?php if (!empty($family_data)): ?>
                 <div><br>
-                    <p style="color:white;"><strong>Job/Company:</strong> <?= htmlspecialchars($family_data['job'] ?? 'Not Available') ?></p>
+                    <p style="color:white;"><strong>Government Job/Company Job:</strong> <?= htmlspecialchars($family_data['job'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Designation:</strong> <?= htmlspecialchars($family_data['job_type'] ?? 'Not Available') ?></p>
                     <p style="color:white;"><strong>Annual Salary (TK):</strong> <?= htmlspecialchars($family_data['job_salary'] ?? 'Not Available') ?>/-</p>
-                    <p style="color:white;"><strong>Family Members in Job/Company:</strong> <?= htmlspecialchars($family_data['family_jc_members'] ?? 'Not Available') ?></p>
+                    <p style="color:white;"><strong>Family Members in Government Job/Company Job:</strong> <?= htmlspecialchars($family_data['family_jc_members'] ?? 'Not Available') ?></p>
 
                     <!-- Dynamically handle family members' jobs/salaries -->
                     <?php

@@ -495,7 +495,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         <td><?php echo isset($user['family_card_number']) ? htmlspecialchars($user['family_card_number']) : 'N/A'; ?></td>
                                         <td><?php echo isset($user['gold']) ? htmlspecialchars($user['gold']) : 'N/A'; ?></td>
                                         <td><?php echo isset($user['asset']) ? htmlspecialchars($user['asset']) : 'N/A'; ?></td>
-                                        <td><?php echo isset($user['balance']) ? htmlspecialchars($user['balance']) : 'N/A'; ?></td>
+                                        <td style="text-align: center;"><?php echo isset($user['balance']) ? htmlspecialchars($user['balance']) : 'N/A'; ?>/-</td>
                                     </tr>
                             <?php endforeach; 
                             } else {
@@ -557,7 +557,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         <td><?php echo isset($user['balance']) ? htmlspecialchars($user['balance']) : 'N/A'; ?></td>
                                         <td>
                                             <select name="agricultural_products_<?= $user['id'] ?>" id="agricultural_products_<?= $user['id'] ?>">
-                                                <option value="">Select</option>
+                                                <option value=""></option>
                                                 <option value="Rice 5 kg">Rice 5 kg</option>
                                                 <option value="Rice 8 kg">Rice 8 kg</option>
                                                 <option value="Wheat 1 kg">Wheat 1 kg</option>
@@ -565,14 +565,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         </td>
                                         <td>
                                             <select name="product_<?= $user['id'] ?>" id="product_<?= $user['id'] ?>">
-                                                <option value="">Select</option>
+                                                <option value=""></option>
                                                 <option value="Rice 1 Packet">Rice 1 Packet</option>
                                                 <option value="Wheat 1 Packet">Wheat 1 Packet</option>
                                             </select>
                                         </td>
                                         <td>
                                             <select name="vehicles_<?= $user['id'] ?>" id="vehicles_<?= $user['id'] ?>">
-                                                <option value="">Select</option>
+                                                <option value=""></option>
                                                 <option value="Home">Home</option>
                                                 <option value="Car">Car</option>
                                                 <option value="Bike">Bike</option>

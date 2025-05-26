@@ -20,7 +20,7 @@ if ($conn->connect_error) {
 // Initialize variables
 $message = "";
 $users = [];
-$search = $_POST['search'] ?? '';
+$search = $_GET['search'] ?? '';
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $limit = 10;
 $offset = ($page - 1) * $limit;
@@ -30,7 +30,7 @@ $order_by = ($sort_by === 'total_amount') ? 'total_amount' : 'balance';
 // Prepare query
 $query = "
     SELECT id, family_name, full_name, family_image, family_members, nid_number, mobile_number, 
-           family_card_number, job, job_type, job_salary, total_amount
+           family_card_number, job, job_type, job_salary, total_amount, balance
     FROM users
     WHERE balance >= ?
     ORDER BY $order_by DESC
@@ -42,8 +42,8 @@ if (!$stmt) {
     die("SQL Prepare Error: " . $conn->error);
 }
 
-$search_param = (int)$search; // Cast to integer for security
-$stmt->bind_param("iii", $search_param, $limit, $offset);
+$search_param = floatval($search); // Securely cast as float
+$stmt->bind_param("dii", $search_param, $limit, $offset);
 
 if ($stmt->execute()) {
     $result = $stmt->get_result();
@@ -57,7 +57,7 @@ $stmt->close();
 // Count total rows for pagination
 $count_query = "SELECT COUNT(*) as total_rows FROM users WHERE balance >= ?";
 $count_stmt = $conn->prepare($count_query);
-$count_stmt->bind_param("i", $search_param);
+$count_stmt->bind_param("d", $search_param);
 if ($count_stmt->execute()) {
     $count_result = $count_stmt->get_result();
     $total_rows = $count_result->fetch_assoc()['total_rows'] ?? 0;
@@ -69,6 +69,7 @@ $count_stmt->close();
 $total_pages = ceil($total_rows / $limit);
 $conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -129,7 +130,7 @@ $conn->close();
                 <?php if (!empty($message)): ?>
                         <p style="color: black;text-align: center; font-size: 22px;"><?php echo htmlspecialchars($message); ?></p>
                     <?php endif; ?>
-                    <div class="col-sm-6 col-xl-3">
+                    <!-- <div class="col-sm-6 col-xl-3">
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-male fa-3x text-primary"></i>
                             <div class="ms-3">
@@ -146,7 +147,7 @@ $conn->close();
                                 <h6 class="mb-0">123 </h6>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-sm-6 col-xl-3">
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-chart-area fa-3x text-primary"></i>
@@ -241,7 +242,7 @@ $conn->close();
                         <td><?php echo htmlspecialchars($user['job']); ?></td>
                         <td><?php echo htmlspecialchars($user['job_type']); ?></td>
                         <td><?php echo number_format((float)$user['job_salary']); ?> Taka</td>
-                        <td><?php echo number_format((float)$user['total_amount']); ?> Taka</td>
+                        <td><?php echo number_format((float)$user['balance'], 0); ?> Taka</td>
 
                     </tr>
                 <?php endforeach; ?>

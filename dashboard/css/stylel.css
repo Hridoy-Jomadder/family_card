@@ -127,10 +127,16 @@ h1, h4 {
 }
 
 .navbar a:hover {
-    background-color: #2980b9;
+    background-color: #2f8cca;
     border-radius: 4px;
     color: #fff;
 }
+.navbar a.active {
+  background-color: #04AA6D;
+  color: white;
+  font-weight: bold;
+}
+
 
 .header {
     text-align: center;

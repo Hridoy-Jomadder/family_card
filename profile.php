@@ -145,10 +145,10 @@ try {
     </div>
 
     <div class="container">
-    <div style="width: 100%;padding: 50px; background-color: #0072ff; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex;">
+    <div style="width: 100%;padding: 50px; background-color: #0072ff; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; ">
         <div>
             <h2 style="color:white;">Family Profile</h2>
-            <img src="<?= htmlspecialchars($family_data['family_image'] ?? 'uploads/default-image.jpg') ?>" style="width: 800px; height: 300px; border-radius: 10px;" alt="Family Image">
+            <img src="<?= htmlspecialchars($family_data['family_image'] ?? 'uploads/default-image.jpg') ?>" style="width: 100%; height: 30%; border-radius: 10px;" alt="Family Image">
 
             <?php if (!empty($family_data)): ?>
                 <div><br>

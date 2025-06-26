@@ -195,6 +195,45 @@ $conn->close(); // Close the connection after all queries are executed
     <!-- Replace HTTP with HTTPS in the CDN links -->
         <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  padding-top: 60px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.9);
+}
+.modal-content {
+  margin: auto;
+  display: block;
+  max-width: 80%;
+  max-height: 80%;
+}
+#caption {
+  text-align: center;
+  color: #ccc;
+  padding: 10px;
+}
+.close {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  color: #fff;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.close:hover {
+  color: #bbb;
+}
+</style>
+
 </head>
 <body>
 <div class="header">
@@ -210,6 +249,13 @@ $conn->close(); // Close the connection after all queries are executed
         <a href="upload_family_image.php">Upload Image</a>
         <a href="logout.php">Logout</a>
     </div>
+    <!-- Modal HTML -->
+<div id="imgModal" class="modal">
+  <span class="close">&times;</span>
+  <img class="modal-content" id="modalImg">
+  <div id="caption"></div>
+</div>
+
 <!-- Star Products Start -->
 <div class="container">
     <div class="container-fluid pt-4 px-4">
@@ -253,7 +299,8 @@ $conn->close(); // Close the connection after all queries are executed
                                 <?php if (!empty($row['gift_image'])) {
                                     $image_paths = explode(",", $row['gift_image']);
                                     foreach ($image_paths as $image_path) {
-                                        echo "<a href='$image_path' target='_blank'><img src='$image_path' alt='Gift Image' style='max-width: 100px; max-height: 100px; margin-top: 10px;'></a><br>";
+                                         echo "<img src='$image_path' alt='Gift Image' style='max-width: 100px; max-height: 100px; margin-top: 10px; cursor: pointer;'><br>";
+
                                     }
                                 } else {
                                     echo "No images available";
@@ -294,6 +341,34 @@ $conn->close(); // Close the connection after all queries are executed
     <script src="lib/tempusdominus/js/moment.min.js"></script>
     <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
     <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var modal = document.getElementById("imgModal");
+            var modalImg = document.getElementById("modalImg");
+            var captionText = document.getElementById("caption");
+            var span = document.getElementsByClassName("close")[0];
+
+            document.querySelectorAll("img[alt='Gift Image']").forEach(function(img) {
+                img.addEventListener("click", function(){
+                    modal.style.display = "block";
+                    modalImg.src = this.src;
+                    captionText.innerHTML = this.alt;
+                });
+            });
+
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            // Optional: click outside image closes modal
+            modal.onclick = function(event) {
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+        </script>
 
 </body>
 </html>

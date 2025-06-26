@@ -177,7 +177,7 @@ $conn->close(); // Close the connection after all queries are executed
     <h4 style="color:white;">Hand in hand, the country of pride is Shahid Zia's Bangladesh.</h4>
 </div>    
 <div class="navbar">
-        <a href="index.php" class="active">Home</a>
+        <a href="index.php" active>Home</a>
         <a href="profile.php">Profile</a>
         <a href="asset.php">Asset</a>
         <a href="jobcompany.php">Govt./Company Job</a>

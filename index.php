@@ -242,17 +242,42 @@ $conn->close(); // Close the connection after all queries are executed
                                 <td><?= htmlspecialchars($row['vehicle'] ?? 'N/A') ?></td>
                                 <td><?= htmlspecialchars($row['created_at'] ?? 'N/A') ?></td>
                                 <td>
-                                <?php if (!empty($row['gift_image'])) {
+                                <?php
+                                if (!empty($row['gift_image'])) {
                                     $image_paths = explode(",", $row['gift_image']);
-                                    foreach ($image_paths as $image_path) {
-                                        echo "<a href='$image_path' target='_blank'><img src='$image_path' alt='Gift Image' style='max-width: 100px; max-height: 100px; margin-top: 10px;'></a><br>";
+                                    foreach ($image_paths as $index => $image_path) {
+                                        $image_path = trim($image_path);
+                                        $modalId = 'modal_' . $row['id'] . '_' . $index;
+                                        ?>
+                                        <!-- Thumbnail -->
+                                        <img src="<?= htmlspecialchars($image_path) ?>"
+                                            alt="Gift Image"
+                                            style="max-width: 100px; max-height: 100px; margin-top: 10px; cursor: pointer;"
+                                            data-bs-toggle="modal" data-bs-target="#<?= $modalId ?>">
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="<?= $modalId ?>" tabindex="-1" aria-labelledby="<?= $modalId ?>Label" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                                            <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="<?= $modalId ?>Label">Gift Image</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body text-center">
+                                                <img src="<?= htmlspecialchars($image_path) ?>" alt="Gift Image" style="max-width: 100%; max-height: 80vh;">
+                                            </div>
+                                            </div>
+                                        </div>
+                                        </div>
+                                        <br>
+                                        <?php
                                     }
                                 } else {
                                     echo "No images available";
                                 }
                                 ?>
+                                </td>
 
-                            </td>
                             </tr>
                         <?php endwhile; ?>
                     <?php else: ?>

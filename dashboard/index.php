@@ -680,5 +680,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
     <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
+    <script>
+    // Save scroll position before navigating away
+    window.addEventListener('beforeunload', () => {
+    sessionStorage.setItem('scrollPos', window.scrollY);
+    });
+
+    // On page load, scroll to the saved position
+    window.addEventListener('load', () => {
+    const scrollPos = sessionStorage.getItem('scrollPos');
+    if (scrollPos) {
+        window.scrollTo(0, parseInt(scrollPos));
+        sessionStorage.removeItem('scrollPos'); // clear it after restoring
+    }
+    });
+    </script>
+
+
 </body>
 </html>

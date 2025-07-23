@@ -95,6 +95,7 @@ $conn->close();
     <title>Months Information</title>
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/style.css" rel="stylesheet" />
+    <link href="css/stylel.css" rel="stylesheet" />
 </head>
 <body>
 <div class="header">
@@ -106,13 +107,13 @@ $conn->close();
     <a href="profile.php">Profile</a>
     <a href="asset.php">Asset</a>
     <a href="jobcompany.php">Govt./Company Job</a>
+    <a href="months.php">Months</a>
     <a href="gift.php">Gift</a>
-    <a href="upload_family_image.php">Upload Image</a>
     <a href="logout.php">Logout</a>
 </div>
 
 <div class="container my-4">
-    <div style="background-color: #0072ff; padding: 30px; color: white; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+    <div style="width: 100%;background-color: #0072ff; padding: 30px; color: white; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
         <h2>Months Information</h2>
         <?php if (!empty($family_data)): ?>
             <p><strong>Family Name:</strong> <?= htmlspecialchars($user_info['family_name'] ?? 'Not Available') ?></p>

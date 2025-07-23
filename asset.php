@@ -118,7 +118,7 @@ $stmt->close();
     </div>
 
     <div class="container">
-    <div style="width: 100%;padding: 50px; background-color: #0072ff; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex;">
+    <div style="width: 100%;padding: 50px; background-color: #0072ff; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
         <div>
             <!-- <h2 style="color:white;">Family Profile</h2>  -->
             <h2 style="color:white;">Family Assets Information</h2>

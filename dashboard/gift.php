@@ -154,6 +154,7 @@ $conn->close(); // Close the database connection
     <a href="index.php">Home</a>
     <a href="profile.php">Profile</a>
     <a href="gift.php">Gift</a>
+    <a href="months.php">Months</a>
     <a href="logout.php" onclick="return confirm('Are you sure you want to log out?');">Logout</a>
     </div>
 

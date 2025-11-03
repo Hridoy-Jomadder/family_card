@@ -288,10 +288,16 @@ $conn->close(); // Close the database connection
                             <!-- <td><?php echo htmlspecialchars(number_format($gift['value'] ?? 0, 2)); ?></td> -->
                             <td><?php echo htmlspecialchars($gift['created_at'] ?? 'N/A'); ?></td>
                             <td>
-                            <?php if (!empty($row['gift_image'])): ?>
-                                    <img src="<?= htmlspecialchars($row['gift_image']) ?>" alt="Gift Image" style="max-width: 100px; max-height: 100px; margin-top: 10px;">
-                                <?php endif; ?>
-                            </td>
+    <?php if (!empty($gift['gift_image'])): ?>
+        <img src="<?php echo 'http://localhost/familycard/uploads/' . htmlspecialchars($gift['gift_image']); ?>" 
+             alt="Gift Image" 
+             style="max-width: 100px; cursor:pointer;" 
+             onclick="openModal('<?php echo 'http://localhost/familycard/uploads/' . htmlspecialchars($gift['gift_image']); ?>')">
+    <?php else: ?>
+        <span>No Image</span>
+    <?php endif; ?>
+</td>
+
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
@@ -321,6 +327,18 @@ $conn->close(); // Close the database connection
     <script src="lib/tempusdominus/js/moment.min.js"></script>
     <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
     <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <script>
+function openModal(src) {
+    document.getElementById('modalImage').src = src;
+    document.getElementById('imgModal').style.display = 'flex';
+}
+function closeModal() {
+    document.getElementById('imgModal').style.display = 'none';
+}
+</script>
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
 
 </body>
 </html>

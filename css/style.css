@@ -87,8 +87,8 @@ button:hover {
     /* display: flex; */
     align-items: center;
     justify-content: center;
-    /* background-color: #3498db; */
-    padding: 10px 20px;
+/* background: linear-gradient(90deg, #007bff, #00c6ff, #007bff);    padding: 10px 20px; */
+background: linear-gradient(90deg, #006cf6, #ff0c00, #0064ff);
     color: white;
     text-align: center;
 }

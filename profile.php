@@ -131,8 +131,8 @@ try {
 </head>
 <body>
 <div class="header">
-    <h1 style="color:white;">Welcome to Family Card</h1>
-    <h4 style="color:white;">Hand in hand, the country of pride is Shahid Zia's Bangladesh.</h4>
+    <h1 style="color: #fff;">Welcome to Family Card</h1>
+    <h4 style="color: #fff;">Hand in hand, the country of pride is Shahid Zia's Bangladesh.</h4>
 </div> 
    <div class="navbar">
         <a href="index.php">Home</a>
@@ -143,55 +143,82 @@ try {
         <a href="upload_family_image.php">Upload Image</a>
         <a href="logout.php">Logout</a>
     </div>
-
     <div class="container">
-    <div style="width: 100%;padding: 50px; background-color: #0072ff; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; ">
+
+    <div style="width: 100%;padding: 115px; justify-content: center; 
+        background-image: url('img/05.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    ">
         <div>
-            <h2 style="color:white;">Family Profile</h2>
-            <img src="<?= htmlspecialchars($family_data['family_image'] ?? 'uploads/default-image.jpg') ?>" style="width: 100%; height: 30%; border-radius: 10px;" alt="Family Image">
+         <img src="<?= htmlspecialchars($family_data['family_image'] ?? 'uploads/default-image.jpg') ?>" style="width: 100%; height: 100%; border-radius: 10px;" alt="Family Image">
+        </div>
+    </div>
+    </div>
+    <div class="container">
+
+    <div style="width: 100%;padding: 50px; justify-content: center; 
+        background-image: url('img/full.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    ">
+        <div>
+            <h2 style="color:#0072ff;">Family Profile</h2>
 
             <?php if (!empty($family_data)): ?>
                 <div><br>
-                    <p style="color:white;"><strong>Family Name:</strong> <?= htmlspecialchars($family_data['family_name'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Full Name:</strong> <?= htmlspecialchars(string: $family_data['full_name'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Hasband or Wife Name:</strong> <?= htmlspecialchars($family_data['wife_name'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Father's Name:</strong> <?= htmlspecialchars($family_data['father_name'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Mother's Name:</strong> <?= htmlspecialchars($family_data['mother_name'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Son's Name:</strong> <?= htmlspecialchars($family_data['son_name_all'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Daughter's Name:</strong> <?= htmlspecialchars($family_data['dau_name_all'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>NID Number:</strong> <?= htmlspecialchars($family_data['nid_number'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Family Card Number:</strong> <?= htmlspecialchars(string: $family_data['family_card_number'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Mobile Number:</strong> <?= htmlspecialchars($family_data['mobile_number'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Family Address:</strong> <?= htmlspecialchars($family_data['family_address'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Balance (TK):</strong> <?= htmlspecialchars($family_data['balance'] ?? 'Not Available') ?> /-</p>
+                    <div style="color: #0072ff; text-align: left; margin-left: 40%;">
+                        <p><strong>Family Name:</strong> <?= htmlspecialchars($family_data['family_name'] ?? 'Not Available') ?></p>
+                        <p><strong>Full Name:</strong> <?= htmlspecialchars($family_data['full_name'] ?? 'Not Available') ?></p>
+                        <p><strong>Husband or Wife Name:</strong> <?= htmlspecialchars($family_data['wife_name'] ?? 'Not Available') ?></p>
+                    <p ><strong>Father's Name:</strong> <?= htmlspecialchars($family_data['father_name'] ?? 'Not Available') ?></p>
+                    <p ><strong>Mother's Name:</strong> <?= htmlspecialchars($family_data['mother_name'] ?? 'Not Available') ?></p>
+                    <p ><strong>Son's Name:</strong> <?= htmlspecialchars($family_data['son_name_all'] ?? 'Not Available') ?></p>
+                    <p ><strong>Daughter's Name:</strong> <?= htmlspecialchars($family_data['dau_name_all'] ?? 'Not Available') ?></p>
+                    <p ><strong>NID Number:</strong> <?= htmlspecialchars($family_data['nid_number'] ?? 'Not Available') ?></p>
+                    <p ><strong>Family Card Number:</strong> <?= htmlspecialchars(string: $family_data['family_card_number'] ?? 'Not Available') ?></p>
+                    <p ><strong>Mobile Number:</strong> <?= htmlspecialchars($family_data['mobile_number'] ?? 'Not Available') ?></p>
+                    <p ><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p>
+                    <p ><strong>Family Address:</strong> <?= htmlspecialchars($family_data['family_address'] ?? 'Not Available') ?></p>
+                    <p ><strong>Balance (TK):</strong> <?= htmlspecialchars($family_data['balance'] ?? 'Not Available') ?> /-</p>
+                </div>
                 </div>
             <?php else: ?>
-                <p style="color:white;"><?= htmlspecialchars($message) ?></p>
+                <p style="color: #0072ff;"><?= htmlspecialchars($message) ?></p>
             <?php endif; ?>
             <br>
             <br>
-            <h2 style="color:white;">Family Assets Information</h2>
+            <h2 style="color: #0072ff;">Family Assets Information</h2>
             <?php if (!empty($family_data)): ?>
                 <div>
-                    <p style="color:white;"><strong>Gold:</strong> <?= htmlspecialchars($family_data['gold'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Asset:</strong> <?= htmlspecialchars(string: $family_data['asset'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Family Members Assets:</strong> <?= htmlspecialchars($family_data['family_member_asset'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Family Members Salary(TK):</strong> <?= htmlspecialchars($family_data['family_member_salary'] ?? 'Not Available') ?> /-</p>
-                    <!-- <p style="color:white;"><strong>Family Card Number:</strong> <?= htmlspecialchars(string: $family_data['family_card_number'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p> -->
+                    <div style="color: #0072ff; text-align: left; margin-left: 40%;">
+                    <p ><strong>Gold:</strong> <?= htmlspecialchars($family_data['gold'] ?? 'Not Available') ?></p>
+                    <p ><strong>Asset:</strong> <?= htmlspecialchars(string: $family_data['asset'] ?? 'Not Available') ?></p>
+                    <p ><strong>Family Members Assets:</strong> <?= htmlspecialchars($family_data['family_member_asset'] ?? 'Not Available') ?></p>
+                    <p ><strong>Family Members Salary(TK):</strong> <?= htmlspecialchars($family_data['family_member_salary'] ?? 'Not Available') ?> /-</p>
+                    <!-- <p style="color: #0072ff;"><strong>Family Card Number:</strong> <?= htmlspecialchars(string: $family_data['family_card_number'] ?? 'Not Available') ?></p>
+                    <p style="color: #0072ff;"><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p> -->
+                </div>
                 </div>
             <?php else: ?>
-                <p style="color:white;"><?= htmlspecialchars($message) ?></p>
+                <p style="color: #0072ff;"><?= htmlspecialchars($message) ?></p>
             <?php endif; ?>
         </div>
      </div>
     </div>
 
     <div class="container">
-    <div style="width: 100%;padding: 50px; background-color: #0072ff; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex;">
+    <div style="width: 100%;padding: 50px; 
+            background-image: url('img/02.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex;">
         <div>
-    <h2 style="color:white;">Edit Profile</h2>
+    <h2 style="color: #000000ff;">Edit Profile</h2>
         <?php if (!empty($message)): ?>
             <p style="color: green;"><?= htmlspecialchars($message) ?></p>
         <?php endif; ?>

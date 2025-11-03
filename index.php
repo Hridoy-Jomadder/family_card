@@ -173,8 +173,8 @@ $conn->close(); // Close the connection after all queries are executed
 </head>
 <body>
 <div class="header">
-    <h1 style="color:white;">Welcome to Family Card</h1>
-    <h4 style="color:white;">Hand in hand, the country of pride is Shahid Zia's Bangladesh.</h4>
+    <h1 style="color: #fff;">Welcome to Family Card</h1>
+    <h4 style="color: #fff;">Hand in hand, the country of pride is Shahid Zia's Bangladesh.</h4>
 </div>    
 <div class="navbar">
         <a href="index.php" active>Home</a>
@@ -187,28 +187,36 @@ $conn->close(); // Close the connection after all queries are executed
         <a href="logout.php">Logout</a>
     </div>
     <div class="container">
-    <div style="width: 100%;padding: 50px; background-color: #0072ff; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex;">
+    <div style="width: 100%;padding: 50px; 
+    background-image: url('img/full.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex;">
         <div>
-            <h2 style="color:white;">Family Information</h2>
+            <h2 style="color: #0072ff;">Family Information</h2>
             <?php if (!empty($family_data)): ?>
                 <div>
-                    <p style="color:white;"><strong>Family Name:</strong> <?= htmlspecialchars($family_data['family_name'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>NID Number:</strong> <?= htmlspecialchars($family_data['nid_number'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Full Name:</strong> <?= htmlspecialchars($family_data['full_name'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Hasband or Wife Name:</strong> <?= htmlspecialchars($family_data['wife_name'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Father's Name:</strong> <?= htmlspecialchars($family_data['father_name'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Mother's Name:</strong> <?= htmlspecialchars($family_data['mother_name'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Mobile Number:</strong> <?= htmlspecialchars($family_data['mobile_number'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Family Address:</strong> <?= htmlspecialchars($family_data['family_address'] ?? 'Not Available') ?></p><br>
-                    <img src="<?= htmlspecialchars($family_data['family_image'] ?? 'uploads/default-image.jpg') ?>" alt="Family Image" style="width: 100%; height: 30%;border-radius: 10px;">
+                    <p style="color: #0072ff;"><strong>Family Name:</strong> <?= htmlspecialchars($family_data['family_name'] ?? 'Not Available') ?></p>
+                    <p style="color: #0072ff;"><strong>NID Number:</strong> <?= htmlspecialchars($family_data['nid_number'] ?? 'Not Available') ?></p>
+                    <p style="color: #0072ff;"><strong>Full Name:</strong> <?= htmlspecialchars($family_data['full_name'] ?? 'Not Available') ?></p>
+                    <p style="color: #0072ff;"><strong>Hasband or Wife Name:</strong> <?= htmlspecialchars($family_data['wife_name'] ?? 'Not Available') ?></p>
+                    <p style="color: #0072ff;"><strong>Father's Name:</strong> <?= htmlspecialchars($family_data['father_name'] ?? 'Not Available') ?></p>
+                    <p style="color: #0072ff;"><strong>Mother's Name:</strong> <?= htmlspecialchars($family_data['mother_name'] ?? 'Not Available') ?></p>
+                    <p style="color: #0072ff;"><strong>Mobile Number:</strong> <?= htmlspecialchars($family_data['mobile_number'] ?? 'Not Available') ?></p>
+                    <p style="color: #0072ff;"><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p>
+                    <p style="color: #0072ff;"><strong>Family Address:</strong> <?= htmlspecialchars($family_data['family_address'] ?? 'Not Available') ?></p><br>
                 </div>
             <?php else: ?>
-                <p style="color:white;"><?= htmlspecialchars($message) ?></p>
+                <p style="color: #0072ff;"><?= htmlspecialchars($message) ?></p>
             <?php endif; ?>
         </div>
      </div>
     </div>
+                     
+    <!-- <div class="container">
+    <img src="<?= htmlspecialchars($family_data['family_image'] ?? 'uploads/default-image.jpg') ?>" alt="Family Image" style="width: 100%; height: 30%;border-radius: 10px;">
+    </div> -->
 
 <!-- Star Products Start -->
 <div class="container">

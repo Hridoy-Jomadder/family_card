@@ -148,7 +148,11 @@ $conn->close();
         <a href="logout.php">Logout</a>
     </div>
 
-    <div style="padding: 50px; background-color: #0f7aff; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);margin-top: 30px;padding-bottom: 122px;">
+    <div style="padding: 50px; background-image: url('img/full.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);margin-top: 30px;padding-bottom: 122px;">
         <div class="container">
 <div style="width: 100%;">         
     <h2 style="color:black;">Family image change</h2>

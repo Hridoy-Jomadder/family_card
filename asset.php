@@ -125,8 +125,7 @@ $stmt->close();
      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
         <div>
             <!-- <h2 style="color:white;">Family Profile</h2>  -->
-            <h2 style="color:white;">Family Assets Information</h2>
-            <img src="<?= htmlspecialchars($family_data['family_image'] ?? 'uploads/default-image.jpg') ?>" style="width: 100%; height: 50%; border-radius: 10px;" alt="Family Image">
+            <h2 style="color:#0072ff;">Family Assets Information</h2>
             <?php if (!empty($family_data)): ?>
                 <div><br>
                     <p style="color:#0072ff;"><strong>Gold:</strong> <?= htmlspecialchars($family_data['gold'] ?? 'Not Available') ?></p>
@@ -154,7 +153,7 @@ $stmt->close();
     background-repeat: no-repeat;
      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex; margin: 5px;">
     <div>
-        <h2 style="color:#fff;">Edit Family Assets Information</h2>
+        <h2 style="color:#0072ff;">Edit Family Assets Information</h2>
         <?php if (!empty($message1)): ?>
             <p style="color: green;"><?= htmlspecialchars($message1) ?></p>
         <?php endif; ?>

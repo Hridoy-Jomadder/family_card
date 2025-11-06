@@ -118,7 +118,7 @@ $stmt->close();
     </div>
 
     <div class="container">
-    <div style="width: 100%;padding: 50px;     background-image: url('img/03.jpg');
+    <div style="width: 100%;padding: 50px;     background-image: url('img/04.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -128,13 +128,15 @@ $stmt->close();
             <h2 style="color:#0072ff;">Family Assets Information</h2>
             <?php if (!empty($family_data)): ?>
                 <div><br>
-                    <p style="color:#0072ff;"><strong>Gold:</strong> <?= htmlspecialchars($family_data['gold'] ?? 'Not Available') ?></p>
-                    <p style="color:#0072ff;"><strong>Asset:</strong> <?= htmlspecialchars(string: $family_data['asset'] ?? 'Not Available') ?></p>
-                    <p style="color:#0072ff;"><strong>Family Members Assets:</strong> <?= htmlspecialchars($family_data['family_member_asset'] ?? 'Not Available') ?></p>
-                    <p style="color:#0072ff;"><strong>Family Members Salary (TK):</strong> <?= htmlspecialchars($family_data['family_member_salary'] ?? 'Not Available') ?> /-</p>
-                    <p style="color:#0072ff;"><strong> Balance (TK):</strong> <?= htmlspecialchars($family_data['balance'] ?? 'Not Available') ?> /-</p>
-                    <!-- <p style="color:white;"><strong>Family Card Number:</strong> <?= htmlspecialchars(string: $family_data['family_card_number'] ?? 'Not Available') ?></p>
-                    <p style="color:white;"><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p> -->
+                    <div style="text-align:center;">
+                        <p style="color:#0072ff;"><strong>Gold:</strong> <?= htmlspecialchars($family_data['gold'] ?? 'Not Available') ?></p>
+                        <p style="color:#0072ff;"><strong>Asset:</strong> <?= htmlspecialchars($family_data['asset'] ?? 'Not Available') ?></p>
+                        <p style="color:#0072ff;"><strong>Family Members Assets:</strong> <?= htmlspecialchars($family_data['family_member_asset'] ?? 'Not Available') ?></p>
+                        <p style="color:#0072ff;"><strong>Family Members Salary (TK):</strong> <?= htmlspecialchars($family_data['family_member_salary'] ?? 'Not Available') ?> /-</p>
+                        <p style="color:#0072ff;"><strong>Balance (TK):</strong> <?= htmlspecialchars($family_data['balance'] ?? 'Not Available') ?> /-</p>
+                        <p style="color:white;"><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p>
+<!-- <p style="color:white;"><strong>Family Card Number:</strong> <?= htmlspecialchars($family_data['family_card_number'] ?? 'Not Available') ?></p> -->
+                    </div>
                 </div>
             <?php else: ?>
                 <p style="color:white;"><?= htmlspecialchars($message) ?></p>

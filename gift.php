@@ -257,7 +257,7 @@ $conn->close(); // Close the connection after all queries are executed
 </div>
 
 <!-- Star Products Start -->
-<div class="container" style="margin-top: 30px; margin-bottom: 30px;    background-image: url('img/03.jpg');
+<div class="container" style="margin-top: 30px; margin-bottom: 30px; background-image: url('img/03.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;">

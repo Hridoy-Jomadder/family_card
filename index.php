@@ -219,7 +219,7 @@ $conn->close(); // Close the connection after all queries are executed
     </div> -->
 
 <!-- Star Products Start -->
-<div class="container">
+<div class="container" style="background-image: url('img/03.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
     <div class="container-fluid pt-4 px-4">
         <div class="bg-light text-center rounded p-4">
             <div class="d-flex align-items-center justify-content-between mb-4">

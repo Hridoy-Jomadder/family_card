@@ -70,7 +70,7 @@ $conn->close();
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="container0">
+    <div class="container0" style="background-image: url('img/02.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <h2>Register Family Card</h2>
             <!-- Display message (success or error) -->
             <?php if (!empty($message)): ?>

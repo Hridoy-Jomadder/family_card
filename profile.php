@@ -145,8 +145,8 @@ try {
     </div>
     <div class="container">
 
-    <div style="width: 100%;padding: 115px; justify-content: center; 
-        background-image: url('img/05.png');
+    <div style="width: 100%;padding: 112px; justify-content: center; 
+        background-image: url('img/07.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -170,19 +170,19 @@ try {
             <?php if (!empty($family_data)): ?>
                 <div><br>
                     <div style="color: #0072ff; text-align: left; margin-left: 40%;">
-                        <p><strong>Family Name:</strong> <?= htmlspecialchars($family_data['family_name'] ?? 'Not Available') ?></p>
-                        <p><strong>Full Name:</strong> <?= htmlspecialchars($family_data['full_name'] ?? 'Not Available') ?></p>
-                        <p><strong>Husband or Wife Name:</strong> <?= htmlspecialchars($family_data['wife_name'] ?? 'Not Available') ?></p>
-                    <p ><strong>Father's Name:</strong> <?= htmlspecialchars($family_data['father_name'] ?? 'Not Available') ?></p>
-                    <p ><strong>Mother's Name:</strong> <?= htmlspecialchars($family_data['mother_name'] ?? 'Not Available') ?></p>
-                    <p ><strong>Son's Name:</strong> <?= htmlspecialchars($family_data['son_name_all'] ?? 'Not Available') ?></p>
-                    <p ><strong>Daughter's Name:</strong> <?= htmlspecialchars($family_data['dau_name_all'] ?? 'Not Available') ?></p>
-                    <p ><strong>NID Number:</strong> <?= htmlspecialchars($family_data['nid_number'] ?? 'Not Available') ?></p>
-                    <p ><strong>Family Card Number:</strong> <?= htmlspecialchars(string: $family_data['family_card_number'] ?? 'Not Available') ?></p>
-                    <p ><strong>Mobile Number:</strong> <?= htmlspecialchars($family_data['mobile_number'] ?? 'Not Available') ?></p>
-                    <p ><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p>
-                    <p ><strong>Family Address:</strong> <?= htmlspecialchars($family_data['family_address'] ?? 'Not Available') ?></p>
-                    <p ><strong>Balance (TK):</strong> <?= htmlspecialchars($family_data['balance'] ?? 'Not Available') ?> /-</p>
+                    <p><strong>Family Name:</strong> <?= htmlspecialchars($family_data['family_name'] ?? 'Not Available') ?></p>
+                    <p><strong>Full Name:</strong> <?= htmlspecialchars($family_data['full_name'] ?? 'Not Available') ?></p>
+                    <p><strong>Husband or Wife Name:</strong> <?= htmlspecialchars($family_data['wife_name'] ?? 'Not Available') ?></p>
+                    <p><strong>Father's Name:</strong> <?= htmlspecialchars($family_data['father_name'] ?? 'Not Available') ?></p>
+                    <p><strong>Mother's Name:</strong> <?= htmlspecialchars($family_data['mother_name'] ?? 'Not Available') ?></p>
+                    <p><strong>Son's Name:</strong> <?= htmlspecialchars($family_data['son_name_all'] ?? 'Not Available') ?></p>
+                    <p><strong>Daughter's Name:</strong> <?= htmlspecialchars($family_data['dau_name_all'] ?? 'Not Available') ?></p>
+                    <p><strong>NID Number:</strong> <?= htmlspecialchars($family_data['nid_number'] ?? 'Not Available') ?></p>
+                    <p><strong>Family Card Number:</strong> <?= htmlspecialchars(string: $family_data['family_card_number'] ?? 'Not Available') ?></p>
+                    <p><strong>Mobile Number:</strong> <?= htmlspecialchars($family_data['mobile_number'] ?? 'Not Available') ?></p>
+                    <p><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p>
+                    <p><strong>Family Address:</strong> <?= htmlspecialchars($family_data['family_address'] ?? 'Not Available') ?></p>
+                    <p><strong>Balance (TK):</strong> <?= htmlspecialchars($family_data['balance'] ?? 'Not Available') ?> /-</p>
                 </div>
                 </div>
             <?php else: ?>

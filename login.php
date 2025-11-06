@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="container0" style="background-image: url('img/02.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+    <div class="container0" style="background-image: url('img/022.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <h1>Welcome to Family Card</h1>
         <h4>Hand in hand, the country of pride is Shahid Zia Bangladesh.</h4>
         <h2>Login</h2>

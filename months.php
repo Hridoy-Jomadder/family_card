@@ -113,21 +113,28 @@ $conn->close();
 </div>
 
 <div class="container my-4">
-    <div style="width: 100%;background-image: url('img/02.jpg');
+    <div style="width: 1280px;height: 820px; background-image: url('img/02.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
      padding: 30px; color: white; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+     <br>
+     <br>
+     <br>
+     <br>
+     <br>
+     <br>
         <h2>Months Information</h2>
         <?php if (!empty($family_data)): ?>
+            <div style="text-align: center;color: black;">
             <p><strong>Family Name:</strong> <?= htmlspecialchars($user_info['family_name'] ?? 'Not Available') ?></p>
-<p><strong>Full Name:</strong> <?= htmlspecialchars($user_info['full_name'] ?? 'Not Available') ?></p>
-<p><strong>Family Card Number:</strong> <?= htmlspecialchars($user_info['family_card_number'] ?? 'Not Available') ?></p>
-
+            <p><strong>Full Name:</strong> <?= htmlspecialchars($user_info['full_name'] ?? 'Not Available') ?></p>
+            <p><strong>Family Card Number:</strong> <?= htmlspecialchars($user_info['family_card_number'] ?? 'Not Available') ?></p>
             <p><strong>Total Income (TK):</strong> <?= $total_income ?>/-</p>
             <p><strong>Total Expenditure (TK):</strong> <?= $total_exp ?>/-</p>
+            </div>
         <?php else: ?>
-            <p><?= htmlspecialchars($message ?? 'No data found.') ?></p>
+            <p style="text-align: center;"><?= htmlspecialchars($message ?? 'No data found.') ?></p>
         <?php endif; ?>
         <?php if (!empty($message)): ?>
             <p style="color: yellow;"><?= htmlspecialchars($message) ?></p>

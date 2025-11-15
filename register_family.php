@@ -108,7 +108,7 @@ $conn->close();
         <?php if (!empty($message)): ?>
             <p><?php echo htmlspecialchars($message); ?></p>
         <?php endif; ?>
-        <p>Do have an account? <a href="login.php">Login</a>.</p>
+        <p>Do have an account? <a href="login.php" style="text-decoration: none;">Login</a>.</p>
 
     </div>
 </body>

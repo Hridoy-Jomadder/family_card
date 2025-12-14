@@ -116,7 +116,6 @@ h1, h4 {
     background: linear-gradient(90deg, #006cf6, #ff0c00, #0064ff);
     padding: 10px 20px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    border: double;
 }
 
 .navbar a {
@@ -125,6 +124,7 @@ h1, h4 {
     padding: 8px 16px;
     font-size: 16px;
     margin: 0 5px;
+    border: dotted;
 }
 
 .navbar a:hover {

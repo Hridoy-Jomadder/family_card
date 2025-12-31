@@ -134,7 +134,7 @@ $stmt->close();
                         <p style="color:#0072ff;"><strong>Family Members Assets:</strong> <?= htmlspecialchars($family_data['family_member_asset'] ?? 'Not Available') ?></p>
                         <p style="color:#0072ff;"><strong>Family Members Salary (TK):</strong> <?= htmlspecialchars($family_data['family_member_salary'] ?? 'Not Available') ?> /-</p>
                         <p style="color:#0072ff;"><strong>Balance (TK):</strong> <?= htmlspecialchars($family_data['balance'] ?? 'Not Available') ?> /-</p>
-                        <p style="color:white;"><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p>
+                        <p style="color:#0072ff;"><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p>
 <!-- <p style="color:white;"><strong>Family Card Number:</strong> <?= htmlspecialchars($family_data['family_card_number'] ?? 'Not Available') ?></p> -->
                     </div>
                 </div>

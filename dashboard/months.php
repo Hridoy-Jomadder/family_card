@@ -161,25 +161,42 @@ new Chart(document.getElementById('incomeExpenseChart'), {
     }
 });
 
-// Gifts
+
+
+</script>
+<script>
 new Chart(document.getElementById('giftChart'), {
-    type: 'bar',
+    type: 'doughnut',
     data: {
-        labels: giftLabels,
+        labels: giftLabels.map((m, i) => `${m} (${giftValues[i]})`),
         datasets: [{
-            label: '🎁 Gifts',
             data: giftValues,
-            backgroundColor: 'rgba(0, 123, 255, 0.6)',
-            borderColor: 'rgba(0, 123, 255, 1)',
-            borderWidth: 1
+            backgroundColor: [
+                '#0d6efd','#20c997','#ffc107','#dc3545',
+                '#6610f2','#fd7e14','#198754','#0dcaf0',
+                '#adb5bd','#198754','#ffc107','#dc3545'
+            ]
         }]
     },
     options: {
-        responsive: true,
-        scales: { y: { beginAtZero: true } },
-        plugins: { legend: { display: false } }
+        plugins: {
+            legend: {
+                position: 'right',
+                labels: {
+                    font: { size: 13 }
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: ctx => `🎁 ${ctx.label}`
+                }
+            }
+        }
     }
 });
 </script>
+
+
+
 </body>
 </html>

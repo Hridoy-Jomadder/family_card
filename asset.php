@@ -128,7 +128,7 @@ $stmt->close();
             <h2 style="color:#0072ff;">Family Assets Information</h2>
             <?php if (!empty($family_data)): ?>
                 <div><br>
-                    <div style="text-align:center;">
+                    <div style="text-align:left;padding-left:450px;">
                         <p style="color:#0072ff;"><strong>Gold:</strong> <?= htmlspecialchars($family_data['gold'] ?? 'Not Available') ?></p>
                         <p style="color:#0072ff;"><strong>Asset:</strong> <?= htmlspecialchars($family_data['asset'] ?? 'Not Available') ?></p>
                         <p style="color:#0072ff;"><strong>Family Members Assets:</strong> <?= htmlspecialchars($family_data['family_member_asset'] ?? 'Not Available') ?></p>

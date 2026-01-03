@@ -198,8 +198,10 @@ $conn->close();
    <p style="color:black;"><?= htmlspecialchars($message) ?></p>
         <form action="upload_family_image.php" method="post" enctype="multipart/form-data">
             <label for="nidnumber">NID Number:</label>
+            
             <input type="text" name="nidnumber" required>
-            <label for="family_image">Upload Family Image:</label>
+            <label for="family_image">Upload Family Image (Recommended size: 1200px x 675px):</label>
+
             <input type="file" name="family_image" accept="image/*" required>
             <button type="submit">Upload</button>
         </form>

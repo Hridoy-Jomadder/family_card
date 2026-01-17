@@ -539,7 +539,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <th scope="col">Family<br> Members</th>
                                     <th scope="col">Balance</th>
                                     <th scope="col">Agricultural Product</th>
-                                    <th scope="col">Product</th>
+                                    <th scope="col">Packet</th>
                                     <th scope="col">Home/Vehicles</th>
                                     <th scope="col">Action</th>
                                     <th scope="col">Messages</th>
@@ -576,7 +576,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                 <option value=""></option>
                                                 <option value="Home">Home</option>
                                                 <option value="Car">Car</option>
-                                                <option value="Bike">Bike</option>
+                                                <option value="Cow">Cow</option>
+                                                <option value="Goat">Goat</option>
+                                                <option value="Lamp">Lamp</option>
                                             </select>
                                         </td>
                                         <td>

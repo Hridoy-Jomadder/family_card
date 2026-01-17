@@ -99,7 +99,11 @@ $conn->close();
             <input type="number" id="family_members" name="family_members" required>
 
             <label for="password">Password:</label>
+            
             <input type="password" id="password" name="password" required>
+            <label for="privacy_agree" style="margin-top: 10px;">
+                <input type="checkbox" id="privacy_agree" name="privacy_agree" required>I agree to the <a href="privacy.php" style="text-decoration: underline; color: #007bff;">privacy policy</a>.
+            </label>
 
             <button type="submit">Register</button>
         </form>

@@ -233,7 +233,7 @@ $conn->close(); // Close the connection after all queries are executed
                             <th scope="col">Full Name</th>
                             <th scope="col">Family Card Number</th>
                             <th scope="col">Agricultural Product</th>
-                            <th scope="col">Product</th>
+                            <th scope="col">Packet</th>
                             <th scope="col">Home/Vehicles</th>
                             <th scope="col">Issued Date</th>
                             <th scope="col">Picture</th>

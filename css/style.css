@@ -124,7 +124,7 @@ h1, h4 {
     padding: 8px 16px;
     font-size: 16px;
     margin: 0 5px;
-    border: dotted;
+    border: double;
 }
 
 .navbar a:hover {

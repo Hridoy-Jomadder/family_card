@@ -87,7 +87,10 @@ $month_labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", 
 <div class="container">
     <div class="text-center mb-4">
         <h2 class="text-primary">📊 Family Card - Monthly Overview</h2>
-        <p class="text-muted">Search by Family ID or Name to view data.</p>
+        <p class="text-muted">Search by Family ID or Name to view data.</p><br>
+        <!-- <a href="division_count.php">Division Views</a><br> -->
+        <a href="dashboard_location.php">Division Information</a>
+
     </div>
 
     <!-- Search -->

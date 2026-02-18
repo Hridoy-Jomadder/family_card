@@ -202,9 +202,7 @@ $conn->close(); // Close the connection after all queries are executed
     display:flex;
     justify-content:center;
     align-items:center;
-    color:#fff;
-    font-size:22px;
-    font-weight:bold;">
+    color:#fff;">
         <div class="bg-light rounded p-4">  
             <h2 style="color: #0072ff;">Family Information</h2>
             <?php if (!empty($family_data)): ?>

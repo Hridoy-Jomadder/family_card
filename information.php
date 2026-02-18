@@ -2,33 +2,29 @@
 include "classes/connection.php";
 session_start();
 
-$family_data = [];
-$message = "";
-
-// Check login session
-if (isset($_SESSION['user_id'])) {
-    $user_id = $_SESSION['user_id'];
-} else {
+if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
 }
 
-// Database connection
 $DB = new Database();
 $conn = $DB->connect();
-
 $user_id = $_SESSION['user_id'];
+$message = "";
 
-// Fetch family data
+/* ==============================
+   FETCH FAMILY DATA
+============================== */
 $stmt = $conn->prepare("SELECT * FROM users WHERE id=?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 $family_data = $result->fetch_assoc() ?? [];
 
-/* =========================
+
+/* ==============================
    UPDATE FAMILY INFORMATION
-========================= */
+============================== */
 if ($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['update_family_select'])) {
 
     $division_id = (int)$_POST['division_id'];
@@ -68,20 +64,19 @@ if ($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['update_family_select']))
     if ($stmt->execute()) {
         $message = "✅ Family Information Updated Successfully!";
     } else {
-        $message = "❌ Update Failed: " . $stmt->error;
+        $message = "❌ Update Failed!";
     }
+}
 
 
-
-
-// Resize function
+/* ==============================
+   IMAGE RESIZE FUNCTION
+============================== */
 function resizeImage($sourcePath, $targetPath, $width, $height, $imageType) {
-    list($originalWidth, $originalHeight) = getimagesize($sourcePath);
 
-    // Create a new blank image
+    list($originalWidth, $originalHeight) = getimagesize($sourcePath);
     $newImage = imagecreatetruecolor($width, $height);
 
-    // Create image resource based on type
     switch ($imageType) {
         case 'jpg':
         case 'jpeg':
@@ -89,7 +84,6 @@ function resizeImage($sourcePath, $targetPath, $width, $height, $imageType) {
             break;
         case 'png':
             $source = imagecreatefrompng($sourcePath);
-            // Preserve transparency
             imagealphablending($newImage, false);
             imagesavealpha($newImage, true);
             break;
@@ -100,11 +94,9 @@ function resizeImage($sourcePath, $targetPath, $width, $height, $imageType) {
             return false;
     }
 
-    // Resize
     imagecopyresampled($newImage, $source, 0, 0, 0, 0, 
-                       $width, $height, $originalWidth, $originalHeight);
+        $width, $height, $originalWidth, $originalHeight);
 
-    // Save resized image
     switch ($imageType) {
         case 'jpg':
         case 'jpeg':
@@ -118,64 +110,55 @@ function resizeImage($sourcePath, $targetPath, $width, $height, $imageType) {
             break;
     }
 
-    // Free memory
     imagedestroy($source);
     imagedestroy($newImage);
-
     return true;
 }
 
-// Handle form submission
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nidnumber']) && isset($_FILES['family_image'])) {
-    $nidNumber = $_POST['nidnumber'];
-    $image = $_FILES['family_image'];
 
-    if ($image['error'] == 0) {
+/* ==============================
+   HANDLE IMAGE UPLOAD
+============================== */
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nidnumber'])) {
+
+    $nidNumber = $_POST['nidnumber'];
+
+    if (isset($_FILES['family_image']) && $_FILES['family_image']['error'] == 0) {
+
+        $image = $_FILES['family_image'];
         $targetDir = "uploads/" . $nidNumber . "/";
-        $targetFile = $targetDir . basename($image["name"]);
-        $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+        $imageFileType = strtolower(pathinfo($image["name"], PATHINFO_EXTENSION));
         $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
 
         if (in_array($imageFileType, $allowedTypes)) {
+
             if (!is_dir($targetDir)) {
                 mkdir($targetDir, 0777, true);
             }
 
-            // Move to a temporary location first
-            $tempPath = $targetDir . "temp_" . basename($image["name"]);
+            $targetFile = $targetDir . "family_image." . $imageFileType;
+            $tempPath = $targetDir . "temp." . $imageFileType;
+
             if (move_uploaded_file($image["tmp_name"], $tempPath)) {
 
-                // Resize to 1200x675
                 if (resizeImage($tempPath, $targetFile, 1200, 675, $imageFileType)) {
-                    unlink($tempPath); // delete temp image
 
-                    // Update database
-                    $query = "UPDATE users SET family_image = ? WHERE nid_number = ?";
-                    $stmt = $conn->prepare($query);
+                    unlink($tempPath);
+
+                    $stmt = $conn->prepare("UPDATE users SET family_image=? WHERE nid_number=?");
                     $stmt->bind_param("ss", $targetFile, $nidNumber);
-                    if ($stmt->execute()) {
-                        $message = "✅ Image resized (1200x675) and uploaded successfully!";
-                    } else {
-                        $message = "Database update error: " . $stmt->error;
-                    }
-                    $stmt->close();
-                } else {
-                    $message = "Image resize failed. Unsupported format?";
+                    $stmt->execute();
+
+                    $message = "✅ Image Uploaded & Resized Successfully!";
                 }
-            } else {
-                $message = "File upload failed.";
             }
         } else {
-            $message = "Only JPG, JPEG, PNG, and GIF files are allowed.";
+            $message = "❌ Only JPG, JPEG, PNG, GIF allowed.";
         }
-    } else {
-        $message = "Error in file upload: " . $image['error'];
     }
 }
-}
-
-
 ?>
+
 
 
 <!DOCTYPE html>

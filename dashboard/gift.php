@@ -166,7 +166,7 @@ $conn->close(); // Close the database connection
                 <?php if (!empty($message)): ?>
             <p style="color: black;text-align: center; font-size: 22px;"><?php echo htmlspecialchars($message); ?></p>
         <?php endif; ?>
-                    
+        
                     <div class="col-sm-6 col-xl-3">
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-gift fa-3x text-primary"></i>
@@ -232,13 +232,22 @@ $conn->close(); // Close the database connection
                     </div>
                     <div class="col-sm-6 col-xl-3">
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-id-card fa-3x text-primary"></i>
+                            <i class="fa fa-globe fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">All Family Card</p>
                                 <h6 class="mb-0">3 crore 93 lakh</h6>
                             </div>
                         </div>
                     </div> 
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-center p-4">
+                            <div class="text-center">
+                                <i class="fa fa-id-card fa-3x text-primary mb-3"></i>
+                                <p class="mb-2">Family Card</p>
+                                <h6 class="mb-0"><a href="card_view.php?id=1">Views Card</a></h6>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
             </div>

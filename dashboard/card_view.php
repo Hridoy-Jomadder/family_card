@@ -295,27 +295,30 @@ button{
             <div class="content">
                 <div class="mag-stripe"></div>
 
-                <div class="notice">
-                    এই কার্ড সরকারি ডাটাবেস ভিত্তিক।  
-                    কার্ড হারিয়ে গেলে নিকটস্থ অফিসে যোগাযোগ করুন।
-                </div>
-
+<br>
+<br>
+<br>
+<br>
                 <div class="card-number">
-                    <h4 style="margin-top:30px; text-align:center;">গণপ্রজাতন্ত্রী বাংলাদেশ সরকার<br>
-                      হাতে হাত রেখে গর্ব দেশ, শহীদ জিয়াউর রহমানের বাংলাদেশ।</h4><br>
+                    <h4 style="margin-top:30px; text-align:center;font-size: 26px;">গণপ্রজাতন্ত্রী বাংলাদেশ সরকার<br>
+                      হাতে হাত রেখে গর্ব দেশ, শহীদ জিয়াউর রহমানের বাংলাদেশ।<br>
                       আপনার সম্পদ আপনার হাতে।<br>
 
-                    কার্ড নং: <?php echo htmlspecialchars($card); ?>
+                    কার্ড নং: <?php echo htmlspecialchars($card); ?></h4>
                 </div>
 
                 <div class="scan-area">
                     <div class="qr">
-                        <img src="generate_qr.php?code=<?php echo urlencode($card); ?>" width="90">
+                        <img src="../generate_qr.php?code=<?php echo urlencode($card); ?>" width="90">
                     </div>
 
                     <div class="barcode">
-                        <img src="../barcode.php?code=<?php echo urlencode($card); ?>" height="50">
+                        <!-- <img src="../barcode.php" height="50"> -->
                     </div>
+                </div>
+                <div class="notice">
+                    এই কার্ড সরকারি ডাটাবেস ভিত্তিক।  
+                    কার্ড হারিয়ে গেলে নিকটস্থ অফিসে যোগাযোগ করুন।
                 </div>
             </div>
 

@@ -193,10 +193,10 @@ $conn->close(); // Close the connection after all queries are executed
     background-position: center;
     background-repeat: no-repeat;
      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex;">
-<div style="background:rgba(255,255,255,0.2); /* সচ্ছ রঙ */
+<div style="background:rgba(255,255,255,0.2);
     border-radius:15px;
     backdrop-filter:blur(10px); /* Glass effect */
-    -webkit-backdrop-filter:blur(10px);
+    /* -webkit-backdrop-filter:blur(10px); */
     border:1px solid rgba(255,255,255,0.3);
     box-shadow:0 8px 32px rgba(0,0,0,0.2);
     display:flex;

@@ -207,12 +207,12 @@ foreach ($salary_fields as $field) {
 
 
     <div class="container">
-    <div style="width: 100%; padding: 50px;             
+    <div style="width: 100%;            
     background-image: url('img/01.jpg');
     background-size: cover;
-    background-position: center;
     background-repeat: no-repeat;
-     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex; margin: 5px;">
+     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex; margin: 5px;
+     padding-left: 330px;padding-top: 30px;padding-bottom: 25px;">
     <div>
         <h2>Job/Company Edit</h2>
         <?php if (!empty($message2)): ?>

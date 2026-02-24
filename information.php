@@ -22,10 +22,29 @@ $result = $stmt->get_result();
 $family_data = $result->fetch_assoc() ?? [];
 
 
+function getLocationName($conn, $table, $id) {
+    if (!$id) return '';
+
+    $stmt = $conn->prepare("SELECT name_en FROM $table WHERE id=?");
+    if(!$stmt) return '';
+
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if($result && $result->num_rows > 0){
+        return $result->fetch_assoc()['name_en'];
+    }
+
+    return '';
+}
+
 /* ==============================
    UPDATE FAMILY INFORMATION
 ============================== */
 if ($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['update_family_select'])) {
+
+    $district_id = !empty($_POST['district_id']) ? (int)$_POST['district_id'] : NULL;
 
     $division_id = (int)$_POST['division_id'];
     $district_id = (int)$_POST['district_id'];
@@ -35,30 +54,36 @@ if ($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['update_family_select']))
     $house_no    = trim($_POST['house_no']);
     $ward_number = trim($_POST['ward_number']);
 
-    $division_name = $conn->query("SELECT name_en FROM divisions WHERE id=$division_id")->fetch_assoc()['name_en'] ?? '';
-    $district_name = $conn->query("SELECT name_en FROM districts WHERE id=$district_id")->fetch_assoc()['name_en'] ?? '';
-    $upazila_name  = $conn->query("SELECT name_en FROM upazilas WHERE id=$upazila_id")->fetch_assoc()['name_en'] ?? '';
-    $union_name    = $conn->query("SELECT name_en FROM unions WHERE id=$union_id")->fetch_assoc()['name_en'] ?? '';
+$division_name = getLocationName($conn, "divisions", $division_id);
+$district_name = getLocationName($conn, "districts", $district_id);
+$upazila_name  = getLocationName($conn, "upazilas", $upazila_id);
+$union_name    = getLocationName($conn, "unions", $union_id);
 
-    $stmt = $conn->prepare("UPDATE users SET 
-        division_id=?, division_name=?,
-        district_id=?, district_name=?,
-        upazila_id=?, upazila_name=?,
-        union_id=?, union_name=?,
-        ward_number=?, 
-        house_no=?, family_name=?
-        WHERE id=?");
+$stmt = $conn->prepare("UPDATE users SET 
+    division_id=?, division_name=?,
+    district_id=?, district_name=?,
+    upazila_id=?, upazila_name=?,
+    union_name=?, 
+    ward_number=?, 
+    house_no=?, 
+    family_name=?
+    WHERE id=?"
+);
 
-    $stmt->bind_param(
-        "isississssi",
-        $division_id, $division_name,
-        $district_id, $district_name,
-        $upazila_id, $upazila_name,
-        $union_id, $union_name,
-        $ward_number,
-        $house_no, $family_name,
-        $user_id
-    );
+$stmt->bind_param(
+    "isisssssssi",
+    $division_id,
+    $division_name,
+    $district_id,
+    $district_name,
+    $upazila_id,
+    $upazila_name,
+    $union_name,
+    $ward_number,
+    $house_no,
+    $family_name,
+    $user_id
+);
 
     if ($stmt->execute()) {
         $message = "✅ Family Information Updated Successfully!";
@@ -227,22 +252,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nidnumber'])) {
     margin-top: 30px;
     padding-bottom: 122px;">
 
-    <div class="container">
-        <div style="width: 100%;">    
-            <p style="color:black;"><?= htmlspecialchars($message) ?></p>
-     
-            <h2 style="color:black;">Family Information</h2>
+<div class="card shadow-lg border-0 rounded-4 p-4 mb-4">
+    <h3 class="mb-4 text-primary">Family Information</h3>
 
-            <h5>Division: <?= htmlspecialchars($family_data['division_name'] ?? '') ?></h5>
-            <h5>District: <?= htmlspecialchars($family_data['district_name'] ?? '') ?></h5>
-            <h5>Upazila: <?= htmlspecialchars($family_data['upazila_name'] ?? '') ?></h5>
-            <h5>Union: <?= htmlspecialchars($family_data['union_name'] ?? '') ?></h5>
-            <h5>Ward: <?= htmlspecialchars($family_data['ward_number'] ?? '') ?></h5>
-            <h5>House No: <?= htmlspecialchars($family_data['house_no'] ?? '') ?></h5>
-            <h5>House Name: <?= htmlspecialchars($family_data['family_name'] ?? '') ?></h5>
+    <div class="row">
+        <div class="col-md-6">
+            <p><strong>Division:</strong> <?= htmlspecialchars($family_data['division_name'] ?? '') ?></p>
+            <p><strong>District:</strong> <?= htmlspecialchars($family_data['district_name'] ?? '') ?></p>
+            <p><strong>Upazila:</strong> <?= htmlspecialchars($family_data['upazila_name'] ?? '') ?></p>
+            <p><strong>Union:</strong> <?= htmlspecialchars($family_data['union_name'] ?? '') ?></p>
+        </div>
 
+        <div class="col-md-6">
+            <p><strong>Ward:</strong> <?= htmlspecialchars($family_data['ward_number'] ?? '') ?></p>
+            <p><strong>House No:</strong> <?= htmlspecialchars($family_data['house_no'] ?? '') ?></p>
+            <p><strong>House Name:</strong> <?= htmlspecialchars($family_data['family_name'] ?? '') ?></p>
         </div>
     </div>
+</div>
        <div class="container">
         <div style="width: 100%;">         
             <h2 style="color:black;">Edit Family Information</h2>
@@ -284,6 +311,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nidnumber'])) {
 
 
     <!-- Ward -->
+     <label>Ward</label>
 <input type="text" name="ward_number" id="ward"
        value="<?= htmlspecialchars($family_data['ward_number'] ?? '') ?>" required>
 
@@ -396,6 +424,7 @@ $(document).ready(function() {
     });
 
 });
+
 $.post('get_location.php', {type:'district', division_id:1}, function(resp){
     console.log(resp);
 });

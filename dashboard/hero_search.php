@@ -82,21 +82,16 @@ $divisions = $conn->query("SELECT id,name_en FROM divisions ORDER BY name_en ASC
 <select id="division" class="form-select mb-2">
     <option value="">Select Division</option>
     <?php foreach($divisions as $d): ?>
-        <option value="<?= $d['id'] ?>">
-            <?= htmlspecialchars($d['name_en']) ?>
-        </option>
+        <option value="<?= $d['id'] ?>"><?= htmlspecialchars($d['name_en']) ?></option>
     <?php endforeach; ?>
 </select>
 
 <select id="district" class="form-select mb-2"></select>
 <select id="upazila" class="form-select mb-2"></select>
 <select id="union" class="form-select mb-2"></select>
-<select id="ward" class="form-select mb-3"></select>
+<!-- <select id="ward" class="form-select mb-2"></select> -->
 
 <div id="searchResult"></div>
-
-<!-- </div> -->
-</div>
 
 <script>
 function resetSelect(selector,label){
@@ -108,15 +103,12 @@ function loadData(type,parentId,target){
         resetSelect(target,type);
         return;
     }
-
     $.post("fetch_locations.php",{type:type,parent_id:parentId},function(res){
         let options = '<option value="">Select '+type+'</option>';
-
         res.forEach(function(row){
             let text = row.name_en ? row.name_en : row.ward_number;
             options += `<option value="${row.id}">${text}</option>`;
         });
-
         $(target).html(options);
     },"json");
 }
@@ -133,7 +125,7 @@ function searchFamily(){
     });
 }
 
-/* Events */
+// Dropdown events
 $("#division").change(function(){
     loadData('district',this.value,'#district');
     resetSelect('#upazila','Upazila');
@@ -141,30 +133,23 @@ $("#division").change(function(){
     resetSelect('#ward','Ward');
     searchFamily();
 });
-
 $("#district").change(function(){
     loadData('upazila',this.value,'#upazila');
     resetSelect('#union','Union');
     resetSelect('#ward','Ward');
     searchFamily();
 });
-
 $("#upazila").change(function(){
     loadData('union',this.value,'#union');
     resetSelect('#ward','Ward');
     searchFamily();
 });
-
 $("#union").change(function(){
     loadData('ward',this.value,'#ward');
     searchFamily();
 });
-
 $("#ward").change(function(){
     searchFamily();
 });
-</script>
 
-<script src="js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+</script>

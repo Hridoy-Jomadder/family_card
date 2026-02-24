@@ -1,60 +1,76 @@
 <?php
-include "classes/connection.php";
-session_start();
-
+include "../classes/connection.php";
 $conn = (new Database())->connect();
 
-$where = [];
+// Get filter values
+$division_id = $_GET['division_id'] ?? '';
+$district_id = $_GET['district_id'] ?? '';
+$upazila_id  = $_GET['upazila_id'] ?? '';
+$union_name  = $_GET['union_name'] ?? '';
+$ward_number = $_GET['ward_number'] ?? '';
+
+$query = "SELECT * FROM users WHERE 1=1";
 $params = [];
-$types = '';
+$types = "";
 
-$fields = ['division_id','district_id','upazila_id','union_id','ward_id'];
-
-foreach($fields as $field){
-    if(isset($_GET[$field]) && $_GET[$field] !== ''){
-        $where[] = "$field = ?";
-        $params[] = (int)$_GET[$field];
-        $types .= "i";
-    }
+// Division filter
+if($division_id){
+    $query .= " AND division_id=?";
+    $params[] = $division_id;
+    $types .= "i";
 }
 
-$query = "SELECT id, family_name, full_name FROM users";
+// District filter
+if($district_id){
+    $query .= " AND district_id=?";
+    $params[] = $district_id;
+    $types .= "i";
+}
 
-if(!empty($where)){
-    $query .= " WHERE " . implode(" AND ", $where);
+// Upazila filter
+if($upazila_id){
+    $query .= " AND upazila_id=?";
+    $params[] = $upazila_id;
+    $types .= "i";
+}
+
+// Union filter (use name)
+if($union_name){
+    $query .= " AND union_name=?";
+    $params[] = $union_name;
+    $types .= "s";
+}
+
+// Ward filter (use number)
+if($ward_number){
+    $query .= " AND ward_number=?";
+    $params[] = $ward_number;
+    $types .= "s";
 }
 
 $stmt = $conn->prepare($query);
-
-if(!$stmt){
-    die("SQL Error: " . $conn->error);
-}
-
-if(!empty($params)){
+if($params){
     $stmt->bind_param($types, ...$params);
 }
-
 $stmt->execute();
 $result = $stmt->get_result();
 
-if($result->num_rows == 0){
-    echo "<div class='alert alert-warning'>No Family Found</div>";
-    exit;
+if($result->num_rows > 0){
+    echo '<table class="table table-bordered">';
+    echo '<tr><th>Family Name</th><th>House No</th><th>Division</th><th>District</th><th>Upazila</th><th>Union</th><th>Ward</th></tr>';
+    while($row = $result->fetch_assoc()){
+        echo '<tr>
+                <td>'.htmlspecialchars($row['family_name']).'</td>
+                <td>'.htmlspecialchars($row['house_no']).'</td>
+                <td>'.htmlspecialchars($row['division_name']).'</td>
+                <td>'.htmlspecialchars($row['district_name']).'</td>
+                <td>'.htmlspecialchars($row['upazila_name']).'</td>
+                <td>'.htmlspecialchars($row['union_name']).'</td>
+                <td>'.htmlspecialchars($row['ward_number']).'</td>
+              </tr>';
+    }
+    echo '</table>';
+}else{
+    echo '<p>No families found.</p>';
 }
-
-echo "<table class='table table-bordered table-striped'>";
-echo "<tr><th>ID</th><th>Family Name</th><th>Family Head</th></tr>";
-
-while($row = $result->fetch_assoc()){
-    echo "<tr>
-            <td>{$row['id']}</td>
-            <td>".htmlspecialchars($row['family_name'])."</td>
-            <td>".htmlspecialchars($row['full_name'])."</td>
-          </tr>";
-}
-
-echo "</table>";
-
-$stmt->close();
-$conn->close();
 ?>

@@ -308,21 +308,28 @@ button{
                 </div>
 
                 <div class="scan-area">
-                    <div class="qr">
-                        <img src="../generate_qr.php?code=<?php echo urlencode($card); ?>" width="90">
-                    </div>
-
+<?php if(!empty($card)): ?>
+    <div class="qr">
+    <img src="../qrcodes/<?= htmlspecialchars($card) ?>.png" width="120" alt="QR Code">
+</div>           
+    </div>
+<?php else: ?>
+    <div class="qr">
+        <p>QR Not Available</p>
+    </div>
+<?php endif; ?>
+<div class="notice">
+                    এই কার্ড সরকারি ডাটাবেস ভিত্তিক।  
+                    কার্ড হারিয়ে গেলে নিকটস্থ অফিসে যোগাযোগ করুন।
+                </div>
                     <div class="barcode">
                         <!-- <img src="../barcode.php" height="50"> -->
                     </div>
                 </div>
-                <div class="notice">
-                    এই কার্ড সরকারি ডাটাবেস ভিত্তিক।  
-                    কার্ড হারিয়ে গেলে নিকটস্থ অফিসে যোগাযোগ করুন।
-                </div>
+                
             </div>
 
-            <div class="watermark">নমুনা কার্ড</div>
+            <!-- <div class="watermark">নমুনা কার্ড</div> -->
         </div>
 
     </div> <!-- card -->

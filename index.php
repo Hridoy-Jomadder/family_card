@@ -165,7 +165,6 @@ $conn->close(); // Close the connection after all queries are executed
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/stylel.css">
 
     <!-- Replace HTTP with HTTPS in the CDN links -->
         <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">

@@ -132,26 +132,30 @@ $conn->close();
             <p><strong>Family Card Number:</strong> <?= htmlspecialchars($user_info['family_card_number'] ?? 'Not Available') ?></p>
             <p><strong>Total Income (TK):</strong> <?= $total_income ?>/-</p>
             <p><strong>Total Expenditure (TK):</strong> <?= $total_exp ?>/-</p>
+            <p><strong>Net Savings (TK):</strong> <?= $total_income - $total_exp ?>/-</p>
+            </div>
+             <div style="text-align: center;color: black;">
+            <p><strong>Note:</strong> Please use the forms below to update your monthly income and expenditure. Make sure to enter accurate data for better financial tracking.</p>
             </div>
         <?php else: ?>
             <p style="text-align: center;"><?= htmlspecialchars($message ?? 'No data found.') ?></p>
         <?php endif; ?>
         <?php if (!empty($message)): ?>
-            <p style="color: yellow;"><?= htmlspecialchars($message) ?></p>
+            <p style="color: #1905b4;text-align: center;"><?= htmlspecialchars($message) ?></p>
         <?php endif; ?>
     </div>
 </div>
 
 <div class="container my-4">
-    <div style="background-color: #0072ff; padding: 30px; color: white; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-        <h2>Income Edit</h2>
+    <div style="background-image: url('img/022.jpg'); padding: 30px; color: black;">
+        <h2 style="color: black;">Income Edit</h2>
         <form action="" method="POST" class="row g-3">
             <?php
             foreach ($months as $month) {
                 $field = 'income_' . $month;
                 ?>
                 <div class="col-md-3">
-                    <label for="<?= $field ?>" class="form-label text-white text-capitalize"><?= ucfirst($month) ?>:</label>
+                    <label for="<?= $field ?>" class="form-label text-black text-capitalize"><?= ucfirst($month) ?>:</label>
                     <input type="number" class="form-control" id="<?= $field ?>" name="<?= $field ?>" 
                            value="<?= htmlspecialchars($family_data[$field] ?? '') ?>" min="0" required>
                 </div>
@@ -163,8 +167,8 @@ $conn->close();
     </div>
 </div>
 
-<div class="container my-4">
-    <div style="background-color: #0072ff; padding: 30px; color: white; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+<div class="container">
+    <div style="background-image: url('img/022.jpg'); padding: 30px; color: black;">
         <h2>Expenditure Edit</h2>
         <form action="" method="POST" class="row g-3">
             <?php
@@ -172,7 +176,7 @@ $conn->close();
                 $field = 'exp_' . $month;
                 ?>
                 <div class="col-md-3">
-                    <label for="<?= $field ?>" class="form-label text-white text-capitalize"><?= ucfirst($month) ?>:</label>
+                    <label for="<?= $field ?>" class="form-label text-black text-capitalize"><?= ucfirst($month) ?>:</label>
                     <input type="number" class="form-control" id="<?= $field ?>" name="<?= $field ?>" 
                            value="<?= htmlspecialchars($family_data[$field] ?? '') ?>" min="0" required>
                 </div>

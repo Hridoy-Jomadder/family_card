@@ -139,7 +139,7 @@ foreach ($salary_fields as $field) {
 <body>
 <div class="header">
     <h1 style="color:#fff;;">Welcome to Family Card</h1>
-    <h4 style="color:#fff;;">Hand in hand, the country of pride is Shahid Zia's Bangladesh.</h4>
+    <h4 style="color: #fff;">Hand in hand, the country of pride is Shahid Ziaur Rahman Bangladesh.</h4>
 </div> 
    <div class="navbar">
         <a href="index.php">Home</a>

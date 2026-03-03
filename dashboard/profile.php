@@ -94,95 +94,6 @@ if ($stmt->execute()) {
 
 $stmt->close();
 
-// Ensure $role is defined
-$role = $family_data['role'] ?? null;
-
-// Fetch products if user is Admin or Editor
-if ($role === 'Admin' || $role === 'Editor') {
-    $stmt = $conn->prepare("
-    SELECT g.*, u.family_name 
-    FROM gift g
-    JOIN users u ON g.family_id = u.id
-    WHERE u.id = ?
-    ");
-    if (!$stmt) {
-        die("SQL Prepare Error: " . $conn->error);
-    }
-
-    $stmt->bind_param("i", $user_id);
-
-    if ($stmt->execute()) {
-        $products = $stmt->get_result();
-    } else {
-        die("Query Execution Error: " . $stmt->error);
-    }
-
-    $stmt->close();
-} else {
-    $products = null;
-}
-
-
-// Initialize variables for search and pagination
-$limit = 10; // Rows per page
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$offset = ($page - 1) * $limit;
-$search = $_POST['search'] ?? '';
-
-// Prepare SQL with filtering and pagination
-$query = "SELECT id, family_name, full_name, family_image, family_members, nid_number, mobile_number, family_card_number, gold, asset, family_member_asset, family_member_salary balance, zakat
-          FROM users 
-          WHERE family_name LIKE ? 
-          LIMIT ? OFFSET ?";
-$stmt = $conn->prepare($query);
-$search_param = "%$search%";
-$stmt->bind_param("sii", $search_param, $limit, $offset);
-
-// Execute and fetch results
-if ($stmt->execute()) {
-    $result = $stmt->get_result();
-    $users = $result->fetch_all(MYSQLI_ASSOC);
-} else {
-    $message = "Error fetching users: " . $stmt->error;
-}
-
-
-// Initialize variables
-$familyData = [];
-$message = "";
-
-// Check if NID number is set in form submission
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nidnumber'])) {
-    $nidNumber = $_POST['nidnumber'];
-
-    // Query to fetch family data by NID Number
-    $query = "SELECT * FROM users WHERE nid_number = ?";
-    $stmt = $conn->prepare($query);
-
-    if ($stmt) {
-        $stmt->bind_param("s", $nidNumber);
-        
-        if ($stmt->execute()) {
-            $result = $stmt->get_result();
-            if ($result->num_rows > 0) {
-                $familyData = $result->fetch_assoc();
-            } else {
-                $message = "No family found with the specified NID Number.";
-            }
-            $result->close();
-        } else {
-            $message = "Error fetching family data: " . $stmt->error;
-        }
-        $stmt->close();
-    } else {
-        $message = "Error preparing the statement: " . $conn->error;
-    }
-}
-
-
-// Database connection
-$DB = new Database();
-$conn = $DB->connect();
 
 // Fetch user data
 $stmt = $conn->prepare("SELECT * FROM leader WHERE id = ?");
@@ -195,6 +106,7 @@ $stmt->close();
 // Display profile data
 $profile_image = $user['profile_image'] ?? 'uploads/default-profile.jpg';
 $username = $user['username'] ?? 'N/A';
+$title = $user['title'] ?? 'N/A';
 $email = $user['email'] ?? 'N/A';
 $role = $user['role'] ?? 'N/A';
 
@@ -399,10 +311,10 @@ $conn->close();
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
         .profile-image {
-            border-radius: 50%;
-            width: 150px;
-            height: 150px;
-            border: 3px solid #4CAF50;
+            /* border-radius: 100%; */
+            width: 600px;
+            height: 450px;
+            border: 3px solid #e9da09;
         }
         .message {
             margin: 10px 0;
@@ -414,7 +326,7 @@ $conn->close();
 <body>
 <div class="header">
     <h1 style="color:white;">Welcome to Family Card</h1>
-    <h4 style="color:white;">Hand in hand, the country of pride is Shahid Zia's Bangladesh.</h4>
+    <h4 style="color: #ffffff;">Hand in hand, the country of pride is Shahid Ziaur Rahman Bangladesh.</h4>
 </div>
 
 <div class="navbar"> 
@@ -430,15 +342,17 @@ $conn->close();
 <div style="width: 100%; text-align: center; padding: 50px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
     <div class="profile-container">
         <h2>Welcome to <?= htmlspecialchars($username) ?></h2>
+        <h4 style="color: #2200ff; font-family: 'time'">When the power of youth awakens, the nation transforms.</h4>
+           <br>
         <img src="<?= htmlspecialchars($profile_image) ?>" alt="Profile Image" class="profile-image">
         <br>
         <br>
-        <p>Full Name: <?= htmlspecialchars($username) ?></p>
-        <p>Designation: President</p>
+        <p style="color: #2200ff;">Full Name: <?= htmlspecialchars($username) ?></p>
+        <p style="color: #2200ff;">Title: <?= htmlspecialchars($title) ?></p>
         <!-- <p>Designation: <?= htmlspecialchars($title) ?></p> -->
 
-        <p>Email: <?= htmlspecialchars($email) ?></p>
-        <p>Role: <?= htmlspecialchars($role) ?></p>
+        <p style="color: #2200ff;">Email: <?= htmlspecialchars($email) ?></p>
+        <p style="color: #2200ff;">Role: <?= htmlspecialchars($role) ?></p>
 
 
         <?php if ($message): ?>
@@ -446,6 +360,82 @@ $conn->close();
         <?php endif; ?>
     </div>
  </div>
+</div>
+
+<div class="container mt-4">
+<div style="width: 100%; padding: 60px; background: linear-gradient(135deg,#1e3c72,#2a5298); box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2); border-radius:10px;">
+
+    <h2 style="color: #ffffff; text-align:center; font-family: 'Nikosh', sans-serif;">আল কুরআন</h2>
+    <h3 style="color: #ffd700; text-align:center; font-family: 'Nikosh', sans-serif;">
+        আল্লাহ তাআলা বলেন—
+    </h3>
+
+    <div id="quranSlider" class="carousel slide mt-4" data-bs-ride="carousel" data-bs-interval="6000">
+
+        <div class="carousel-inner text-center">
+
+            <!-- Slide 1 -->
+            <div class="carousel-item active">
+                <h2 style="color:#ffd700; font-size:32px; direction: rtl; font-family: 'Scheherazade', serif;">
+                    إِنَّ ٱلَّذِينَ ءَامَنُوا۟ وَهَاجَرُوا۟ وَجَٰهَدُوا۟ فِى سَبِيلِ ٱللَّهِ
+                </h2>
+                <p style="color:white; font-family:'Nikosh', sans-serif; font-size:20px;">
+                    তোমাদের মধ্যে যারা বিশ্বাস করে এবং যারা আল্লাহর পথে জিহাদ করে,
+                    তাদের জন্য রয়েছে বড় পুরস্কার।
+                </p>
+                <h6 style="color:white; font-family:'Nikosh', sans-serif;">– সূরা আন-নিসা ৪:৭৫</h6>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="carousel-item">
+                <h2 style="color:#ffd700; font-size:32px; direction: rtl; font-family: 'Scheherazade', serif;">
+                    إِنَّ ٱللَّهَ يَأْمُرُكُمْ أَن تُؤَدُّوا۟ ٱلْأَمَـٰنَـٰتِ إِلَىٰٓ أَهْلِهَا
+                </h2>
+                <p style="color:white; font-family:'Nikosh', sans-serif; font-size:20px;">
+                    নিশ্চয়ই আল্লাহ তোমাদের নির্দেশ দেন যে,
+                    তোমরা আমানতসমূহ তার হকদারের কাছে পৌঁছে দাও;
+                    আর বিচার করলে ন্যায়বিচার করো।
+                </p>
+                <h6 style="color:white; font-family:'Nikosh', sans-serif;">– সূরা আন-নিসা ৪:৫৮</h6>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="carousel-item">
+                <h2 style="color:#ffd700; font-size:32px; direction: rtl; font-family: 'Scheherazade', serif;">
+                    ٱعْدِلُوا۟ هُوَ أَقْرَبُ لِلتَّقْوَىٰ
+                </h2>
+                <p style="color:white; font-family:'Nikosh', sans-serif; font-size:20px;">
+                    ন্যায়বিচার করো; এটাই তাকওয়ার অধিক নিকটবর্তী।
+                </p>
+                <h6 style="color:white; font-family:'Nikosh', sans-serif;">– সূরা আল-মায়েদা ৫:৮</h6>
+            </div>
+
+            <!-- Slide 4 -->
+            <div class="carousel-item">
+                <h2 style="color:#ffd700; font-size:32px; direction: rtl; font-family: 'Scheherazade', serif;">
+                    وَتَوَاصَوْا۟ بِٱلْحَقِّ وَتَوَاصَوْا۟ بِٱلصَّبْرِ
+                </h2>
+                <p style="color:white; font-family:'Nikosh', sans-serif; font-size:20px;">
+                    তারা সত্যের উপদেশ দেয় এবং ধৈর্যের উপদেশ দেয়।
+                </p>
+                <h6 style="color:white; font-family:'Nikosh', sans-serif;">– সূরা আল-আস্‌র ১০৩:৩</h6>
+            </div>
+
+        </div>
+
+        <!-- Previous -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#quranSlider" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+
+        <!-- Next -->
+        <button class="carousel-control-next" type="button" data-bs-target="#quranSlider" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+
+    </div>
+
+</div>
 </div>
 
 <!-- Admin Dashboard HTML -->
@@ -515,6 +505,9 @@ $conn->close();
 <!-- Back to Top -->
 <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
+<!-- silder & Arabic -->
+    <div id="quranSlider" class="carousel slide mt-4" data-bs-ride="carousel" data-bs-interval="300"></div>
+    <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

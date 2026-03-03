@@ -26,7 +26,7 @@ if(mysqli_num_rows($res_family)==0){
 $family = mysqli_fetch_assoc($res_family);
 
 // Fetch gifts
-$sql_gifts = "SELECT full_name,gift_name,agricultural_product,product_name,vehicle,value,description,gift_image,issued_date
+$sql_gifts = "SELECT full_name,gift_name,agricultural_product,product_name,vehicle,value,description,gift_image,created_at
               FROM gift
               WHERE family_card_number='$card'";
 
@@ -82,8 +82,8 @@ img{max-width:80px;height:auto;border-radius:5px;}
 <th>Agricultural Product</th>
 <th>Product Name</th>
 <th>Vehicle</th>
-<th>Value</th>
-<th>Description</th>
+<!-- <th>Value</th>
+<th>Description</th> -->
 <th>Gift Image</th>
 <th>Issued Date</th>
 </tr>
@@ -96,14 +96,14 @@ img{max-width:80px;height:auto;border-radius:5px;}
 <td><?= htmlspecialchars($gift['agricultural_product']) ?></td>
 <td><?= htmlspecialchars($gift['product_name']) ?></td>
 <td><?= htmlspecialchars($gift['vehicle']) ?></td>
-<td><?= htmlspecialchars($gift['value']) ?></td>
-<td><?= htmlspecialchars($gift['description']) ?></td>
+<!-- <td><?= htmlspecialchars($gift['value']) ?></td>
+<td><?= htmlspecialchars($gift['description']) ?></td> -->
 <td>
 <?php if($gift['gift_image']): ?>
-<img src="<?= '../'.$gift['gift_image'] ?>" alt="Gift Image">
+<img src="<?= '../uploads/family_card_number'.$gift['gift_image'] ?>">
 <?php else: echo '-'; endif; ?>
 </td>
-<td><?= htmlspecialchars($gift['issued_date'] ?? '-') ?></td>
+<td><?= htmlspecialchars($gift['created_at'] ?? '-') ?></td>
 </tr>
 <?php endforeach; ?>
 <?php else: ?>

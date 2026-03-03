@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="container0" style="background-image: url('img/022.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <h1>Welcome to Family Card</h1>
-        <h4>Hand in hand, the country of pride is Shahid Zia Bangladesh.</h4>
+        <h4>Hand in hand, the country of pride is Shahid Ziaur Rahman Bangladesh.</h4>
         <br>
         <h2>Login</h2>
 
@@ -75,9 +75,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="password" id="password" name="password" required>
 
             <button type="submit">Login</button>
+            <br><br>
+            <a href="forget_password.php" style="text-decoration: none; margin-left: 10px;">Forgot Password?</a>
         </form>
         <br><br>
-        <p>Don't have an account? <a href="register_family.php" style="text-decoration: none;">Register here</a>.</p>
+        <p>Don't have an account? <a href="register_family.php" style="text-decoration: none;"> Register here</a>.</p>
     </div>
 </body>
 </html>

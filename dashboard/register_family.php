@@ -81,7 +81,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body>
     <div class="container0">
         <h1>Welcome to Family Card</h1><br>
-        <h4>Hand in hand, the country of pride is Shahid Zia's Bangladesh.</h4><br>
+    <h4 style="color: #fff;">Hand in hand, the country of pride is Shahid Ziaur Rahman Bangladesh.</h4>
+    <br>
         <h2>Register Leader</h2>
         <?php if (!empty($message)): ?>
             <p style="color: red;"><?= htmlspecialchars($message) ?></p>

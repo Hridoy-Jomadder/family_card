@@ -7,7 +7,10 @@
 body {
     font-family: 'Times New Roman', Times, serif;
     background-color: #f7f9fc;
-    margin: 0;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0 10px;
 }
 
 /* Main Containers */
@@ -83,9 +86,19 @@ button:hover {
 
 /* Header */
 .header {
-    background-color: #0c58ce;
+    background: linear-gradient(90deg, #006cf6, #ff0c00, #0064ff);
     padding: 15px 20px;
     color: white;
+    text-align: center;
+}
+
+.header img {
+    width: 40px;
+    margin-right: 10px;
+}
+
+h1, h4 {
+    margin: 0;
     text-align: center;
 }
 
@@ -100,7 +113,9 @@ button:hover {
     justify-content: center;
     background: linear-gradient(90deg, #006cf6, #ff0c00, #0064ff);
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    flex-wrap: wrap;
+    padding: 10px 20px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+
 }
 
 .navbar a {
@@ -110,12 +125,27 @@ button:hover {
     font-size: 16px;
     margin: 5px;
     transition: 0.3s;
+    /* border-radius: 20px; */
 }
 
-.navbar a:hover,
+/* Hover effect */
+.navbar a:hover {
+    background-color: #2980b9;
+}
+
+/* Active link animation */
 .navbar a.active {
     background-color: #2980b9;
-    border-radius: 4px;
+    border: 2px solid red;
+    animation: borderColorChange 3s linear infinite;
+}
+
+@keyframes borderColorChange {
+    0%   { border-color: white; }
+    25%  { border-color: blue; }
+    50%  { border-color: green; }
+    75%  { border-color: yellow; }
+    100% { border-color: red; }
 }
 
 /* Message */

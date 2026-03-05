@@ -45,8 +45,11 @@ if(isset($_POST['reset_password'])){
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<div class="container0" style="background-image: url('img/022.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
-    <h1>Reset Password</h1>
+<div style="padding: 22%;margin: 8%;margin-top: 8%;background-color: #6adacb;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);margin-top: 30px;background-image: url('img/022.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+    <h1>Welcome to Family Card</h1>
+    <h4>Hand in hand, the country of pride is Shahid Ziaur Rahman Bangladesh.</h4>
+    <br><br><br>
+        <h1>Reset Password</h1>
 <form method="POST">
     <label>New Password:</label>
     <input type="password" name="password" required>

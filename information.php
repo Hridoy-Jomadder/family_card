@@ -253,17 +253,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nidnumber'])) {
     padding-bottom: 122px;">
 
 <div class="card shadow-lg border-0 rounded-4 p-4 mb-4">
-    <h3 class="mb-4 text-primary">Family Information</h3>
+    <h3 class="mb-4 text-primary" style="text-align: center;">Family Information</h3>
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6" style="color:black;padding-left: 160px;">
             <p><strong>Division:</strong> <?= htmlspecialchars($family_data['division_name'] ?? '') ?></p>
             <p><strong>District:</strong> <?= htmlspecialchars($family_data['district_name'] ?? '') ?></p>
             <p><strong>Upazila:</strong> <?= htmlspecialchars($family_data['upazila_name'] ?? '') ?></p>
             <p><strong>Union:</strong> <?= htmlspecialchars($family_data['union_name'] ?? '') ?></p>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-6" style="color:black;padding-right: 160px;">
             <p><strong>Ward:</strong> <?= htmlspecialchars($family_data['ward_number'] ?? '') ?></p>
             <p><strong>House No:</strong> <?= htmlspecialchars($family_data['house_no'] ?? '') ?></p>
             <p><strong>House Name:</strong> <?= htmlspecialchars($family_data['family_name'] ?? '') ?></p>
@@ -271,7 +271,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nidnumber'])) {
     </div>
 </div>
        <div class="container">
-        <div style="width: 100%;">         
+        <div style="width: 80%;padding-left: 270px;">         
             <h2 style="color:black;">Edit Family Information</h2>
 
 

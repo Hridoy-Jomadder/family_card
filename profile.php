@@ -136,7 +136,7 @@ try {
 </div> 
    <div class="navbar">
         <a href="index.php">Home</a>
-        <a href="profile.php">Profile</a>
+        <a href="profile.php" class="active">Profile</a>
         <a href="asset.php">Asset</a>
         <a href="jobcompany.php">Govt./Company Job</a>
         <a href="gift.php">Gift</a>
@@ -146,14 +146,15 @@ try {
     </div>
     <div class="container">
 
-    <div style="width: 100%;padding: 112px; justify-content: center; 
-        background-image: url('img/07.png');
+    <div style="width: 100%;padding: 60px; justify-content: center; 
+        background-image: url('img/08.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    height: 805px;
     ">
-        <div>
-         <img src="<?= htmlspecialchars($family_data['family_image'] ?? 'uploads/default-image.jpg') ?>" style="width: 100%; height: 100%; border-radius: 10px;" alt="Family Image">
+        <div style="padding-top: 20px;">
+         <img src="<?= htmlspecialchars($family_data['family_image'] ?? 'uploads/default-image.jpg') ?>" style="width: 100%; height: 100%; border-radius: 15px;" alt="Family Image">
         </div>
     </div>
     </div>

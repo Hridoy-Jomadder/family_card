@@ -110,7 +110,7 @@ $stmt->close();
    <div class="navbar">
         <a href="index.php">Home</a>
         <a href="profile.php">Profile</a>
-        <a href="asset.php">Asset</a>
+        <a href="asset.php" class="active">Asset</a>
         <a href="jobcompany.php">Govt./Company Job</a>
         <a href="gift.php">Gift</a>
         <a href="information.php">Information</a>
@@ -149,7 +149,7 @@ $stmt->close();
 <!-- Family Assets Information -->
  <div class="container">
  <div style="width: 100%; padding: 50px;             
- background-image: url('img/02.jpg');
+ background-image: url('img/04.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

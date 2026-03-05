@@ -338,29 +338,6 @@ $conn->close();
         <a href="logout.php" onclick="return confirm('Are you sure you want to log out?');">Logout</a>
         </div>
 </div>
-<div class="container">
-<div style="width: 100%; text-align: center; padding: 50px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
-    <div class="profile-container">
-        <h2>Welcome to <?= htmlspecialchars($username) ?></h2>
-        <h4 style="color: #2200ff; font-family: 'time'">When the power of youth awakens, the nation transforms.</h4>
-           <br>
-        <img src="<?= htmlspecialchars($profile_image) ?>" alt="Profile Image" class="profile-image">
-        <br>
-        <br>
-        <p style="color: #2200ff;">Full Name: <?= htmlspecialchars($username) ?></p>
-        <p style="color: #2200ff;">Title: <?= htmlspecialchars($title) ?></p>
-        <!-- <p>Designation: <?= htmlspecialchars($title) ?></p> -->
-
-        <p style="color: #2200ff;">Email: <?= htmlspecialchars($email) ?></p>
-        <p style="color: #2200ff;">Role: <?= htmlspecialchars($role) ?></p>
-
-
-        <?php if ($message): ?>
-            <p class="message"><?= htmlspecialchars($message) ?></p>
-        <?php endif; ?>
-    </div>
- </div>
-</div>
 
 <div class="container mt-4">
 <div style="width: 100%; padding: 60px; background: linear-gradient(135deg,#1e3c72,#2a5298); box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2); border-radius:10px;">
@@ -438,45 +415,146 @@ $conn->close();
 </div>
 </div>
 
-<!-- Admin Dashboard HTML -->
-<div class="container">
-<div style="width: 100%; text-align: center; padding: 50px; background-color:rgb(9, 66, 136);color:rgb(253, 250, 251);">  
-    <h2 style="color:rgb(253, 250, 251);">Admin Dashboard</h2>
-    <table class="table table-bordered">
-        <thead style="color:rgb(253, 250, 251);">
-                <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Status</th>
-                </tr>
-        </thead>
-        <tbody style="color:rgb(253, 250, 251);">
-                <?php while ($row = $result->fetch_assoc()) : ?>
-                    <tr>
-                        <td><?= htmlspecialchars($row['id']) ?></td>
-                        <td><?= htmlspecialchars($row['username']) ?></td>
-                        <td><?= htmlspecialchars($row['email']) ?></td>
-                        <td><?= htmlspecialchars($row['role']) ?></td>
-                        <td>
-                            <?php if ($row['is_active']) : ?>
-                                <span class="badge badge-success">Active</span>
-                            <?php else : ?>
-                                <span class="badge badge-secondary">Inactive</span>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                <?php endwhile; ?>
-            </tbody>
-    </table>
+
+<div style="width: 100%; text-align: center; padding: 50px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
+    <div class="profile-container">
+        <h2 style="color:#ffd700; font-size:32px; direction: rtl; font-family: 'Scheherazade', serif;">
+    لَا إِلٰهَ إِلَّا اللّٰهُ مُحَمَّدٌ رَسُولُ اللّٰهِ
+</h2>
+
+<p style="color:#ffd700; font-family:'Nikosh', sans-serif; font-size:20px;">
+    লা ইলাহা ইল্লাল্লাহু মুহাম্মাদুর রাসূলুল্লাহ <br>
+    অর্থ: আল্লাহ ছাড়া কোনো উপাস্য নেই; হযরত মুহাম্মদ (সা.) আল্লাহর প্রেরিত রাসূল।
+</p>
+        <h2>Welcome to <?= htmlspecialchars($username) ?></h2>
+        <h4 style="color: #2200ff; font-family: 'time'">When the power of youth awakens, the nation transforms.</h4>
+           <br>
+        <img src="<?= htmlspecialchars($profile_image) ?>" alt="Profile Image" class="profile-image">
+        <br>
+        <br>
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden mt-4">
     
+    <div class="bg-primary text-white text-center py-3 fs-5 fw-semibold">
+        <i class="bi bi-person-circle me-2"></i> Profile Information
+    </div>
+
+    <div class="p-4">
+
+        <div class="row mb-3">
+            <div class="col-sm-4 fw-bold text-secondary">
+                Full Name
+            </div>
+            <div class="col-sm-8 text-dark">
+                <?= htmlspecialchars($username) ?>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-sm-4 fw-bold text-secondary">
+                Title
+            </div>
+            <div class="col-sm-8 text-dark">
+                <?= htmlspecialchars($title) ?>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-sm-4 fw-bold text-secondary">
+                Email
+            </div>
+            <div class="col-sm-8 text-dark">
+                <?= htmlspecialchars($email) ?>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-4 fw-bold text-secondary">
+                Role
+            </div>
+            <div class="col-sm-8">
+                <span class="badge bg-success">
+                    <?= htmlspecialchars($role) ?>
+                </span>
+            </div>
+        </div>
+
+        <?php if ($message): ?>
+            <div class="alert alert-info mt-4 text-center">
+                <?= htmlspecialchars($message) ?>
+            </div>
+        <?php endif; ?>
+
+    </div>
 </div>
+    </div>
 </div>
 
-    <br><br>
-    <div class="container">
-        <div class="profile-container">
+
+<div class="container my-4">
+     <div style="width: 100%;padding: 60px; justify-content: center;">
+
+    <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+
+        <!-- Header -->
+        <div class="bg-light text-black text-center py-3 fs-4 fw-semibold">
+            <i class="bi bi-speedometer2 me-2"></i> Admin Dashboard
+        </div>
+
+        <div class="p-4">
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle text-center">
+
+                    <thead class="table-primary">
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <?php while ($row = $result->fetch_assoc()) : ?>
+                            <tr>
+                                <td><?= htmlspecialchars($row['id']) ?></td>
+
+                                <td class="fw-semibold">
+                                    <?= htmlspecialchars($row['username']) ?>
+                                </td>
+
+                                <td><?= htmlspecialchars($row['email']) ?></td>
+
+                                <td>
+                                    <span class="badge bg-info text-dark">
+                                        <?= htmlspecialchars($row['role']) ?>
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <?php if ($row['is_active']) : ?>
+                                        <span class="badge bg-success">
+                                            Active
+                                        </span>
+                                    <?php else : ?>
+                                        <span class="badge bg-danger">
+                                            Inactive
+                                        </span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+       <div class="profile-container">
             <!--  -->
         <h2>Edit Admin</h2>
         <form action="" method="POST" enctype="multipart/form-data">
@@ -501,6 +579,8 @@ $conn->close();
 </form>
 
         </div>
+      </div>
+    </div>
 
 <!-- Back to Top -->
 <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>

@@ -239,7 +239,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nidnumber'])) {
         <a href="asset.php">Asset</a>
         <a href="jobcompany.php">Govt./Company Job</a>
         <a href="gift.php">Gift</a>
-        <a href="">Information</a>
+        <a href="information.php" class="active">Information</a>
         <a href="logout.php">Logout</a>
     </div>
 

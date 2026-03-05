@@ -145,7 +145,7 @@ foreach ($salary_fields as $field) {
         <a href="index.php">Home</a>
         <a href="profile.php">Profile</a>
         <a href="asset.php">Asset</a>
-        <a href="jobcompany.php">Govt./Company Job</a>
+        <a href="jobcompany.php" class="active">Govt./Company Job</a>
         <a href="gift.php">Gift</a>
         <a href="information.php">Information</a>
         <a href="logout.php">Logout</a>

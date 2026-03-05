@@ -100,14 +100,14 @@ $conn->close();
 <body>
 <div class="header">
     <h1 style="color:white;">Welcome to Family Card</h1>
-    <h4 style="color:white;">Hand in hand, the country of pride is Shahid Zia's Bangladesh.</h4>
+    <h4 style="color: #fff;">Hand in hand, the country of pride is Shahid Ziaur Rahman Bangladesh.</h4>
 </div> 
 <div class="navbar">
     <a href="index.php">Home</a>
     <a href="profile.php">Profile</a>
     <a href="asset.php">Asset</a>
     <a href="jobcompany.php">Govt./Company Job</a>
-    <a href="months.php">Months</a>
+    <a href="months.php" class="active">Months</a>
     <a href="gift.php">Gift</a>
     <a href="logout.php">Logout</a>
 </div>
@@ -147,7 +147,12 @@ $conn->close();
 </div>
 
 <div class="container my-4">
-    <div style="background-image: url('img/022.jpg'); padding: 30px; color: black;">
+    <div style="min-height: 600px;
+    background-image: url('img/02.jpg');
+    background-size: cover;
+    background-position: top;
+    padding: 100px;
+    color: white;">
         <h2 style="color: black;">Income Edit</h2>
         <form action="" method="POST" class="row g-3">
             <?php
@@ -160,15 +165,21 @@ $conn->close();
                            value="<?= htmlspecialchars($family_data[$field] ?? '') ?>" min="0" required>
                 </div>
             <?php } ?>
-            <div class="col-12">
-                <button type="submit" name="submit_income" class="btn btn-light">Save Income</button>
-            </div>
+<button type="submit" name="submit_income"
+    style="background-color:#0280FF; color:white; border:none; padding:10px 20px; border-radius:5px;">
+    Save Income
+</button>
         </form>
     </div>
 </div>
 
 <div class="container">
-    <div style="background-image: url('img/022.jpg'); padding: 30px; color: black;">
+    <div style="min-height: 600px;
+    background-image: url('img/02.jpg');
+    background-size: cover;
+    background-position: bottom;
+    padding: 100px;
+    color: white;">
         <h2>Expenditure Edit</h2>
         <form action="" method="POST" class="row g-3">
             <?php
@@ -181,9 +192,10 @@ $conn->close();
                            value="<?= htmlspecialchars($family_data[$field] ?? '') ?>" min="0" required>
                 </div>
             <?php } ?>
-            <div class="col-12">
-                <button type="submit" name="submit_exp" class="btn btn-light">Save Expenditure</button>
-            </div>
+
+            <button type="submit" name="submit_exp"
+                style="background-color:#0280FF; color:white; border:none; padding:10px 20px; border-radius:5px;"> Save Expenditure
+            </button>
         </form>
     </div>
 </div>

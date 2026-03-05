@@ -165,7 +165,7 @@ $conn->close(); // Close the connection after all queries are executed
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/stylel.css">
+    <!-- <link rel="stylesheet" href="css/stylel.css"> -->
 
     <!-- Replace HTTP with HTTPS in the CDN links -->
         <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -177,15 +177,15 @@ $conn->close(); // Close the connection after all queries are executed
     <h4 style="color: #fff;">Hand in hand, the country of pride is Shahid Ziaur Rahman Bangladesh.</h4>
 </div>    
 <div class="navbar">
-        <a href="index.php" active>Home</a>
-        <a href="profile.php">Profile</a>
-        <a href="asset.php">Asset</a>
-        <a href="jobcompany.php">Govt./Company Job</a>
-        <a href="months.php">Months</a>
+    <a href="index.php" class="active">Home</a>
+    <a href="profile.php">Profile</a>
+    <a href="asset.php">Asset</a>
+    <a href="jobcompany.php">Govt./Company Job</a>
         <a href="gift.php">Gift</a>
-        <!-- <a href="upload_family_image.php">Upload Image</a> -->
-        <a href="logout.php">Logout</a>
-    </div>
+        <a href="information.php">Information</a>
+        <a href="months.php">Months</a>
+    <a href="logout.php">Logout</a>
+</div>
     <div class="container">
     <div style="width: 100%;padding: 50px; 
     background-image: url('img/full.jpg');

@@ -245,7 +245,7 @@ $conn->close(); // Close the connection after all queries are executed
         <a href="profile.php">Profile</a>
         <a href="asset.php">Asset</a>
         <a href="jobcompany.php">Govt./Company Job</a>
-        <a href="gift.php">Gift</a>
+        <a href="gift.php" class="active">Gift</a>
         <a href="information.php">Information</a>
         <a href="logout.php">Logout</a>
     </div>

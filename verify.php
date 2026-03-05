@@ -1,43 +1,61 @@
 <?php
-include "config.php";  // ensure config.php is in the same folder
+include "config.php";
 
 $card = $_GET['card'] ?? '';
+
 if(!$card){
     die("<h2 style='color:red;text-align:center'>Card number missing!</h2>");
 }
 
-// Show the received card (debug)
-echo "<div class='card'><p style='text-align:center; color:blue;'>Card received: <b>$card</b></p></div>";
-
-// Fetch family info
-$sql_family = "SELECT family_name, full_name AS family_head, family_members, family_card_number
-               FROM users
-               WHERE family_card_number='$card' LIMIT 1";
-
-$res_family = mysqli_query($conn,$sql_family);
-if(!$res_family){
-    die("SQL Error: ".mysqli_error($conn));
+/* Card format validation (Only numbers 5-15 digit) */
+if(!preg_match('/^[0-9]{5,15}$/', $card)){
+    die("<h2 style='color:red;text-align:center'>Invalid Card Format</h2>");
 }
 
-if(mysqli_num_rows($res_family)==0){
+/* =============================
+   FETCH FAMILY INFO (SECURE)
+============================= */
+$stmt = $conn->prepare("SELECT family_name,
+                               full_name AS family_head,
+                               family_members,
+                               family_card_number,
+                               family_image
+                        FROM users
+                        WHERE family_card_number = ?
+                        LIMIT 1");
+
+$stmt->bind_param("s", $card);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if($result->num_rows == 0){
     die("<h2 style='color:red;text-align:center'>❌ Invalid Family Card</h2>");
 }
 
-$family = mysqli_fetch_assoc($res_family);
+$family = $result->fetch_assoc();
 
-// Fetch gifts
-$sql_gifts = "SELECT full_name,gift_name,agricultural_product,product_name,vehicle,value,description,gift_image,created_at
-              FROM gift
-              WHERE family_card_number='$card'";
+/* =============================
+   FETCH GIFTS (SECURE)
+============================= */
+$stmt2 = $conn->prepare("SELECT full_name,
+                                gift_name,
+                                agricultural_product,
+                                product_name,
+                                vehicle,
+                                gift_image,
+                                created_at
+                         FROM gift
+                         WHERE family_card_number = ?");
 
-$res_gifts = mysqli_query($conn,$sql_gifts);
+$stmt2->bind_param("s", $card);
+$stmt2->execute();
+$res_gifts = $stmt2->get_result();
 
 $gifts = [];
-if($res_gifts){
-    while($row = mysqli_fetch_assoc($res_gifts)){
-        $gifts[] = $row;
-    }
+while($row = $res_gifts->fetch_assoc()){
+    $gifts[] = $row;
 }
+echo "<div class='card' style='text-align:center; color:blue;'>Card received: $card</div>";
 ?>
 
 <!DOCTYPE html>
@@ -67,6 +85,25 @@ img{max-width:80px;height:auto;border-radius:5px;}
 <h2>✔ Family Verified</h2>
 
 <div class="family-info">
+    <div style="text-align:center;margin-bottom:15px;">
+        
+        <?php
+        
+$profilePath = $family['family_image']; // already full path in DB
+if(!empty($family['family_image']) && file_exists($profilePath)){
+    $imgSrc = $profilePath;
+}else{
+    $imgSrc = "uploads/default-image.jpg";
+}
+?>
+<div style="text-align:center;margin-bottom:15px;">
+    <img src="<?= htmlspecialchars($imgSrc) ?>" 
+         style="width:120px;height:120px;
+                border-radius:50%;
+                border:3px solid #006400;
+                object-fit:cover;">
+</div>
+</div>
 <p><b>Family Name:</b> <?= htmlspecialchars($family['family_name']) ?></p>
 <p><b>Family Head:</b> <?= htmlspecialchars($family['family_head'] ?? '-') ?></p>
 <p><b>Total Members:</b> <?= htmlspecialchars($family['family_members'] ?? '-') ?></p>
@@ -99,10 +136,16 @@ img{max-width:80px;height:auto;border-radius:5px;}
 <!-- <td><?= htmlspecialchars($gift['value']) ?></td>
 <td><?= htmlspecialchars($gift['description']) ?></td> -->
 <td>
-<?php if($gift['gift_image']): ?>
-<img src="<?= '../uploads/family_card_number'.$gift['gift_image'] ?>">
-<?php else: echo '-'; endif; ?>
+<?php 
+$giftPath = $gift['gift_image']; // DB থেকে full path
+if(!empty($gift['gift_image']) && file_exists($giftPath)){
+    echo '<img src="'.htmlspecialchars($giftPath).'" width="80">';
+}else{
+    echo '-';
+}
+?>
 </td>
+
 <td><?= htmlspecialchars($gift['created_at'] ?? '-') ?></td>
 </tr>
 <?php endforeach; ?>

@@ -98,10 +98,9 @@ if(!empty($family['family_image']) && file_exists($profilePath)){
 ?>
 <div style="text-align:center;margin-bottom:15px;">
     <img src="<?= htmlspecialchars($imgSrc) ?>" 
-         style="width:120px;height:120px;
-                /* border-radius:100%; */
-                border:3px solid #006400;
-                object-fit:cover;">
+         style="width: 800px;
+            height: 450px;
+            border: 3px solid #e9da09;">
 </div>
 </div>
 <p><b>Family Name:</b> <?= htmlspecialchars($family['family_name']) ?></p>

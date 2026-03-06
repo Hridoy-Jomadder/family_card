@@ -74,7 +74,6 @@ h2{text-align:center;color:#006400;}
 table{width:100%;border-collapse:collapse;min-width:800px;}
 th,td{border:1px solid #ccc;padding:8px;text-align:left;}
 th{background:#006400;color:white;}
-img{max-width:80px;height:auto;border-radius:5px;}
 @media (max-width:600px){.family-info p b{width:100px;}}
 </style>
 </head>

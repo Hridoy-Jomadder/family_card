@@ -99,7 +99,7 @@ if(!empty($family['family_image']) && file_exists($profilePath)){
 <div style="text-align:center;margin-bottom:15px;">
     <img src="<?= htmlspecialchars($imgSrc) ?>" 
          style="width:120px;height:120px;
-                border-radius:50%;
+                /* border-radius:100%; */
                 border:3px solid #006400;
                 object-fit:cover;">
 </div>

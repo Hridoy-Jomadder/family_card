@@ -207,7 +207,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <div class="navbar">
-    <a href="index.php">Home</a>
+    <a href="index.php" class="active">Home</a>
     <a href="profile.php">Profile</a>
     <a href="division_wise_family_count.php">Division Wise Family Count</a>
     <a href="search.php">Search</a>

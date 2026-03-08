@@ -21,13 +21,15 @@ $data=$conn->query($query)->fetch_all(MYSQLI_ASSOC);
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 body{
-background:#f5f7fb;
 font-family: 'Times New Roman', Times, serif;
 }
+</style>
 
 </head>
 <body>
-
+    <h1 style="color: #1b4ee8; text-align: center;">Welcome to Family Card</h1>
+    <h4 style="color: #5079f1; text-align: center;">Hand in hand, the country of pride is Shahid Ziaur Rahman Bangladesh.</h4>
+    
 <div class="container mt-5">
 <h4>📊 Division Wise Family Count</h4>
 

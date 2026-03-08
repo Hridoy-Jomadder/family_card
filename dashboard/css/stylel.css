@@ -126,15 +126,10 @@ h1, h4 {
     margin: 0 5px;
 }
 
-.navbar a:hover {
+.navbar a:hover,
+.navbar a.active {
     background-color: #cfd8dd;
     border-radius: 4px;
     color: #4687ff;
-}
-
-
-.header {
-    text-align: center;
-    color: white;
 }
 

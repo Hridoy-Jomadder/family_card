@@ -15,8 +15,16 @@ $data=$conn->query($query)->fetch_all(MYSQLI_ASSOC);
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
+<title>Division Wise Family Count</title>
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body{
+background:#f5f7fb;
+font-family: 'Times New Roman', Times, serif;
+}
+
 </head>
 <body>
 

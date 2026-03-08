@@ -180,6 +180,37 @@ if ($stmt) {
 </div>
 
 <div class="container">
+    <?php if (!empty($familyData)): ?>
+        <div class="family-profile">
+            <p><strong>Family Name:</strong> <?= htmlspecialchars($familyData['family_name'] ?? 'Not Available') ?></p>
+            <p><strong>NID Number:</strong> <?= htmlspecialchars($familyData['nid_number'] ?? 'Not Available') ?></p>
+            <p><strong>Full Name:</strong> <?= htmlspecialchars($familyData['full_name'] ?? 'Not Available') ?></p>
+            <p><strong>Father Name:</strong> <?= htmlspecialchars($familyData['father_name'] ?? 'Not Available') ?></p>
+            <p><strong>Mother Name:</strong> <?= htmlspecialchars($familyData['mother_name'] ?? 'Not Available') ?></p>
+            <p><strong>Mobile Number:</strong> <?= htmlspecialchars(string: $familyData['mobile_number'] ?? 'Not Available') ?></p>
+            <p><strong>Number of Family Members:</strong> <?= htmlspecialchars($familyData['family_members'] ?? 'Not Available') ?></p>
+            <img src="<?= htmlspecialchars($familyData['family_image'] ?? 'uploads/default-image.jpg') ?>" alt="Family Image" style="max-width: 100%; height: auto;">
+        </div>
+    <?php endif; ?>
+    <br>
+    <div style="width: 42%; padding-left: 50px;">
+    <form method="POST" action="family_details.php">
+            <label for="nidnumber">Enter NID Number Search:</label>
+            <input type="text" name="nidnumber" id="nidnumber" required>
+            <button type="submit">View Profile</button>
+    </form>
+    </div>
+    <div style="width: 54%; padding-left: 210px;">
+    <form method="POST" action="amount.php">
+        <label for="search">Top or Low Amount Search:</label>
+        <input type="text" name="search" id="search" required>
+        <button type="submit">Amount Search</button>
+    </form>
+</div>
+
+    </div>
+
+<div class="container">
     <div class="container-fluid pt-4 px-4">
         <div class="bg-light text-center rounded p-4">
         <div class="d-flex align-items-center justify-content-between mb-4">

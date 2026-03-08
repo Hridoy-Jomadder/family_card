@@ -2,73 +2,50 @@
 include "classes/connection.php";
 session_start();
 
-// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
 }
 
-$user_id = $_SESSION['user_id'];
-
-// Create a database connection
 $DB = new Database();
 $conn = $DB->connect();
-if ($conn->connect_error) {
-    die("Database connection failed: " . $conn->connect_error);
-}
 
-// Initialize variables
-$message = "";
-$users = [];
-$search = $_GET['search'] ?? '';
+$min_amount = $_GET['min_amount'] ?? 0;
+$max_amount = $_GET['max_amount'] ?? 999999999;
+
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $limit = 10;
 $offset = ($page - 1) * $limit;
-$sort_by = $_GET['sort_by'] ?? 'balance';
-$order_by = ($sort_by === 'total_amount') ? 'total_amount' : 'balance';
 
-// Prepare query
+$sort_by = $_GET['sort_by'] ?? 'balance';
+$order_by = ($sort_by == 'total_amount') ? 'total_amount' : 'balance';
+
 $query = "
-    SELECT id, family_name, full_name, family_image, family_members, nid_number, mobile_number, 
-           family_card_number, job, job_type, job_salary, total_amount, balance
-    FROM users
-    WHERE balance >= ?
-    ORDER BY $order_by DESC
-    LIMIT ? OFFSET ?
+SELECT id,family_name,full_name,family_image,family_members,
+mobile_number,nid_number,family_card_number,
+job,job_type,job_salary,total_amount,balance
+FROM users
+WHERE balance BETWEEN ? AND ?
+ORDER BY $order_by DESC
+LIMIT ? OFFSET ?
 ";
 
 $stmt = $conn->prepare($query);
-if (!$stmt) {
-    die("SQL Prepare Error: " . $conn->error);
-}
+$stmt->bind_param("ddii", $min_amount,$max_amount,$limit,$offset);
+$stmt->execute();
+$result = $stmt->get_result();
+$users = $result->fetch_all(MYSQLI_ASSOC);
 
-$search_param = floatval($search); // Securely cast as float
-$stmt->bind_param("dii", $search_param, $limit, $offset);
-
-if ($stmt->execute()) {
-    $result = $stmt->get_result();
-    $users = $result->fetch_all(MYSQLI_ASSOC);
-} else {
-    $message = "Error fetching data: " . $stmt->error;
-}
-
-$stmt->close();
-
-// Count total rows for pagination
-$count_query = "SELECT COUNT(*) as total_rows FROM users WHERE balance >= ?";
+$count_query = "SELECT COUNT(*) as total FROM users WHERE balance BETWEEN ? AND ?";
 $count_stmt = $conn->prepare($count_query);
-$count_stmt->bind_param("d", $search_param);
-if ($count_stmt->execute()) {
-    $count_result = $count_stmt->get_result();
-    $total_rows = $count_result->fetch_assoc()['total_rows'] ?? 0;
-} else {
-    $total_rows = 0;
-}
-$count_stmt->close();
+$count_stmt->bind_param("dd",$min_amount,$max_amount);
+$count_stmt->execute();
+$total_rows = $count_stmt->get_result()->fetch_assoc()['total'];
 
-$total_pages = ceil($total_rows / $limit);
-$conn->close();
+$total_pages = ceil($total_rows/$limit);
 ?>
+
+
 
 
 <!DOCTYPE html>
@@ -188,80 +165,186 @@ $conn->close();
             </div>
         </div>
      <!-- Star End -->
-    <h1 class="text-center">Top or Low Amount Search</h1>
+    <h1 class="text-center">Family Balance Search</h1>
     <div class="container">
     <div style="width: 100%;">
-    <form method="POST" action="" class="mb-4">
-        <label for="search">Enter Amount:</label>
-        <input type="text" name="search" id="search" class="form-control" placeholder="Enter amount" value="<?php echo htmlspecialchars($search); ?>" required>
-        <button type="submit" class="btn btn-primary mt-2">Search</button>
-    </form>
+<form method="GET" class="row g-3 mb-4">
+
+<div class="col-md-3">
+<label>Minimum Amount</label>
+<input type="number" name="min_amount" class="form-control"
+value="<?php echo $min_amount ?>">
+</div>
+
+<div class="col-md-3">
+<label>Maximum Amount</label>
+<input type="number" name="max_amount" class="form-control"
+value="<?php echo $max_amount ?>">
+</div>
+
+<div class="col-md-3">
+<label>Sort By</label>
+<select name="sort_by" class="form-control">
+
+<option value="balance"
+<?php if($sort_by=='balance') echo "selected"; ?>>
+Balance
+</option>
+
+<option value="total_amount"
+<?php if($sort_by=='total_amount') echo "selected"; ?>>
+Total Amount
+</option>
+
+</select>
+</div>
+
+<div class="col-md-3">
+<button class="btn btn-primary mt-4 w-100">Search</button>
+</div>
+
+</form>
     </div>
 </div>
-    <div class="container">
 
-    <?php if (!empty($message)): ?>
-        <p class="message"><?php echo htmlspecialchars($message); ?></p>
-    <?php endif; ?>
 
-    <?php if (!empty($users)): ?>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Family Name</th>
-                    <th>Full Name</th>
-                    <th>Profile Image</th>
-                    <th>Family Members</th>
-                    <th>Mobile</th>
-                    <th>NID Card</th>
-                    <th>Family Card Number</th>
-                    <th>Job/Company Name</th>
-                    <th>Job/Company Designation</th>
-                    <th>Salary</th>
-                    <th>Total Amount (Taka)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($users as $user): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($user['id']); ?></td>
-                        <td><?php echo htmlspecialchars($user['family_name']); ?></td>
-                        <td><?php echo htmlspecialchars($user['full_name']); ?></td>
-                        <td>
-                            <?php if (!empty($user['family_image'])): ?>
-                                <img src="<?php echo htmlspecialchars($user['family_image']); ?>" alt="Profile Image" width="50">
-                            <?php else: ?>
-                                No Image
-                            <?php endif; ?>
-                        </td>
-                        <td><?php echo htmlspecialchars($user['family_members']); ?></td>
-                        <td><?php echo htmlspecialchars($user['mobile_number']); ?></td>
-                        <td><?php echo htmlspecialchars($user['nid_number']); ?></td>
-                        <td><?php echo htmlspecialchars($user['family_card_number']); ?></td>
-                        <td><?php echo htmlspecialchars($user['job']); ?></td>
-                        <td><?php echo htmlspecialchars($user['job_type']); ?></td>
-                        <td><?php echo number_format((float)$user['job_salary']); ?> Taka</td>
-                        <td><?php echo number_format((float)$user['balance'], 0); ?> Taka</td>
 
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+
+
+<!-- TABLE -->
+
+<table class="table table-bordered table-striped">
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+<th>Family Name</th>
+<th>Full Name</th>
+<th>Image</th>
+<th>Members</th>
+<th>Mobile</th>
+<th>NID</th>
+<th>Family Card</th>
+<th>Job</th>
+<th>Designation</th>
+<th>Salary</th>
+<th>Balance</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<?php foreach($users as $user){ ?>
+
+<tr>
+
+<td><?php echo $user['id']; ?></td>
+
+<td><?php echo htmlspecialchars($user['family_name']); ?></td>
+
+<td><?php echo htmlspecialchars($user['full_name']); ?></td>
+
+<td>
+
+<?php if(!empty($user['family_image'])){ ?>
+
+<img src="<?php echo $user['family_image']; ?>"
+width="60"
+class="img-thumbnail"
+data-bs-toggle="modal"
+data-bs-target="#imageModal"
+onclick="showImage(this.src)">
+
+<?php } else { ?>
+
+No Image
+
+<?php } ?>
+
+</td>
+
+<td><?php echo $user['family_members']; ?></td>
+
+<td><?php echo $user['mobile_number']; ?></td>
+
+<td><?php echo $user['nid_number']; ?></td>
+
+<td><?php echo $user['family_card_number']; ?></td>
+
+<td><?php echo $user['job']; ?></td>
+
+<td><?php echo $user['job_type']; ?></td>
+
+<td><?php echo ($user['job_salary']); ?> Tk</td>
+
+<td><?php echo ($user['balance']); ?> Tk</td>
+
+</tr>
+
+<?php } ?>
+
+</tbody>
+
+</table>
+
+<!-- PAGINATION -->
+
+<nav>
+
+<ul class="pagination justify-content-center">
+
+<?php for($i=1;$i<=$total_pages;$i++){ ?>
+
+<li class="page-item <?php if($i==$page) echo 'active'; ?>">
+
+<a class="page-link"
+href="?page=<?php echo $i ?>
+&min_amount=<?php echo $min_amount ?>
+&max_amount=<?php echo $max_amount ?>
+&sort_by=<?php echo $sort_by ?>">
+
+<?php echo $i ?>
+
+</a>
+
+</li>
+
+<?php } ?>
+
+</ul>
+
+</nav>
+
 </div>
-        <!-- Pagination -->
-        <nav>
-            <ul class="pagination justify-content-center">
-                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                    <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
-                        <a class="page-link" href="?page=<?php echo $i; ?>&sort_by=<?php echo $sort_by; ?>"><?php echo $i; ?></a>
-                    </li>
-                <?php endfor; ?>
-            </ul>
-        </nav>
-    <?php else: ?>
-        <p>No results found for "<?php echo htmlspecialchars($search); ?>".</p>
-    <?php endif; ?>
+
+<!-- IMAGE MODAL -->
+
+<div class="modal fade" id="imageModal">
+
+<div class="modal-dialog modal-lg">
+
+<div class="modal-content">
+
+<div class="modal-body text-center">
+
+<img id="modalImage" style="width:100%">
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+
+
     
 </div>
 <!-- Back to Top -->
@@ -279,5 +362,15 @@ $conn->close();
     <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
     <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
+    
+<script>
+
+function showImage(src){
+
+document.getElementById("modalImage").src = src;
+
+}
+
+</script>
 </body>
 </html>

@@ -248,6 +248,15 @@ $conn->close(); // Close the database connection
                             </div>
                         </div>
                     </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-center p-4">
+                            <div class="text-center">
+                                <i class="fa fa-id-card fa-3x text-primary mb-3"></i>
+                                <p class="mb-2">Family Months</p>
+                                <h6 class="mb-0"><a href="months.php">Monthly Income vs Expense</a></h6>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
             </div>

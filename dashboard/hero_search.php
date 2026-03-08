@@ -76,7 +76,7 @@ $divisions = $conn->query("SELECT id,name_en FROM divisions ORDER BY name_en ASC
 
 <!-- <div class="container mt-5"> -->
 <div class="card shadow p-4">
-
+<a href="top_rich_family.php" class="btn btn-primary mb-3" style="font-family: 'Times New Roman', serif;">Top 10 Rich Family</a>
 <h4 class="mb-3" style="font-family: 'Times New Roman', serif;">🔎 Hero Search Family Information</h4>
 
 <select id="division" class="form-select mb-2">

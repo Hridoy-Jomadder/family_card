@@ -210,9 +210,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <a href="index.php">Home</a>
     <a href="profile.php">Profile</a>
     <a href="division_wise_family_count.php">Division Wise Family Count</a>
-    <a href="hero_search.php">Search</a>
-    <a href="gift.php">Gift</a>
-    <a href="months.php">Months</a>
+    <a href="search.php">Search</a>
+    <a href="gift.php">Gifts</a>
     <a href="logout.php" onclick="return confirm('Are you sure you want to log out?');">Logout</a>
 </div>
 

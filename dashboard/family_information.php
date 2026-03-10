@@ -94,14 +94,12 @@ $query = "
     SELECT id, family_name, full_name, family_image, family_members, mobile_number, nid_number, family_card_number, job, job_type, job_salary, balance, gold, asset, family_member_asset, family_member_salary, balance, family_address, zakat
     FROM users 
     WHERE family_name LIKE ? 
-       OR family_address LIKE ?  
-       OR nid_number LIKE ? 
     LIMIT ? OFFSET ?";
-
 $stmt = $conn->prepare($query);
+
 if ($stmt) {
     $search_param = "%$search%";
-    $stmt->bind_param("sssii", $search_param, $search_param, $search_param, $limit, $offset);
+    $stmt->bind_param("sii", $search_param, $limit, $offset);
 
     if ($stmt->execute()) {
         $result = $stmt->get_result();
@@ -109,31 +107,73 @@ if ($stmt) {
     } else {
         $message = "Error fetching users: " . $stmt->error;
     }
-    $stmt->close();
 } else {
     die("SQL Prepare Error: " . $conn->error);
 }
 
-$count_query = "SELECT COUNT(*) as total_records FROM users WHERE family_name LIKE ? OR family_address LIKE ? OR nid_number LIKE ?";
-$stmt = $conn->prepare($count_query);
-if ($stmt) {
-    $stmt->bind_param("sss", $search_param, $search_param, $search_param);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $total_records = $result->fetch_assoc()['total_records'];
-    $stmt->close();
+// Handle gift submissions
+$gift_messages = [];
 
-    $total_pages = ceil($total_records / $limit);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    foreach ($_POST['gift'] as $userId => $giftAction) {
+        $agriculturalProduct = $_POST['agricultural_products_' . $userId] ?? null;
+        $product = $_POST['product_' . $userId] ?? null;
+        $vehicle = $_POST['vehicles_' . $userId] ?? null;
+
+        $user = array_filter($users, function ($u) use ($userId) {
+            return $u['id'] == $userId;
+        });
+
+        $user = reset($user);
+        $fullName = $user['full_name'] ?? null;
+
+        if (!$fullName) {
+            $gift_messages[$userId] = "Error: Full name is missing for user ID $userId.";
+            continue;
+        }
+
+        if ($giftAction === 'gift') {
+            $query = "
+                INSERT INTO gift (family_id, full_name, family_card_number, gift_name, agricultural_product, product_name, vehicle, value, description, issued_date) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($query);
+
+            if ($stmt) {
+                $familyId = $user['id'];
+                $familyCardNumber = $user['family_card_number'] ?? '';
+                $giftName = "Custom Gift";
+                $value = 0;
+                $description = "Gift Description";
+                $issuedDate = date('Y-m-d H:i:s');
+
+                $stmt->bind_param("issssssdsd", $familyId, $fullName, $familyCardNumber, $giftName, $agriculturalProduct, $product, $vehicle, $value, $description, $issuedDate);
+
+                if ($stmt->execute()) {
+                    $gift_messages[$userId] = "Gift successfully added for " . htmlspecialchars($fullName);
+                } else {
+                    $gift_messages[$userId] = "Error inserting gift for " . htmlspecialchars($fullName) . ": " . $stmt->error;
+                }
+            } else {
+                $gift_messages[$userId] = "Error preparing the insert query: " . $conn->error;
+            }
+        }
+    }
 }
 
+// Total Families
+$family_count_query = "SELECT COUNT(*) AS total_family FROM users";
+$family_count_result = $conn->query($family_count_query);
+$total_family = $family_count_result->fetch_assoc()['total_family'] ?? 0;
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Family Address Search</title>
+    <title>Family Profile</title>
 
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -169,7 +209,7 @@ if ($stmt) {
 <body>
 <div class="header">
     <h1 style="color:white;">Welcome to Family Card</h1>
-    <h4 style="color: #fff;">Hand in hand, the country of pride is Shahid Ziaur Rahman Bangladesh.</h4>
+    <h4 style="color: #ffffff;">Hand in hand, the country of pride is Shahid Ziaur Rahman Bangladesh.</h4>
 </div>
 
 <div class="navbar">
@@ -184,92 +224,48 @@ if ($stmt) {
     <a href="logout.php" onclick="return confirm('Are you sure you want to log out?');">Logout</a>
 </div>
 
-<!--  Start -->
 <div class="container">
+           <!-- Star Start -->
            <div class="container-fluid pt-4 px-4">
-                <div class="row g-4">
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-center p-4">
-                            <div class="text-center">
-                                <i class="fa fa-id-card fa-3x text-primary mb-3"></i>
-                                <p class="mb-2">Family Card</p>
-                                <h6 class="mb-0"><a href="card_view.php?id=1">Views Card</a></h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-center p-4">
-                            <div class="text-center">
-                                <i class="fa fa-id-card fa-3x text-primary mb-3"></i>
-                                <p class="mb-2">Family Months</p>
-                                <h6 class="mb-0"><a href="months.php">Monthly Income vs Expense</a></h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-center p-4">
-                            <div class="text-center">
-                                <i class="fa fa-id-card fa-3x text-primary mb-3"></i>
-                                <p class="mb-2">Top Family </p>
-                                <h6 class="mb-0"><a href="top_rich_family.php">Top 10 Rich Family</a></h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                    <div class="bg-light rounded d-flex align-items-center justify-content-center p-4">
-                    <div class="text-center">
-                    <i class="fa fa-id-card fa-3x text-primary mb-3"></i>
-                    <p class="mb-2">Poor Family</p>
-                    <h6 class="mb-0"><a href="poor_family.php">View List</a></h6>
-                    </div>
-                    </div>
-                    </div>
+<div class="row g-4">
 
-                </div>
-            </div>
-            </div>
-            <!-- Star End -->    
+<?php if (!empty($message)): ?>
+<p style="color:black;text-align:center;font-size:22px;">
+<?= htmlspecialchars($message); ?>
+</p>
+<?php endif; ?>
 
-<div class="container">
-    <?php if (!empty($familyData)): ?>
-        <div class="family-profile">
-            <p><strong>Family Name:</strong> <?= htmlspecialchars($familyData['family_name'] ?? 'Not Available') ?></p>
-            <p><strong>NID Number:</strong> <?= htmlspecialchars($familyData['nid_number'] ?? 'Not Available') ?></p>
-            <p><strong>Full Name:</strong> <?= htmlspecialchars($familyData['full_name'] ?? 'Not Available') ?></p>
-            <p><strong>Father Name:</strong> <?= htmlspecialchars($familyData['father_name'] ?? 'Not Available') ?></p>
-            <p><strong>Mother Name:</strong> <?= htmlspecialchars($familyData['mother_name'] ?? 'Not Available') ?></p>
-            <p><strong>Mobile Number:</strong> <?= htmlspecialchars(string: $familyData['mobile_number'] ?? 'Not Available') ?></p>
-            <p><strong>Number of Family Members:</strong> <?= htmlspecialchars($familyData['family_members'] ?? 'Not Available') ?></p>
-            <img src="<?= htmlspecialchars($familyData['family_image'] ?? 'uploads/default-image.jpg') ?>" alt="Family Image" style="max-width: 100%; height: auto;">
-        </div>
-    <?php endif; ?>
-    <br>
-    <div style="width: 42%; padding-left: 50px;">
-    <form method="POST" action="family_details.php">
-            <label for="nidnumber">Enter NID Number Search:</label>
-            <input type="text" name="nidnumber" id="nidnumber" required>
-            <button type="submit">View Profile</button>
-    </form>
-    </div>
-    <div style="width: 54%; padding-left: 210px;">
-    <form method="POST" action="amount.php">
-        <label for="search">Top or Low Amount Search:</label>
-        <input type="text" name="search" id="search" required>
-        <button type="submit">Amount Search</button>
-    </form>
+
+<!-- Total Families -->
+
+<div class="col-sm-6 col-xl-12 pt-2">
+<div class="bg-light rounded d-flex align-items-center justify-content-center p-4 shadow-sm">
+
+<i class="fa fa-home fa-3x text-primary"></i>
+
+<div class="ms-3 text-end">
+<p class="mb-2">Total Families</p>
+<h4 class="mb-0"><?= number_format($total_family) ?></h4>
 </div>
 
-    </div>
+</div>
+</div>
+
+</div>
+</div>
+     <!-- Star End -->
+           
+           </div>
+ 
 
 <div class="container">
     <div class="container-fluid pt-4 px-4">
         <div class="bg-light text-center rounded p-4">
-        <div class="d-flex align-items-center justify-content-between mb-4">
-        <div style="width: 100%;">
-                <form method="POST" action="search.php">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h3 class="mb-0">Family Information</h3>
+                <!-- <form method="POST" action="search.php">
                     <input type="text" name="search" id="search" required><button type="submit">Address Search</button>
-                </form>
-                </div>
+                </form> -->
             </div>
             <div class="table-responsive">
                 <table class="table text-start align-middle table-bordered table-hover mb-0">
@@ -278,15 +274,17 @@ if ($stmt) {
                             <th scope="col">ID</th>
                             <th scope="col">Family Name</th>
                             <th scope="col">Full Name</th>
-                            <th scope="col">Profile Image</th>
+                            <!-- <th scope="col">Profile Image</th> -->
                             <th scope="col">Family Members</th>
                             <th scope="col">Mobile</th>
                             <th scope="col">Family Address</th>
                             <th scope="col">NID Card</th>
                             <th scope="col">Family Card Number</th>
+                            <th scope="col">Job/Company Name</th>
+                            <th scope="col">Job/Company Designation</th>
                             <th scope="col">Salary</th>
                             <th scope="col">Balance</th>
-                            <th scope="col">Total Balance</th>
+                            <th scope="col">Total Balance (Balance + Salary)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -306,17 +304,19 @@ if ($stmt) {
                                     <td><?php echo htmlspecialchars($user['id']); ?></td>
                                     <td><?php echo htmlspecialchars($user['family_name']); ?></td>
                                     <td><?php echo htmlspecialchars($user['full_name']); ?></td>
-                                    <td>
+                                    <!-- <td>
                                         <img src="<?= htmlspecialchars($user['family_image'] ?? 'uploads/default-image.jpg') ?>" alt="" style="width: 60px; height: 80px;">
-                                    </td>
+                                    </td> -->
                                     <td><?php echo isset($user['family_members']) ? htmlspecialchars($user['family_members']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['mobile_number']) ? htmlspecialchars($user['mobile_number']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['family_address']) ? htmlspecialchars($user['family_address']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['nid_number']) ? htmlspecialchars($user['nid_number']) : 'N/A'; ?></td>
                                     <td><?php echo isset($user['family_card_number']) ? htmlspecialchars($user['family_card_number']) : 'N/A'; ?></td>
-                                    <td><?php echo isset($user['job_salary']) ? htmlspecialchars($user['job_salary']) : 'N/A'; ?></td>
-                                    <td><?php echo isset($user['balance']) ? htmlspecialchars($user['balance']) : 'N/A'; ?></td>
-                                    <td><?php echo htmlspecialchars(number_format($family_total, 0)); ?> TK</td>
+                                    <td><?php echo isset($user['job']) ? htmlspecialchars($user['job']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['job_type']) ? htmlspecialchars($user['job_type']) : 'N/A'; ?></td>
+                                    <td><?php echo isset($user['job_salary']) ? htmlspecialchars($user['job_salary']) : 'N/A'; ?>/-</td>
+                                    <td><?php echo isset($user['balance']) ? htmlspecialchars($user['balance']) : 'N/A'; ?>/-</td>
+                                    <td><?php echo htmlspecialchars(number_format($family_total, 0)); ?>/-</td>
                                 </tr>
                         <?php endforeach; 
                         } else {
@@ -329,6 +329,8 @@ if ($stmt) {
         </div>
     </div>
 </div>
+
+
 
 
 <!-- Pagination Logic Start -->
@@ -400,6 +402,23 @@ if ($stmt) {
     <script src="lib/tempusdominus/js/moment.min.js"></script>
     <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
     <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <script>
+    // Save scroll position before navigating away
+    window.addEventListener('beforeunload', () => {
+    sessionStorage.setItem('scrollPos', window.scrollY);
+    });
+
+    // On page load, scroll to the saved position
+    window.addEventListener('load', () => {
+    const scrollPos = sessionStorage.getItem('scrollPos');
+    if (scrollPos) {
+        window.scrollTo(0, parseInt(scrollPos));
+        sessionStorage.removeItem('scrollPos'); // clear it after restoring
+    }
+    });
+    </script>
+
 
 </body>
 </html>

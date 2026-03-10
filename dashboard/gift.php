@@ -153,10 +153,14 @@ $conn->close(); // Close the database connection
 <div class="navbar">
     <a href="index.php">Home</a>
     <a href="profile.php">Profile</a>
-    <a href="gift.php">Gift</a>
-    <a href="months.php">Months</a>
+    <a href="division_wise_family_count.php">Division Wise Family</a>
+    <a href="family_information.php">Family Information</a>
+    <a href="family_assets_information.php">Family Assets Information</a>
+    <a href="gift_send.php">Send Gift</a>
+    <a href="gift.php">Gifts</a>
+    <a href="search.php">Search</a>
     <a href="logout.php" onclick="return confirm('Are you sure you want to log out?');">Logout</a>
-    </div>
+</div>
 
 
 <!--  Start -->
@@ -176,7 +180,7 @@ $conn->close(); // Close the database connection
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-xl-3">
+                    <!-- <div class="col-sm-6 col-xl-3">
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-car fa-3x text-primary"></i>
                             <div class="ms-3">
@@ -184,7 +188,7 @@ $conn->close(); // Close the database connection
                                 <h6 class="mb-0">123 </h6>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-sm-6 col-xl-3">
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-home fa-3x text-primary"></i>
@@ -194,7 +198,7 @@ $conn->close(); // Close the database connection
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-xl-3">
+                    <!-- <div class="col-sm-6 col-xl-3">
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-box fa-3x text-primary"></i>
                             <div class="ms-3">
@@ -202,8 +206,8 @@ $conn->close(); // Close the database connection
                                 <h6 class="mb-0">2</h6>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
+                    </div> -->
+                    <!-- <div class="col-sm-6 col-xl-3">
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-users fa-3x text-primary"></i>
                             <div class="ms-3">
@@ -211,7 +215,7 @@ $conn->close(); // Close the database connection
                                 <h6 class="mb-0">Online 6 lakh</h6>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-sm-6 col-xl-3">
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-city fa-3x text-primary"></i>
@@ -230,7 +234,7 @@ $conn->close(); // Close the database connection
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-xl-3">
+                    <!-- <div class="col-sm-6 col-xl-3">
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-globe fa-3x text-primary"></i>
                             <div class="ms-3">
@@ -238,8 +242,8 @@ $conn->close(); // Close the database connection
                                 <h6 class="mb-0">3 crore 93 lakh</h6>
                             </div>
                         </div>
-                    </div> 
-                    <div class="col-sm-6 col-xl-3">
+                    </div>  -->
+                    <!-- <div class="col-sm-6 col-xl-3">
                         <div class="bg-light rounded d-flex align-items-center justify-content-center p-4">
                             <div class="text-center">
                                 <i class="fa fa-id-card fa-3x text-primary mb-3"></i>
@@ -256,7 +260,7 @@ $conn->close(); // Close the database connection
                                 <h6 class="mb-0"><a href="months.php">Monthly Income vs Expense</a></h6>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                 </div>
             </div>

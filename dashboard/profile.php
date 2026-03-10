@@ -30,6 +30,7 @@ $stmt->close();
 $profile_image = $user['profile_image'] ?? 'uploads/default-profile.jpg';
 $username = $user['username'] ?? 'N/A';
 $email = $user['email'] ?? 'N/A';
+$title = $user['title'] ?? 'N/A';
 $role = $user['role'] ?? 'N/A';
 
 
@@ -39,6 +40,7 @@ $products = null; // Set to null initially
 $message = "";
 $role = null; // Initialize $role to avoid undefined variable errors
 $user = null; // Initialize $user to avoid undefined variable errors
+
 
 // Check if user is logged in and session contains a valid user ID
 if (!isset($_SESSION['user_id'])) {
@@ -165,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile_image'])) {
 
 
 // Fetch all user data for Admin Dashboard (This is to display the list of users)
-$query = "SELECT id, username, email, role, is_active FROM leader";
+$query = "SELECT id, username, email, title, role, is_active FROM leader";
 $result = $conn->query($query); // Run the query to get all users
 
 // if ($result) {
@@ -329,16 +331,18 @@ $conn->close();
     <h4 style="color: #ffffff;">Hand in hand, the country of pride is Shahid Ziaur Rahman Bangladesh.</h4>
 </div>
 
-<div class="navbar"> 
-    <div>
-        <a href="index.php">Home</a>
-        <a href="profile.php">Profile</a>
-        <a href="gift.php">Gift</a>
-        <a href="months.php">Months</a>
-        <a href="logout.php" onclick="return confirm('Are you sure you want to log out?');">Logout</a>
-        </div>
+<div class="navbar">
+    <a href="index.php">Home</a>
+    <a href="profile.php">Profile</a>
+    <a href="division_wise_family_count.php">Division Wise Family</a>
+    <a href="family_information.php">Family Information</a>
+    <a href="family_assets_information.php">Family Assets Information</a>
+    <a href="gift_send.php">Send Gift</a>
+    <a href="gift.php">Gifts</a>
+    <a href="search.php">Search</a>
+    <a href="logout.php" onclick="return confirm('Are you sure you want to log out?');">Logout</a>
 </div>
-
+<!-- 
 <div class="container mt-4">
 <div style="width: 100%; padding: 60px; background: linear-gradient(135deg,#1e3c72,#2a5298); box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2); border-radius:10px;">
 
@@ -349,10 +353,10 @@ $conn->close();
 
     <div id="quranSlider" class="carousel slide mt-4" data-bs-ride="carousel" data-bs-interval="6000">
 
-        <div class="carousel-inner text-center">
+        <div class="carousel-inner text-center"> -->
 
             <!-- Slide 1 -->
-            <div class="carousel-item active">
+            <!-- <div class="carousel-item active">
                 <h2 style="color:#ffd700; font-size:32px; direction: rtl; font-family: 'Scheherazade', serif;">
                     إِنَّ ٱلَّذِينَ ءَامَنُوا۟ وَهَاجَرُوا۟ وَجَٰهَدُوا۟ فِى سَبِيلِ ٱللَّهِ
                 </h2>
@@ -361,10 +365,10 @@ $conn->close();
                     তাদের জন্য রয়েছে বড় পুরস্কার।
                 </p>
                 <h6 style="color:white; font-family:'Nikosh', sans-serif;">– সূরা আন-নিসা ৪:৭৫</h6>
-            </div>
+            </div> -->
 
             <!-- Slide 2 -->
-            <div class="carousel-item">
+            <!-- <div class="carousel-item">
                 <h2 style="color:#ffd700; font-size:32px; direction: rtl; font-family: 'Scheherazade', serif;">
                     إِنَّ ٱللَّهَ يَأْمُرُكُمْ أَن تُؤَدُّوا۟ ٱلْأَمَـٰنَـٰتِ إِلَىٰٓ أَهْلِهَا
                 </h2>
@@ -374,10 +378,10 @@ $conn->close();
                     আর বিচার করলে ন্যায়বিচার করো।
                 </p>
                 <h6 style="color:white; font-family:'Nikosh', sans-serif;">– সূরা আন-নিসা ৪:৫৮</h6>
-            </div>
+            </div> -->
 
             <!-- Slide 3 -->
-            <div class="carousel-item">
+            <!-- <div class="carousel-item">
                 <h2 style="color:#ffd700; font-size:32px; direction: rtl; font-family: 'Scheherazade', serif;">
                     ٱعْدِلُوا۟ هُوَ أَقْرَبُ لِلتَّقْوَىٰ
                 </h2>
@@ -385,10 +389,10 @@ $conn->close();
                     ন্যায়বিচার করো; এটাই তাকওয়ার অধিক নিকটবর্তী।
                 </p>
                 <h6 style="color:white; font-family:'Nikosh', sans-serif;">– সূরা আল-মায়েদা ৫:৮</h6>
-            </div>
+            </div> -->
 
             <!-- Slide 4 -->
-            <div class="carousel-item">
+            <!-- <div class="carousel-item">
                 <h2 style="color:#ffd700; font-size:32px; direction: rtl; font-family: 'Scheherazade', serif;">
                     وَتَوَاصَوْا۟ بِٱلْحَقِّ وَتَوَاصَوْا۟ بِٱلصَّبْرِ
                 </h2>
@@ -397,26 +401,13 @@ $conn->close();
                 </p>
                 <h6 style="color:white; font-family:'Nikosh', sans-serif;">– সূরা আল-আস্‌র ১০৩:৩</h6>
             </div>
-
         </div>
-
-        <!-- Previous -->
-        <!-- <button class="carousel-control-prev" type="button" data-bs-target="#quranSlider" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon"></span>
-        </button> -->
-
-        <!-- Next -->
-        <!-- <button class="carousel-control-next" type="button" data-bs-target="#quranSlider" data-bs-slide="next">
-            <span class="carousel-control-next-icon"></span>
-        </button> -->
-
     </div>
-
 </div>
-</div>
+</div> -->
 
 
-<div style="width: 100%; text-align: center; padding: 50px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
+<div style="width: 100%; text-align: center; padding: 5px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
     <div class="profile-container">
         <h2 style="color:#ffd700; font-size:32px; direction: rtl; font-family: 'Scheherazade', serif;">
     لَا إِلٰهَ إِلَّا اللّٰهُ مُحَمَّدٌ رَسُولُ اللّٰهِ
@@ -426,8 +417,8 @@ $conn->close();
     লা ইলাহা ইল্লাল্লাহু মুহাম্মাদুর রাসূলুল্লাহ <br>
     অর্থ: আল্লাহ ছাড়া কোনো উপাস্য নেই; হযরত মুহাম্মদ (সা.) আল্লাহর প্রেরিত রাসূল।
 </p>
-        <h2>Welcome to <?= htmlspecialchars($username) ?></h2>
-        <h4 style="color: #2200ff; font-family: 'time'">When the power of youth awakens, the nation transforms.</h4>
+        <h2 style="color: #2200ff; font-family: 'Times New Roman', Times, serif">Welcome to <?= htmlspecialchars($username) ?></h2>
+        <h4 style="color: #2200ff; font-family: 'Times New Roman', Times, serif">When the power of youth awakens, the nation transforms.</h4>
            <br>
         <img src="<?= htmlspecialchars($profile_image) ?>" alt="Profile Image" class="profile-image">
         <br>
@@ -496,7 +487,7 @@ $conn->close();
     <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
 
         <!-- Header -->
-        <div class="bg-light text-black text-center py-3 fs-4 fw-semibold">
+        <div class="bg-gradient bg-primary text-light text-center py-3 fs-4 fw-semibold">
             <i class="bi bi-speedometer2 me-2"></i> Admin Dashboard
         </div>
 
@@ -509,6 +500,7 @@ $conn->close();
                         <tr>
                             <th>ID</th>
                             <th>Username</th>
+                            <th>Title</th>
                             <th>Email</th>
                             <th>Role</th>
                             <th>Status</th>
@@ -524,6 +516,7 @@ $conn->close();
                                     <?= htmlspecialchars($row['username']) ?>
                                 </td>
 
+                                <td><?= htmlspecialchars($row['title']) ?></td>
                                 <td><?= htmlspecialchars($row['email']) ?></td>
 
                                 <td>
@@ -554,7 +547,159 @@ $conn->close();
     </div>
 
 </div>
-       <div class="profile-container">
+</div>
+
+<div class="container my-5">
+
+<div class="card shadow-lg border-0 rounded-4">
+
+<!-- Header -->
+<div class="bg-gradient bg-primary text-white text-center py-3">
+<h4 class="mb-0" style="color: #f8f9fa;">
+<i class="bi bi-shield-lock-fill me-2"></i> Admin Dashboard Rules
+</h4>
+</div>
+
+<div class="card-body">
+
+<div class="row g-4">
+
+<!-- Role Permissions -->
+
+<div class="col-lg-6">
+
+<div class="card border-0 shadow-sm h-100">
+
+<div class="card-header bg-primary text-white fw-semibold">
+<i class="bi bi-person-badge me-2"></i> Role Permissions
+</div>
+
+<div class="card-body p-0">
+
+<div class="table-responsive">
+
+<table class="table table-hover align-middle text-center mb-0">
+
+<thead class="table-light">
+<tr>
+<th>Role</th>
+<th>Access Level</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td><span class="badge bg-danger px-3 py-2">Admin</span></td>
+<td class="fw-semibold text-success">Full Access</td>
+<td>Manage users, edit all data, view system reports</td>
+</tr>
+
+<tr>
+<td><span class="badge bg-warning text-dark px-3 py-2">Editor</span></td>
+<td class="fw-semibold text-primary">Edit Access</td>
+<td>Edit family information and gifts</td>
+</tr>
+
+<tr>
+<td><span class="badge bg-success px-3 py-2">User</span></td>
+<td class="fw-semibold text-secondary">Limited Access</td>
+<td>View data only</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+</div>
+</div>
+
+</div>
+
+
+<!-- System Rules -->
+
+<div class="col-lg-6">
+
+<div class="card border-0 shadow-sm h-100">
+
+<div class="card-header bg-success text-white fw-semibold">
+<i class="bi bi-gear-fill me-2"></i> System Rules
+</div>
+
+<div class="card-body p-0">
+
+<div class="table-responsive">
+
+<table class="table table-hover align-middle text-center mb-0">
+
+<thead class="table-light">
+<tr>
+<th>Action</th>
+<th>Admin</th>
+<th>Editor</th>
+<th>User</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td class="fw-semibold">View Dashboard</td>
+<td><span class="badge bg-success">Allowed</span></td>
+<td><span class="badge bg-success">Allowed</span></td>
+<td><span class="badge bg-success">Allowed</span></td>
+</tr>
+
+<tr>
+<td class="fw-semibold">Add Family Data</td>
+<td><span class="badge bg-success">Allowed</span></td>
+<td><span class="badge bg-success">Allowed</span></td>
+<td><span class="badge bg-danger">Denied</span></td>
+</tr>
+
+<tr>
+<td class="fw-semibold">Edit Family Data</td>
+<td><span class="badge bg-success">Allowed</span></td>
+<td><span class="badge bg-success">Allowed</span></td>
+<td><span class="badge bg-danger">Denied</span></td>
+</tr>
+
+<tr>
+<td class="fw-semibold">Delete Records</td>
+<td><span class="badge bg-success">Allowed</span></td>
+<td><span class="badge bg-danger">Denied</span></td>
+<td><span class="badge bg-danger">Denied</span></td>
+</tr>
+
+<tr>
+<td class="fw-semibold">Manage Users</td>
+<td><span class="badge bg-success">Allowed</span></td>
+<td><span class="badge bg-danger">Denied</span></td>
+<td><span class="badge bg-danger">Denied</span></td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+       <div class="profile-container" style="width: 30%;">
             <!--  -->
         <h2>Edit Admin</h2>
         <form action="" method="POST" enctype="multipart/form-data">
@@ -579,8 +724,11 @@ $conn->close();
 </form>
 
         </div>
-      </div>
-    </div>
+     </div>
+    </div>        
+</div>
+
+
 
 <!-- Back to Top -->
 <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>

@@ -132,12 +132,6 @@ h1, h4 {
     color: #4687ff;
 }
 
-.navbar a.active {
-    background-color: #0d5aa7;
-    border-radius: 4px;
-    color: white;
-}
-
 
 .header {
     text-align: center;

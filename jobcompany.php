@@ -142,14 +142,15 @@ foreach ($salary_fields as $field) {
     <h4 style="color: #fff;">Hand in hand, the country of pride is Shahid Ziaur Rahman Bangladesh.</h4>
 </div> 
    <div class="navbar">
-        <a href="index.php">Home</a>
-        <a href="profile.php">Profile</a>
-        <a href="asset.php">Asset</a>
-        <a href="jobcompany.php" class="active">Govt./Company Job</a>
-        <a href="gift.php">Gift</a>
-        <a href="information.php">Information</a>
-        <a href="logout.php">Logout</a>
-    </div>
+    <a href="index.php">Home</a>
+    <a href="profile.php">Profile</a>
+    <a href="asset.php">Asset</a>
+    <a href="jobcompany.php" class="active">Govt./Company Job</a>
+    <a href="gift.php">Gift</a>
+    <a href="information.php">Information</a>
+    <a href="months.php">Months</a>
+    <a href="logout.php">Logout</a>
+</div>
 
     <!-- <div class="container">
     <div style="width: 100%;padding: 50px; background-color: #5c9ded; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex;">

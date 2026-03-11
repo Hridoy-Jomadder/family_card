@@ -102,13 +102,15 @@ $conn->close();
     <h1 style="color:white;">Welcome to Family Card</h1>
     <h4 style="color: #fff;">Hand in hand, the country of pride is Shahid Ziaur Rahman Bangladesh.</h4>
 </div> 
+
 <div class="navbar">
     <a href="index.php">Home</a>
     <a href="profile.php">Profile</a>
     <a href="asset.php">Asset</a>
     <a href="jobcompany.php">Govt./Company Job</a>
-    <a href="months.php" class="active">Months</a>
     <a href="gift.php">Gift</a>
+    <a href="information.php">Information</a>
+    <a href="months.php" class="active">Months</a>
     <a href="logout.php">Logout</a>
 </div>
 
@@ -118,6 +120,7 @@ $conn->close();
     background-position: center;
     background-repeat: no-repeat;
      padding: 30px; color: white; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+     <br>
      <br>
      <br>
      <br>
@@ -135,7 +138,9 @@ $conn->close();
             <p><strong>Net Savings (TK):</strong> <?= $total_income - $total_exp ?>/-</p>
             </div>
              <div style="text-align: center;color: black;">
-            <p><strong>Note:</strong> Please use the forms below to update your monthly income and expenditure. Make sure to enter accurate data for better financial tracking.</p>
+                <br>
+                <br>
+            <p><strong>Note:</strong> Please use the forms below to update your monthly income and expenditure.<br> Make sure to enter accurate data for better financial tracking.</p>
             </div>
         <?php else: ?>
             <p style="text-align: center;"><?= htmlspecialchars($message ?? 'No data found.') ?></p>

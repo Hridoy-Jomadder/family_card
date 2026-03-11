@@ -233,15 +233,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nidnumber'])) {
 <div class="header">
     <h1 style="color:white;">Welcome to Family Card</h1>
     <h4 style="color: #fff;">Hand in hand, the country of pride is Shahid Ziaur Rahman Bangladesh.</h4>
-</div>    <div class="navbar">
-        <a href="index.php">Home</a>
-        <a href="profile.php">Profile</a>
-        <a href="asset.php">Asset</a>
-        <a href="jobcompany.php">Govt./Company Job</a>
-        <a href="gift.php">Gift</a>
-        <a href="information.php" class="active">Information</a>
-        <a href="logout.php">Logout</a>
-    </div>
+</div>    
+
+<div class="navbar">
+    <a href="index.php">Home</a>
+    <a href="profile.php">Profile</a>
+    <a href="asset.php">Asset</a>
+    <a href="jobcompany.php">Govt./Company Job</a>
+    <a href="gift.php">Gift</a>
+    <a href="information.php" class="active">Information</a>
+    <a href="months.php">Months</a>
+    <a href="logout.php">Logout</a>
+</div>
 
 
 <div style="padding: 50px; background-image: url('img/full.jpg');

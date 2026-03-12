@@ -1,3 +1,11 @@
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:11998e,100:38ef7d&height=200&section=header&text=Family%20Card%20Management%20System&fontSize=40&fontColor=ffffff"/>
+</p>
+
+![Stars](https://img.shields.io/github/stars/Hridoy-Jomadder/family_card?style=for-the-badge)
+![Forks](https://img.shields.io/github/forks/Hridoy-Jomadder/family_card?style=for-the-badge)
+![License](https://img.shields.io/github/license/Hridoy-Jomadder/family_card?style=for-the-badge)
+
 📌 Project Details
 
 Family Card Management System is a web-based application developed using PHP and MySQL to manage family information, members, assets, gifts, and monthly financial records. The system creates a digital family database where administrators and users can easily store, update, and manage family-related data.
@@ -57,3 +65,14 @@ SMS / Email Notification System
 API Integration
 
 Mobile Application Version
+
+
+## 📊 GitHub Statistics
+
+![GitHub Stats](https://github-readme-stats.vercel.app/api?username=Hridoy-Jomadder&show_icons=true)
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.

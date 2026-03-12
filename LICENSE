@@ -1,6 +1,16 @@
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:11998e,100:38ef7d&height=200&section=header&text=Family%20Card%20Management%20System&fontSize=40&fontColor=ffffff"/>
+</p>
+
+![Stars](https://img.shields.io/github/stars/Hridoy-Jomadder/family_card?style=for-the-badge)
+![Forks](https://img.shields.io/github/forks/Hridoy-Jomadder/family_card?style=for-the-badge)
+![License](https://img.shields.io/github/license/Hridoy-Jomadder/family_card?style=for-the-badge)
+
+# 🏡 Family Card Management System
+
 MIT License
 
-Copyright (c) 2026 Md. Minhazul Islam
+Copyright (c) 2026 Md. Minhazul Islam Hridoy Jomadder
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

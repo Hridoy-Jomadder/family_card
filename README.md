@@ -67,12 +67,7 @@ API Integration
 Mobile Application Version
 
 
-## 📊 GitHub Statistics
-
-![GitHub Stats](https://github-readme-stats.vercel.app/api?username=Hridoy-Jomadder&show_icons=true)
-
----
-
 ## 📜 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+

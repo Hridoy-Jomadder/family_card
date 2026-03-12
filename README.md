@@ -4,7 +4,7 @@
 
 ![Stars](https://img.shields.io/github/stars/Hridoy-Jomadder/family_card?style=for-the-badge)
 ![Forks](https://img.shields.io/github/forks/Hridoy-Jomadder/family_card?style=for-the-badge)
-![License](https://img.shields.io/github/license/Hridoy-Jomadder/family_card?style=for-the-badge)
+![License]([https://img.shields.io/github/license/Hridoy-Jomadder/family_card?style=for-the-badge](https://github.com/Hridoy-Jomadder/family_card?tab=License-1-ov-file))
 
 📌 Project Details
 
@@ -70,4 +70,5 @@ Mobile Application Version
 ## 📜 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
 

@@ -181,7 +181,7 @@ $conn->close(); // Close the connection after all queries are executed
     <a href="index.php" class="active">Home</a>
     <a href="profile.php">Profile</a>
     <a href="asset.php">Asset</a>
-    <a href="jobcompany.php">Govt./Company Job</a>
+    <a href="job.php">Govt./Company Job</a>
     <a href="gift.php">Gift</a>
     <a href="information.php">Information</a>
     <a href="months.php">Months</a>
@@ -244,7 +244,7 @@ $conn->close(); // Close the connection after all queries are executed
                         <tr class="text-dark">
                             <th scope="col">ID</th>
                             <th scope="col">Full Name</th>
-                            <th scope="col">Family Card Number</th>
+                            <th scope="col">Family Card<br> Number</th>
                             <th scope="col">Agricultural Product</th>
                             <th scope="col">Packet</th>
                             <th scope="col">Home/Vehicles</th>
@@ -286,7 +286,7 @@ $conn->close(); // Close the connection after all queries are executed
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body text-center">
-                                                <img src="<?= htmlspecialchars($image_path) ?>" alt="Gift Image" style="max-width: 100%; max-height: 80vh;">
+                                                <img src="<?= htmlspecialchars($image_path) ?>" alt="Gift Image" style="max-width: 100%; max-height: 100vh;">
                                             </div>
                                             </div>
                                         </div>

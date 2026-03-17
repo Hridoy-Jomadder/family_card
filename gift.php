@@ -245,7 +245,7 @@ $conn->close(); // Close the connection after all queries are executed
     <a href="index.php">Home</a>
     <a href="profile.php">Profile</a>
     <a href="asset.php">Asset</a>
-    <a href="jobcompany.php">Govt./Company Job</a>
+    <a href="job.php">Govt./Company Job</a>
     <a href="gift.php" class="active">Gift</a>
     <a href="information.php">Information</a>
     <a href="months.php">Months</a>
@@ -266,8 +266,8 @@ $conn->close(); // Close the connection after all queries are executed
     background-repeat: no-repeat;">
     <div class="container-fluid pt-4 px-4">
         <div class="bg-light text-center rounded p-4">
-            <div class="d-flex align-items-center justify-content-between mb-4">
-                <h6 class="mb-0">Family Gifts</h6>
+            <div class="card shadow-lg border-0 rounded-4 p-4 mb-4">
+                    <h3 class="mb-4 text-primary" style="text-align: center;">Family Gifts</h3>
             </div>
             <div class="table-responsive">
                 <table class="table text-start align-middle table-bordered table-hover mb-0">
@@ -305,7 +305,7 @@ $conn->close(); // Close the connection after all queries are executed
                                 <?php if (!empty($row['gift_image'])) {
                                     $image_paths = explode(",", $row['gift_image']);
                                     foreach ($image_paths as $image_path) {
-                                         echo "<img src='$image_path' alt='Gift Image' style='max-width: 100px; max-height: 100px; margin-top: 10px; cursor: pointer;'><br>";
+                                         echo "<img src='$image_path' alt='Gift Image' style='max-width: 100%; max-height: 100%; margin-top: 10px; cursor: pointer;'><br>";
 
                                     }
                                 } else {

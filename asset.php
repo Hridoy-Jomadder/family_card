@@ -112,7 +112,7 @@ $stmt->close();
     <a href="index.php">Home</a>
     <a href="profile.php">Profile</a>
     <a href="asset.php" class="active">Asset</a>
-    <a href="jobcompany.php">Govt./Company Job</a>
+    <a href="job.php">Govt./Company Job</a>
     <a href="gift.php">Gift</a>
     <a href="information.php">Information</a>
     <a href="months.php">Months</a>

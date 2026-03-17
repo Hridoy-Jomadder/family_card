@@ -145,7 +145,7 @@ foreach ($salary_fields as $field) {
     <a href="index.php">Home</a>
     <a href="profile.php">Profile</a>
     <a href="asset.php">Asset</a>
-    <a href="jobcompany.php" class="active">Govt./Company Job</a>
+    <a href="job.php" class="active">Govt./Company Job</a>
     <a href="gift.php">Gift</a>
     <a href="information.php">Information</a>
     <a href="months.php">Months</a>
@@ -172,7 +172,7 @@ foreach ($salary_fields as $field) {
             <h2 style="color: #0072ff;;">Government Job/Company Job Information</h2>
             <?php if (!empty($family_data)): ?>
                 <div><br>
-                    <p style="color:#0072ff;;"><strong>Government Job/Company Job:</strong> <?= htmlspecialchars($family_data['job'] ?? 'Not Available') ?></p>
+                    <p style="color:#0072ff;;"><strong>Government Job/Company Job/Anytype of work:</strong> <?= htmlspecialchars($family_data['job'] ?? 'Not Available') ?></p>
                     <p style="color:#0072ff;;"><strong>Designation:</strong> <?= htmlspecialchars($family_data['job_type'] ?? 'Not Available') ?></p>
                     <p style="color:#0072ff;;"><strong>Annual Salary (TK):</strong> <?= htmlspecialchars($family_data['job_salary'] ?? 'Not Available') ?>/-</p>
                     <p style="color:#0072ff;;"><strong>Family Members in Government Job/Company Job:</strong> <?= htmlspecialchars($family_data['family_jc_members'] ?? 'Not Available') ?></p>

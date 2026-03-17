@@ -92,14 +92,18 @@ $total_pages = ceil($total_rows/$limit);
     <h4 style="color: #fff;">Hand in hand, the country of pride is Shahid Ziaur Rahman Bangladesh.</h4>
 </div>
 
-<div class="navbar"> 
-    <div>
-        <a href="index.php">Home</a>
-        <a href="profile.php">Profile</a>
-        <a href="gift.php">Gift</a>
-        <a href="logout.php" onclick="return confirm('Are you sure you want to log out?');">Logout</a>
-        </div>
+<div class="navbar">
+    <a href="index.php">Home</a>
+    <a href="profile.php">Profile</a>
+    <a href="division_wise_family_count.php">Division Wise Family</a>
+    <a href="family_information.php">Family Information</a>
+    <a href="family_assets_information.php">Family Assets Information</a>
+    <a href="gift_send.php">Send Gift</a>
+    <a href="gift.php">Gifts</a>
+    <a href="search.php">Search</a>
+    <a href="logout.php" onclick="return confirm('Are you sure you want to log out?');">Logout</a>
 </div>
+
 <div class="container">
            <!-- Star Start -->
            <div class="container-fluid pt-4 px-4">

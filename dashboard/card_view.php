@@ -268,7 +268,7 @@ button{
                         ইউনিয়ন: <?php echo htmlspecialchars($union); ?><br>
                         ওয়ার্ড: <?php echo htmlspecialchars($ward); ?><br>
                         ঠিকানা: <?php echo htmlspecialchars($address); ?><br>
-                        বাড়ি: <?php echo htmlspecialchars($house); ?><br>
+                        বাড়ি নং: <?php echo htmlspecialchars($house); ?><br>
                         কার্ড নং: <?php echo htmlspecialchars($card); ?><br>
                         সদস্য সংখ্যা: <?php echo htmlspecialchars($members); ?>
                     </div>

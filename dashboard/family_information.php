@@ -244,7 +244,7 @@ $total_family = $family_count_result->fetch_assoc()['total_family'] ?? 0;
 <i class="fa fa-home fa-3x text-primary"></i>
 
 <div class="ms-3 text-end">
-<p class="mb-2">Total Families</p>
+<h5 class="mb-2">Total Families</h5>
 <h4 class="mb-0"><?= number_format($total_family) ?></h4>
 </div>
 
@@ -262,7 +262,7 @@ $total_family = $family_count_result->fetch_assoc()['total_family'] ?? 0;
     <div class="container-fluid pt-4 px-4">
         <div class="bg-light text-center rounded p-4">
             <div class="d-flex align-items-center justify-content-between mb-4">
-                <h3 class="mb-0">Family Information</h3>
+                <!-- <h3 class="mb-0">Family Information</h3> -->
                 <!-- <form method="POST" action="search.php">
                     <input type="text" name="search" id="search" required><button type="submit">Address Search</button>
                 </form> -->

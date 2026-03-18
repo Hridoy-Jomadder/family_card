@@ -220,6 +220,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="container">
 
+<!-- Star Start -->
+<div class="container-fluid pt-4 px-4">
+  <div class="row g-4">
+
+<?php if (!empty($message)): ?>
+<p style="color:black;text-align:center;font-size:22px;">
+<?= htmlspecialchars($message); ?>
+</p>
+<?php endif; ?>
+
+
+<!-- Total Families -->
+
+        <div class="col-sm-6 col-xl-12 pt-2">
+        <div class="bg-light rounded d-flex align-items-center justify-content-center p-4 shadow-sm">
+
+<i class="fas fa-money-bill-wave fa-3x text-primary" style="margin:5px;"></i>
+<i class="fas fa-building fa-3x text-primary"></i>
+<!-- <i class="fas fa-home fa-3x text-primary"></i> -->
+
+
+        <div class="ms-3 text-end">
+        <h5 class="mb-2">Families Assets</h5>
+        </div>
+<i class="fas fa-database fa-3x text-primary" style="margin:5px;"></i>
+<i class="fas fa-box fa-3x text-primary"></i>
+        </div>
+        </div>
+
+        </div>
+        </div>
+            <!-- Star End -->
+           
+</div>
+
 <!-- Family assets Start -->
 <div class="container">
     <div class="container-fluid pt-4 px-4">

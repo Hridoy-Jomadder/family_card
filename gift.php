@@ -270,7 +270,7 @@ $conn->close(); // Close the connection after all queries are executed
                     <h3 class="mb-4 text-primary" style="text-align: center;">Family Gifts</h3>
             </div>
             <div class="table-responsive">
-                <table class="table text-start align-middle table-bordered table-hover mb-0">
+                <table class="table text-middle align-middle table-bordered table-hover mb-0">
                     <thead>
                         <tr class="text-dark">
                             <th scope="col">ID</th>

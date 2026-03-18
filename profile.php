@@ -222,7 +222,7 @@ try {
     
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex;">
         <div>
-    <h2 style="color: #000000ff;">Edit Profile</h2>
+    <h2 style="color: #0072ff;">Edit Profile</h2>
         <?php if (!empty($message)): ?>
             <p style="color: green;"><?= htmlspecialchars($message) ?></p>
         <?php endif; ?>

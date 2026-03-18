@@ -219,6 +219,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <div class="container">
+
+<!-- Star Start -->
+<div class="container-fluid pt-4 px-4">
+  <div class="row g-4">
+
+<?php if (!empty($message)): ?>
+<p style="color:black;text-align:center;font-size:22px;">
+<?= htmlspecialchars($message); ?>
+</p>
+<?php endif; ?>
+
+
+<!-- Total Families -->
+
+        <div class="col-sm-6 col-xl-12 pt-2">
+        <div class="bg-light rounded d-flex align-items-center justify-content-center p-4 shadow-sm">
+
+<i class="fas fa-box fa-3x text-primary"></i>
+
+        <div class="ms-3 text-end">
+        <h5 class="mb-2">Send Gift</h5>
+        <p class="text-muted">Distribute gifts to families</p>
+        </div>
+
+        </div>
+        </div>
+
+        </div>
+        </div>
+            <!-- Star End -->
+           
+</div>
+
         
 <!-- Start Products Section -->
 <div class="container">

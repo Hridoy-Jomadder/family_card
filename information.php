@@ -268,16 +268,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nidnumber'])) {
 </div>
     <div class="row">
         <div class="col-md-6" style="color:black;padding-left: 160px;">
+            <p><strong>Full Name:</strong> <?= htmlspecialchars($family_data['full_name'] ?? '') ?></p>
+            <p><strong>House Name:</strong> <?= htmlspecialchars($family_data['family_name'] ?? '') ?></p>
+            <p><strong>House No:</strong> <?= htmlspecialchars($family_data['house_no'] ?? '') ?></p>
             <p><strong>Division:</strong> <?= htmlspecialchars($family_data['division_name'] ?? '') ?></p>
-            <p><strong>District:</strong> <?= htmlspecialchars($family_data['district_name'] ?? '') ?></p>
-            <p><strong>Upazila:</strong> <?= htmlspecialchars($family_data['upazila_name'] ?? '') ?></p>
-            <p><strong>Union:</strong> <?= htmlspecialchars($family_data['union_name'] ?? '') ?></p>
         </div>
 
         <div class="col-md-6" style="color:black;padding-right: 160px;">
+            <p><strong>District:</strong> <?= htmlspecialchars($family_data['district_name'] ?? '') ?></p>
+            <p><strong>Upazila:</strong> <?= htmlspecialchars($family_data['upazila_name'] ?? '') ?></p>
+            <p><strong>Union:</strong> <?= htmlspecialchars($family_data['union_name'] ?? '') ?></p>   
             <p><strong>Ward:</strong> <?= htmlspecialchars($family_data['ward_number'] ?? '') ?></p>
-            <p><strong>House No:</strong> <?= htmlspecialchars($family_data['house_no'] ?? '') ?></p>
-            <p><strong>House Name:</strong> <?= htmlspecialchars($family_data['family_name'] ?? '') ?></p>
         </div>
     </div>
 </div>

@@ -181,10 +181,10 @@ try {
                     <p><strong>Mother's Name:</strong> <?= htmlspecialchars($family_data['mother_name'] ?? 'Not Available') ?></p>
                     <p><strong>Son's Name:</strong> <?= htmlspecialchars($family_data['son_name_all'] ?? 'Not Available') ?></p>
                     <p><strong>Daughter's Name:</strong> <?= htmlspecialchars($family_data['dau_name_all'] ?? 'Not Available') ?></p>
+                    <p><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p>
                     <p><strong>NID Number:</strong> <?= htmlspecialchars($family_data['nid_number'] ?? 'Not Available') ?></p>
                     <p><strong>Family Card Number:</strong> <?= htmlspecialchars(string: $family_data['family_card_number'] ?? 'Not Available') ?></p>
                     <p><strong>Mobile Number:</strong> <?= htmlspecialchars($family_data['mobile_number'] ?? 'Not Available') ?></p>
-                    <p><strong>Number of Family Members:</strong> <?= htmlspecialchars($family_data['family_members'] ?? 'Not Available') ?></p>
                     <p><strong>Family Address:</strong> <?= htmlspecialchars($family_data['family_address'] ?? 'Not Available') ?></p>
                     <p><strong>Balance (TK):</strong> <?= htmlspecialchars($family_data['balance'] ?? 'Not Available') ?> /-</p>
                 </div>
@@ -236,7 +236,7 @@ try {
                 <input type="text" class="form-control" id="full_name" name="full_name" value="<?= htmlspecialchars($family_data['full_name'] ?? '') ?>" required>
             </div>
             <div class="form-group">
-                <label for="wife_name">Hasband or Wife Name:</label>
+                <label for="wife_name">Husband or Wife Name:</label>
                 <input type="text" class="form-control" id="wife_name" name="wife_name" value="<?= htmlspecialchars($family_data['wife_name'] ?? '') ?>" required>
             </div>
             <div class="form-group">

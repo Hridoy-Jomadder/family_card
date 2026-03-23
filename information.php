@@ -53,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['update_family_select']))
     $family_name = trim($_POST['family_name']);
     $house_no    = trim($_POST['house_no']);
     $ward_number = trim($_POST['ward_number']);
+    $religion = $_POST['religion'];
 
 $division_name = getLocationName($conn, "divisions", $division_id);
 $district_name = getLocationName($conn, "districts", $district_id);
@@ -66,12 +67,13 @@ $stmt = $conn->prepare("UPDATE users SET
     union_name=?, 
     ward_number=?, 
     house_no=?, 
-    family_name=?
+    family_name=?,
+        religion=?
     WHERE id=?"
 );
 
 $stmt->bind_param(
-    "isisssssssi",
+    "isisssssissi",
     $division_id,
     $division_name,
     $district_id,
@@ -82,6 +84,7 @@ $stmt->bind_param(
     $ward_number,
     $house_no,
     $family_name,
+    $religion,
     $user_id
 );
 
@@ -257,7 +260,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nidnumber'])) {
 
 <div class="card shadow-lg border-0 rounded-4 p-4 mb-4">
     <h3 class="mb-4 text-primary" style="text-align: center;">Family Information</h3>
-
+<div class="row">
+    <div class="col-md-6" style="color:black;padding-left: 160px;">
+        <p><strong>Nationality: Bangladeshi</strong></p>
+        <p><strong>Religion: <?= htmlspecialchars($family_data['religion'] ?? '') ?> </strong></p>
+    </div>
+</div>
     <div class="row">
         <div class="col-md-6" style="color:black;padding-left: 160px;">
             <p><strong>Division:</strong> <?= htmlspecialchars($family_data['division_name'] ?? '') ?></p>
@@ -279,10 +287,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nidnumber'])) {
 
 
 <form method="POST" enctype="multipart/form-data">
+
+<label style="text-aligin:center;">Religion: 
+    <select name="religion" required>
+    <option value=""> Select Religion </option>
+    <option value="Islam" <?= ($family_data['religion'] == 'Islam') ? 'selected' : '' ?>>Islam</option>
+    <option value="Hindu" <?= ($family_data['religion'] == 'Hindu') ? 'selected' : '' ?>>Hindu</option>
+    <option value="Christian" <?= ($family_data['religion'] == 'Christian') ? 'selected' : '' ?>>Christian</option>
+    <option value="Buddhist" <?= ($family_data['religion'] == 'Buddhist') ? 'selected' : '' ?>>Buddhist</option>
+    <option value="Other" <?= ($family_data['religion'] == 'Other') ? 'selected' : '' ?>>Other</option>
+</select>
+</label>
+<br>
+
 <!-- Division -->
-<label>Division</label>
+<label>Division: 
 <select name="division_id" id="division" required>
-    <option value="">--Select Division--</option>
+    <option value=""> Select Division </option>
     <?php
     $divisions = $conn->query("SELECT * FROM divisions ORDER BY name_en ASC");
     while($div = $divisions->fetch_assoc()):
@@ -293,43 +314,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nidnumber'])) {
         </option>
     <?php endwhile; ?>
 </select>
+</label>
+<br>
 
 <!-- District -->
-<label>District</label>
+<label>District:
 <select name="district_id" id="district" required>
-    <option value="">--Select District--</option>
+    <option value=""> Select District </option>
 </select>
+</label>
+<br>
 
 <!-- Upazila -->
-<label>Upazila</label>
+<label>Upazila:
 <select name="upazila_id" id="upazila" required>
-    <option value="">--Select Upazila--</option>
+    <option value=""> Select Upazila </option>
 </select>
+</label>
 
+<br>
 <!-- Union -->
-<label>Union</label>
+<label>Union:
 <select name="union_id" id="union" required>
-    <option value="">--Select Union--</option>
+    <option value=""> Select Union </option>
 </select>
+</label>
 
-
-    <!-- Ward -->
-     <label>Ward</label>
-<input type="text" name="ward_number" id="ward"
-       value="<?= htmlspecialchars($family_data['ward_number'] ?? '') ?>" required>
-
-
+<br>
+<!-- Ward -->
+<label>Ward:
+<input type="text" name="ward_number" id="ward" value="<?= htmlspecialchars($family_data['ward_number'] ?? '') ?>" required>
+</label>
 
     <!-- House Info -->
-    <label>House No</label>
+    <label>House No: 
     <input type="text" name="house_no" value="<?= htmlspecialchars($family_data['house_no'] ?? '') ?>" required>
+    </label>
 
-    <label>House Name</label>
+    <label>House Name: 
     <input type="text" name="family_name" value="<?= htmlspecialchars($family_data['family_name'] ?? '') ?>" required>
+    </label>
 
     <button type="submit" name="update_family_select" class="btn btn-primary mt-2">Update Family Info</button>
 </form>
-
 
         </div>
     </div>

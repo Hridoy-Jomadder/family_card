@@ -215,28 +215,28 @@ foreach ($salary_fields as $field) {
      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); justify-content: center; display: flex; margin: 5px;
      padding-left: 330px;padding-top: 30px;padding-bottom: 25px;">
     <div>
-        <h2>Job/Company Edit</h2>
+        <h2>Edit Government Job/Company Job</h2>
         <?php if (!empty($message2)): ?>
             <p style="color: green;"><?= htmlspecialchars($message2) ?></p>
         <?php endif; ?>
         <form action="" method="POST">
             <div class="form-group">
-                <label for="job">Job/Company:</label>
+                <label for="job">Government Job/Company Job:</label>
                 <input type="text" class="form-control" id="job" name="job" 
                     value="<?= htmlspecialchars($family_data['job'] ?? '') ?>" required>
             </div>
             <div class="form-group">
-                <label for="job_type">Job/Company Designation:</label>
+                <label for="job_type">Government Job/Company Job Designation:</label>
                 <input type="text" class="form-control" id="job_type" name="job_type" 
                     value="<?= htmlspecialchars($family_data['job_type'] ?? '') ?>" required>
             </div>
             <div class="form-group">
-                <label for="job_salary">Job/Company Salary (Annually):</label>
+                <label for="job_salary">Government Job/Company Job Salary (Annually):</label>
                 <input type="number" class="form-control" id="job_salary" name="job_salary" 
                     value="<?= htmlspecialchars($family_data['job_salary'] ?? '') ?>" required>
             </div>
             <div class="form-group">
-                <label for="family_jc_members">Family Job/Company Members:</label>
+                <label for="family_jc_members">Family Government Job/Company Job Members:</label>
                 <input type="text" class="form-control" id="family_jc_members" name="family_jc_members" 
                     value="<?= htmlspecialchars($family_data['family_jc_members'] ?? '') ?>" required>
             </div>

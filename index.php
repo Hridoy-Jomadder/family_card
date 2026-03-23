@@ -173,6 +173,7 @@ $conn->close(); // Close the connection after all queries are executed
 </head>
 <body>
 <div class="header">
+    <img src="img/Government_Seal_of_Bangladesh.png" style="width: 60px;">
     <h1 style="color: #fff;">Welcome to Family Card</h1>
     <h4 style="color: #fff;">Hand in hand, the country of pride is Shahid Ziaur Rahman Bangladesh.</h4>
 </div> 
@@ -206,6 +207,7 @@ $conn->close(); // Close the connection after all queries are executed
     align-items:center;
     color:#fff;">
         <div class="bg-light rounded p-4">  
+            <br>
             <h2 style="color: #0072ff;">Family Information</h2>
             <?php if (!empty($family_data)): ?>
                 <div>

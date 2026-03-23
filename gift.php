@@ -267,7 +267,7 @@ $conn->close(); // Close the connection after all queries are executed
     <div class="container-fluid pt-4 px-4">
         <div class="bg-light text-center rounded p-4">
             <div class="card shadow-lg border-0 rounded-4 p-4 mb-4">
-                    <h3 class="mb-4 text-primary" style="text-align: center;">Family Gifts</h3>
+                    <h3 class="mb-2 text-primary" style="text-align: center;">Family Gifts</h3>
             </div>
             <div class="table-responsive">
                 <table class="table text-middle align-middle table-bordered table-hover mb-0">

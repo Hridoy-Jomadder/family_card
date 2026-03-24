@@ -234,6 +234,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nidnumber'])) {
 </head>
 <body>
 <div class="header">
+        <img src="img/Government_Seal_of_Bangladesh.png" style="width: 60px;">
     <h1 style="color:white;">Welcome to Family Card</h1>
     <h4 style="color: #fff;">Hand in hand, the country of pride is Shahid Ziaur Rahman Bangladesh.</h4>
 </div>    

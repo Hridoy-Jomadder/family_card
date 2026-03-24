@@ -138,6 +138,7 @@ foreach ($salary_fields as $field) {
 </head>
 <body>
 <div class="header">
+        <img src="img/Government_Seal_of_Bangladesh.png" style="width: 60px;">
     <h1 style="color:#fff;;">Welcome to Family Card</h1>
     <h4 style="color: #fff;">Hand in hand, the country of pride is Shahid Ziaur Rahman Bangladesh.</h4>
 </div> 

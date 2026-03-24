@@ -85,16 +85,18 @@ $stmt->close();
 <div class="header">
     <h1 style="color:white;">Welcome to Family Card</h1>
     <h4 style="color:white;">Hand in hand, the country of pride is Shahid Zia's Bangladesh.</h4>
-</div>    
+</div> 
+   
 <div class="navbar">
-        <a href="index.php" active>Home</a>
-        <a href="profile.php">Profile</a>
-        <a href="asset.php">Asset</a>
-        <a href="jobcompany.php">Job/Company</a>
-        <a href="gift.php">Gift</a>
-        <a href="upload_family_image.php">Upload Image</a>
-        <a href="logout.php">Logout</a>
-    </div>
+    <a href="index.php" class="active">Home</a>
+    <a href="profile.php">Profile</a>
+    <a href="asset.php">Asset</a>
+    <a href="job.php">Govt./Company Job</a>
+    <a href="gift.php">Gift</a>
+    <a href="information.php">Information</a>
+    <a href="months.php">Months</a>
+    <a href="logout.php">Logout</a>
+</div>
 
 <!-- New Section: Additional Information -->
 <div class="container">
@@ -111,6 +113,10 @@ $stmt->close();
             </p>
             <div>Contact information: +880170 000 0000</div>
             <div>Email Address: familycard@gmail.com</div>
+            <div>
+                <a href="online.php">Online Form</a>
+
+            </div>
         </div>
     </div>
 </div>

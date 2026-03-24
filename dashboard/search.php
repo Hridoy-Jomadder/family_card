@@ -228,7 +228,7 @@ if ($stmt) {
                     <div class="bg-light rounded d-flex align-items-center justify-content-center p-4">
                     <div class="text-center">
                     <i class="fa fa-id-card fa-3x text-primary mb-3"></i>
-                    <p class="mb-2">Family</p>
+                    <p class="mb-2">Family QR Code List</p>
                     <h6 class="mb-0"><a href="http://localhost/familycard/qr_list.php">QR List View</a></h6>
                     </div>
                     </div>
@@ -239,7 +239,7 @@ if ($stmt) {
                     <div class="text-center">
                     <i class="fa fa-id-card fa-3x text-primary mb-3"></i>
                     <p class="mb-2">Family Card Verify</p>
-                    <h6 class="mb-0"><a href="http://localhost/familycard/verify.php?card=">Verify Card</a></h6>
+                    <h6 class="mb-0"><a href="http://localhost/familycard/verify.php?card=">Go to Card</a></h6>
                     </div>
                     </div>
                     </div>
@@ -249,7 +249,7 @@ if ($stmt) {
                     <div class="text-center">
                     <i class="fa fa-id-card fa-3x text-primary mb-3"></i>
                     <p class="mb-2">Family Card</p>
-                    <h6 class="mb-0"><a href="new_card.php">New Card</a></h6>
+                    <h6 class="mb-0"><a href="new_card.php">New Card Design</a></h6>
                     </div>
                     </div>
                     </div>

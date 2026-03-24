@@ -286,66 +286,65 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nidnumber'])) {
         <div style="width: 80%;padding-left: 270px;">         
             <h2 style="color:black;">Edit Family Information</h2>
 
+            <form method="POST" enctype="multipart/form-data">
 
-<form method="POST" enctype="multipart/form-data">
+    <label style="text-aligin:center;">Religion: 
+        <select name="religion" required>
+        <option value=""> Select Religion </option>
+        <option value="Islam" <?= ($family_data['religion'] == 'Islam') ? 'selected' : '' ?>>Islam</option>
+        <option value="Hindu" <?= ($family_data['religion'] == 'Hindu') ? 'selected' : '' ?>>Hindu</option>
+        <option value="Christian" <?= ($family_data['religion'] == 'Christian') ? 'selected' : '' ?>>Christian</option>
+        <option value="Buddhist" <?= ($family_data['religion'] == 'Buddhist') ? 'selected' : '' ?>>Buddhist</option>
+        <option value="Other" <?= ($family_data['religion'] == 'Other') ? 'selected' : '' ?>>Other</option>
+    </select>
+    </label>
+    <br>
 
-<label style="text-aligin:center;">Religion: 
-    <select name="religion" required>
-    <option value=""> Select Religion </option>
-    <option value="Islam" <?= ($family_data['religion'] == 'Islam') ? 'selected' : '' ?>>Islam</option>
-    <option value="Hindu" <?= ($family_data['religion'] == 'Hindu') ? 'selected' : '' ?>>Hindu</option>
-    <option value="Christian" <?= ($family_data['religion'] == 'Christian') ? 'selected' : '' ?>>Christian</option>
-    <option value="Buddhist" <?= ($family_data['religion'] == 'Buddhist') ? 'selected' : '' ?>>Buddhist</option>
-    <option value="Other" <?= ($family_data['religion'] == 'Other') ? 'selected' : '' ?>>Other</option>
-</select>
-</label>
-<br>
+    <!-- Division -->
+    <label>Division: 
+    <select name="division_id" id="division" required>
+        <option value=""> Select Division </option>
+        <?php
+        $divisions = $conn->query("SELECT * FROM divisions ORDER BY name_en ASC");
+        while($div = $divisions->fetch_assoc()):
+        ?>
+            <option value="<?= $div['id'] ?>"
+                <?= ($family_data['division_id'] == $div['id']) ? 'selected' : '' ?>>
+                <?= htmlspecialchars($div['name_en']) ?>
+            </option>
+        <?php endwhile; ?>
+    </select>
+    </label>
+    <br>
 
-<!-- Division -->
-<label>Division: 
-<select name="division_id" id="division" required>
-    <option value=""> Select Division </option>
-    <?php
-    $divisions = $conn->query("SELECT * FROM divisions ORDER BY name_en ASC");
-    while($div = $divisions->fetch_assoc()):
-    ?>
-        <option value="<?= $div['id'] ?>"
-            <?= ($family_data['division_id'] == $div['id']) ? 'selected' : '' ?>>
-            <?= htmlspecialchars($div['name_en']) ?>
-        </option>
-    <?php endwhile; ?>
-</select>
-</label>
-<br>
+    <!-- District -->
+    <label>District:
+    <select name="district_id" id="district" required>
+        <option value=""> Select District </option>
+    </select>
+    </label>
+    <br>
 
-<!-- District -->
-<label>District:
-<select name="district_id" id="district" required>
-    <option value=""> Select District </option>
-</select>
-</label>
-<br>
+    <!-- Upazila -->
+    <label>Upazila:
+    <select name="upazila_id" id="upazila" required>
+        <option value=""> Select Upazila </option>
+    </select>
+    </label>
 
-<!-- Upazila -->
-<label>Upazila:
-<select name="upazila_id" id="upazila" required>
-    <option value=""> Select Upazila </option>
-</select>
-</label>
+    <br>
+    <!-- Union -->
+    <label>Union:
+    <select name="union_id" id="union" required>
+        <option value=""> Select Union </option>
+    </select>
+    </label>
 
-<br>
-<!-- Union -->
-<label>Union:
-<select name="union_id" id="union" required>
-    <option value=""> Select Union </option>
-</select>
-</label>
-
-<br>
-<!-- Ward -->
-<label>Ward:
-<input type="text" name="ward_number" id="ward" value="<?= htmlspecialchars($family_data['ward_number'] ?? '') ?>" required>
-</label>
+    <br>
+    <!-- Ward -->
+    <label>Ward:
+    <input type="text" name="ward_number" id="ward" value="<?= htmlspecialchars($family_data['ward_number'] ?? '') ?>" required>
+    </label>
 
     <!-- House Info -->
     <label>House No: 

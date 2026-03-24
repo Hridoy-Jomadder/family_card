@@ -221,7 +221,7 @@ foreach ($salary_fields as $field) {
         <?php endif; ?>
         <form action="" method="POST">
             <div class="form-group">
-                <label for="job">Government Job/Company Job:</label>
+                <label for="job">Government Job/Company Job/Anytype of work:</label>
                 <input type="text" class="form-control" id="job" name="job" 
                     value="<?= htmlspecialchars($family_data['job'] ?? '') ?>" required>
             </div>

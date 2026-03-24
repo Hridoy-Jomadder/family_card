@@ -139,7 +139,8 @@ $conn->close();
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-     padding: 30px; color: white; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+     padding: 30px; color: white; box-shadow: 0 0 10px rgba(0,0,0,0.1);
+     justify-content: right; display: ;">
      <br>
      <br>
      <br>

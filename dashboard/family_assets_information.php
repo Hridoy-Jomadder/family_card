@@ -237,7 +237,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="bg-light rounded d-flex align-items-center justify-content-center p-4 shadow-sm">
 
 <i class="fas fa-money-bill-wave fa-3x text-primary" style="margin:5px;"></i>
-<i class="fas fa-building fa-3x text-primary"></i>
+<!-- <i class="fas fa-building fa-3x text-primary"></i> -->
 <!-- <i class="fas fa-home fa-3x text-primary"></i> -->
 
 
@@ -245,7 +245,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h5 class="mb-2">Families Assets</h5>
         </div>
 <i class="fas fa-database fa-3x text-primary" style="margin:5px;"></i>
-<i class="fas fa-box fa-3x text-primary"></i>
+<!-- <i class="fas fa-box fa-3x text-primary"></i> -->
         </div>
         </div>
 

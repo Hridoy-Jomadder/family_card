@@ -184,12 +184,12 @@ foreach ($salary_fields as $field) {
                         'Father' => ['father_job', 'father_salary'],
                         'Mother' => ['mother_job', 'mother_salary'],
                         'Wife' => ['wife_job', 'wife_salary'],
-                        'Son' => ['son_job', 'son_salary'],
-                        'Son1' => ['son_job1', 'son_salary1'],
-                        'Son2' => ['son_job2', 'son_salary2'],
-                        'Daughter' => ['dau_job', 'dau_salary'],
-                        'Daughter1' => ['dau_job1', 'dau_salary1'],
-                        'Daughter2' => ['dau_job2', 'dau_salary2'],
+                        '1.Son' => ['son_job', 'son_salary'],
+                        '2.Son' => ['son_job1', 'son_salary1'],
+                        '3.Son' => ['son_job2', 'son_salary2'],
+                        '1.Daughter' => ['dau_job', 'dau_salary'],
+                        '2.Daughter' => ['dau_job1', 'dau_salary1'],
+                        '3.Daughter' => ['dau_job2', 'dau_salary2'],
                         'Other Members' => ['family_other_members', 'family_other_members_salary']
                     ];
 
@@ -247,12 +247,12 @@ foreach ($salary_fields as $field) {
                 'Father' => ['father_job', 'father_salary'],
                 'Mother' => ['mother_job', 'mother_salary'],
                 'Wife' => ['wife_job', 'wife_salary'],
-                'Son' => ['son_job', 'son_salary'],
-                'Son1' => ['son_job1', 'son_salary1'],
-                'Son2' => ['son_job2', 'son_salary2'],
-                'Daughter' => ['dau_job', 'dau_salary'],
-                'Daughter1' => ['dau_job1', 'dau_salary1'],
-                'Daughter2' => ['dau_job2', 'dau_salary2'],
+                '1.Son' => ['son_job', 'son_salary'],
+                '2.Son' => ['son_job1', 'son_salary1'],
+                '3.Son' => ['son_job2', 'son_salary2'],
+                '1.Daughter' => ['dau_job', 'dau_salary'],
+                '2.Daughter' => ['dau_job1', 'dau_salary1'],
+                '3.Daughter' => ['dau_job2', 'dau_salary2'],
                 'Other Members' => ['family_other_members', 'family_other_members_salary']
             ];
             foreach ($roles as $label => [$jobField, $salaryField]) {

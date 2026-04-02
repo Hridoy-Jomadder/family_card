@@ -319,13 +319,17 @@ $conn->close(); // Close the connection after all queries are executed
 </div>
 
 <!-- Left-Aligned Mobile Icon -->
-<div class="d-flex justify-content-start align-items-center bg-light rounded p-4 mt-4">
+<div class="d-flex justify-content-start align-items-center bg-light rounded p-4 mt-2">
     <a href="info.php" class="d-flex align-items-center text-decoration-none">
         <i class="fa fa-mobile fa-2x text-primary"></i>
-        <span class="ms-2">Info</span> <!-- Optional Text -->
+<h5 class="" style="font-family: 'Times New Roman', Times, serif;margin:5px;">Smart Classification System</h5>
     </a>
 </div>
 
+<div class="d-flex justify-content-center align-items-center rounded p-2 mt-2">
+    <h5>© Copyright-2026|Family Card</h5>
+   
+</div>
 <!-- Back to Top Button (Right-Aligned) -->
 <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top position-fixed bottom-0 end-0 m-4">
     <i class="bi bi-arrow-up"></i>

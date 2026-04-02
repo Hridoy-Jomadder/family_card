@@ -83,6 +83,7 @@ $stmt->close();
 </head>
 <body>
 <div class="header">
+        <img src="img/Government_Seal_of_Bangladesh.png" style="width: 60px;">
     <h1 style="color:white;">Welcome to Family Card</h1>
     <h4 style="color:white;">Hand in hand, the country of pride is Shahid Zia's Bangladesh.</h4>
 </div> 
@@ -102,21 +103,61 @@ $stmt->close();
 <div class="container">
     <div class="container-fluid pt-4 px-4">
         <div class="bg-light text-center rounded p-4">
-            <div class="d-flex align-items-center justify-content-between mb-4">
-                <h6 class="mb-0">Additional Information</h6>
+<div class="text-center mb-4">
+    <h4 class="mb-2">Additional Information</h4>
+    <p class="text-muted">
+        Manage and update your family information easily through our smart system.
+        Each family is categorized to ensure better organization and service delivery.
+    </p>
+</div>
+
+<div class="row justify-content-center">
+    
+    <!-- Top Family Card -->
+    <div class="col-md-4 mb-3">
+        <div class="card border-success shadow-sm h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title text-success">Top Family</h5>
+                <p class="card-text">
+                    Families with strong financial stability, assets, and higher income level.
+                </p>
             </div>
-            <p>
+        </div>
+    </div>
+
+    <!-- Low Family Card -->
+    <div class="col-md-4 mb-3">
+        <div class="card border-warning shadow-sm h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title text-warning">Low Family</h5>
+                <p class="card-text">
+                    Families with limited income and resources who may require support and assistance.
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Button -->
+<div class="text-center mt-4">
+    <a href="online.php" class="btn btn-primary px-4 py-2">
+        <i class="fas fa-edit"></i> Fill Online Form
+    </a>
+</div>
+      <div class="text-center mt-4">
+    <p class="text-muted">
                 Welcome to the Family Card system, where we honor family values and pride in unity. 
                 Here, you can manage your family data, view profiles, and access resources tailored 
                 for your needs. If you encounter any issues, please contact us using the phone 
                 numbers provided under. Thank you for being a part of this journey!
             </p>
-            <div>Contact information: +880170 000 0000</div>
-            <div>Email Address: familycard@gmail.com</div>
-            <div>
-                <a href="online.php">Online Form</a>
+    <div class="mt-3">
+        <p><i class="fas fa-phone-alt text-primary"></i> <strong>Contact:</strong> +880170 000 0000</p>
+        <p><i class="fas fa-envelope text-danger"></i> <strong>Email:</strong> familycard@gmail.com</p>
+    </div>
 
-            </div>
+
         </div>
     </div>
 </div>

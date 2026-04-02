@@ -147,24 +147,25 @@ $conn->close();
      <br>
      <br>
      <br>
-     <br>
-     <br>
+
         <h2>Months Information</h2>
         <?php if (!empty($family_data)): ?>
             <div style="text-align: center;color: black;">
-<p><strong>Family Name:</strong> <?= htmlspecialchars($user['family_name'] ?? 'Not Available') ?></p>
-<p><strong>Full Name:</strong> <?= htmlspecialchars($user['full_name'] ?? 'Not Available') ?></p>
-<p><strong>Family Card Number:</strong> <?= htmlspecialchars($user['family_card_number'] ?? 'Not Available') ?></p>
-            
+            <p><strong>Family Name:</strong> <?= htmlspecialchars($user['family_name'] ?? 'Not Available') ?></p>
+            <p><strong>Full Name:</strong> <?= htmlspecialchars($user['full_name'] ?? 'Not Available') ?></p>
+            <p><strong>Family Card Number:</strong> <?= htmlspecialchars($user['family_card_number'] ?? 'Not Available') ?></p>
+            <p>Yearly Income Information </p>
+            <br>
             <form method="GET" class="mb-3">
-            <select name="year" class="form-control" style="text-align: center;justify-content: center;display: flex;width: 30%;">
+            <select name="year" class="form-control" style="text-align: center;justify-content: center;display: inline-grid;width: 30%;">
             <option value="2024" <?= $year==2024?'selected':'' ?>>2024</option>
             <option value="2025" <?= $year==2025?'selected':'' ?>>2025</option>
             <option value="2026" <?= $year==2026?'selected':'' ?>>2026</option>
             <option value="2027" <?= $year==2027?'selected':'' ?>>2027</option>
             </select>
-
-            <button type="submit" class="btn btn-primary mt-2" style="width: 30%;">Load Year/Show Year</button>
+            <br>
+            
+            <button type="submit" class="btn btn-primary mt-2" style="width: 30%;">Load Year</button>
             </form>
             <p><strong>Total Income (TK):</strong> <?= $total_income ?>/-</p>
             <p><strong>Total Expenditure (TK):</strong> <?= $total_exp ?>/-</p>

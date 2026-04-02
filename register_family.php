@@ -81,6 +81,12 @@ $conn->close();
             <p><?php echo htmlspecialchars($message); ?></p>
         <?php endif; ?>
         <form action="" method="POST">
+
+            <label for="privacy_agree" style="margin-top: 0px; ">
+                I agree to the <a href="privacy.php" style="text-decoration: underline; color: #007bff;">privacy policy</a>.
+            <input type="checkbox" id="privacy_agree" name="privacy_agree" style="box-shadow: 0px 0px 10px rgb(248, 5, 5);" required>
+            </label>
+
             <label for="family_name">Family Name:</label>
             <input type="text" id="family_name" name="family_name" required>
 
@@ -103,11 +109,7 @@ $conn->close();
             <input type="number" id="family_members" name="family_members" required>
 
             <label for="password">Password:</label>
-            
             <input type="password" id="password" name="password" required>
-            <label for="privacy_agree" style="margin-top: 10px;">
-                <input type="checkbox" id="privacy_agree" name="privacy_agree" required>I agree to the <a href="privacy.php" style="text-decoration: underline; color: #007bff;">privacy policy</a>.
-            </label>
 
             <button type="submit">Register</button>
         </form>

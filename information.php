@@ -260,7 +260,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nidnumber'])) {
     padding-bottom: 122px;">
 
 <div class="card shadow-lg border-0 rounded-4 p-4 mb-4">
-    <h3 class="mb-4 text-primary" style="text-align: center;">Family Information</h3>
+    <h3 class="mb-4 text-primary" style="text-align: center;">Family Address Information</h3>
 <div class="row">
     <div class="col-md-6" style="color:black;padding-left: 160px;">
         <p><strong>Nationality: Bangladeshi</strong></p>
@@ -385,6 +385,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nidnumber'])) {
         </div>
     </div>
 </div>
+
+<!-- Back to Top Button (Right-Aligned) -->
+<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top position-fixed bottom-0 end-0 m-4">
+    <i class="bi bi-arrow-up"></i>
+</a>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>

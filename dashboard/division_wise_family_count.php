@@ -107,19 +107,31 @@ $data=$conn->query($query)->fetch_all(MYSQLI_ASSOC);
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
-new Chart(document.getElementById('chart'),{
-    type:'bar',
-    data:{
-        labels:<?= json_encode(array_column($data,'name_en')) ?>,
-        datasets:[{
-            label:'Total Families',
-            data:<?= json_encode(array_column($data,'total')) ?>
+const ctx = document.getElementById('chart').getContext('2d');
+
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: <?= json_encode(array_column($data,'name_en')) ?>,
+        datasets: [{
+            label: 'Total Families',
+            data: <?= json_encode(array_column($data,'total')) ?>,
+            backgroundColor: 'rgba(75, 192, 192, 0.7)',
+            borderWidth: 1
         }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
     }
 });
 </script>
-
 
 <!-- Back to Top -->
 <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>

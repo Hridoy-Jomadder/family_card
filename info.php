@@ -107,7 +107,7 @@ $stmt->close();
     <h4 class="mb-2">Additional Information</h4>
     <p class="text-muted">
         Manage and update your family information easily through our smart system.
-        Each family is categorized to ensure better organization and service delivery.
+        Each family is categorized to ensure better organization, transparency, and service delivery.
     </p>
 </div>
 
@@ -119,7 +119,8 @@ $stmt->close();
             <div class="card-body text-center">
                 <h5 class="card-title text-success">Top Family</h5>
                 <p class="card-text">
-                    Families with strong financial stability, assets, and higher income level.
+                    Families with strong financial stability, valuable assets, and higher income levels.
+                    These families are recognized for their economic strength, responsibility, and contribution to society.
                 </p>
             </div>
         </div>
@@ -131,7 +132,7 @@ $stmt->close();
             <div class="card-body text-center">
                 <h5 class="card-title text-warning">Low Family</h5>
                 <p class="card-text">
-                    Families with limited income and resources who may require support and assistance.
+                   Families with limited income and resources who may require financial support, social welfare assistance, and community services.
                 </p>
             </div>
         </div>
@@ -140,17 +141,34 @@ $stmt->close();
 </div>
 
 <!-- Button -->
+<divclass="col-md-4 mb-3">
+        <div class="card border-primary shadow-sm h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title text-primary">Important Notice</h5>
+
+To become eligible for the Top Family category, every family must complete and submit the online registration form with accurate information.
+<br>
+Please ensure that all required family details, income records, assets, and identification information are properly updated in the system.
+<br>
+Families who successfully complete the verification process may receive priority access to government and community support services.
+<br><br>
+👉 Click the Fill Online Form button below to continue your registration.
+
 <div class="text-center mt-4">
     <a href="online.php" class="btn btn-primary px-4 py-2">
         <i class="fas fa-edit"></i> Fill Online Form
     </a>
+</div>
+</div>
+</div>
 </div>
       <div class="text-center mt-4">
     <p class="text-muted">
                 Welcome to the Family Card system, where we honor family values and pride in unity. 
                 Here, you can manage your family data, view profiles, and access resources tailored 
                 for your needs. If you encounter any issues, please contact us using the phone 
-                numbers provided under. Thank you for being a part of this journey!
+                numbers provided under.
+                 Thank you for being a part of this journey!
             </p>
     <div class="mt-3">
         <p><i class="fas fa-phone-alt text-primary"></i> <strong>Contact:</strong> +880170 000 0000</p>

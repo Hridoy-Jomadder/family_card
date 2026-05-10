@@ -26,11 +26,19 @@ function uploadFile($name, $nidNumber, $oldFile = ''){
     if(!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 
     if(!empty($_FILES[$name]['name'])){
+
+        $allowedTypes = ['image/jpeg','image/png','image/jpg'];
+        $fileType = $_FILES[$name]['type'];
+
+        if(!in_array($fileType, $allowedTypes)){
+            return $oldFile; // invalid file reject
+        }
+
         $fileName = time().'_'.basename($_FILES[$name]['name']);
         move_uploaded_file($_FILES[$name]['tmp_name'], $uploadDir.$fileName);
         return $fileName;
     }
-    return $oldFile; // keep old file if no new upload
+    return $oldFile;
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['nid_number'])) {
@@ -115,6 +123,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['nid_number'])) {
 <title>Top Family Full Information</title>
 <link href="css/bootstrap.min.css" rel="stylesheet" />
 <link href="css/style.css" rel="stylesheet" />
+<style>
+    .form{
+    width: 50%;
+    margin: 0 auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    };
+
+</style>
 </head>
 <body>
 <div class="header">
@@ -134,7 +152,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['nid_number'])) {
     <a href="logout.php">Logout</a>
 </div>
 
-<div class="container mt-4" d>
+<div class="container">
+    <div class="container-fluid pt-4 px-4">
+        <div class="bg-light text-center rounded p-4">
+<div class="text-center mb-4">
 
     <form method="POST" enctype="multipart/form-data">
         <?php if($message): ?>
@@ -142,75 +163,115 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['nid_number'])) {
         <?php endif; ?>
             <h2>Top Family Full Information</h2>
 
-        <input type="text" name="nid_number" class="form-control mb-2" placeholder="NID Number" required value="<?= $existingData['nid_number'] ?? '' ?>">
-        <input type="text" name="spouse_nid" class="form-control mb-2" placeholder="Spouse NID" value="<?= $existingData['spouse_nid'] ?? '' ?>">
-        <input type="text" name="father_nid" class="form-control mb-2" placeholder="Father NID" value="<?= $existingData['father_nid'] ?? '' ?>">
-        <input type="text" name="mother_nid" class="form-control mb-2" placeholder="Mother NID" value="<?= $existingData['mother_nid'] ?? '' ?>">
+           <h3> Purpose & Rules</h3><br>
+
+Purpose of Information Collection:<br>
+
+The information provided in this form is collected to maintain accurate family records, verify identity, and manage family-related assets and documents within the system.
+<br><br><br>
+Rules for Providing Information:
+<br>
+1. All information must be accurate and truthful.<br>
+2. The NID number must belong to the actual person.<br>
+3. Uploaded documents (NID, Passport, etc.) must be clear and valid.<br>
+4. Do not upload fake or edited documents.<br>
+5. Each user is responsible for the security of their own data.<br>
+6. Any misuse of this system may result in account suspension.<br>
+7. Personal data will be used only for official and system management purposes.
+<br><br><br>
+
+        <input type="text" name="nid_number" class="form mb-2" placeholder="NID Number" required value="<?= $existingData['nid_number'] ?? '' ?>">
+        <input type="text" name="spouse_nid" class="form mb-2" placeholder="Spouse NID" required value="<?= $existingData['spouse_nid'] ?? '' ?>">
+        <input type="text" name="father_nid" class="form mb-2" placeholder="Father NID" value="<?= $existingData['father_nid'] ?? '' ?>">
+        <input type="text" name="mother_nid" class="form mb-2" placeholder="Mother NID" value="<?= $existingData['mother_nid'] ?? '' ?>">
         <br>
         <h5>Sons NID</h5>
-        <input type="text" name="son1" placeholder="Son NID" class="form-control mb-2" value="<?= $existingData['son1'] ?? '' ?>">
-        <input type="text" name="son2" placeholder="Son NID" class="form-control mb-2" value="<?= $existingData['son2'] ?? '' ?>">
-        <input type="text" name="son3" placeholder="Son NID" class="form-control mb-2" value="<?= $existingData['son3'] ?? '' ?>">
+        <input type="text" name="son1" placeholder="Son NID" class="form mb-2" value="<?= $existingData['son1'] ?? '' ?>">
+        <input type="text" name="son2" placeholder="Son NID" class="form mb-2" value="<?= $existingData['son2'] ?? '' ?>">
+        <input type="text" name="son3" placeholder="Son NID" class="form mb-2" value="<?= $existingData['son3'] ?? '' ?>">
         <br>
         <h5>Daughters NID</h5>
-        <input type="text" name="daughter1" placeholder="Daughter NID" class="form-control mb-2" value="<?= $existingData['daughter1'] ?? '' ?>">
-        <input type="text" name="daughter2" placeholder="Daughter NID" class="form-control mb-2" value="<?= $existingData['daughter2'] ?? '' ?>">
-        <input type="text" name="daughter3" placeholder="Daughter NID" class="form-control mb-2" value="<?= $existingData['daughter3'] ?? '' ?>">
+        <input type="text" name="daughter1" placeholder="Daughter NID" class="form mb-2" value="<?= $existingData['daughter1'] ?? '' ?>">
+        <input type="text" name="daughter2" placeholder="Daughter NID" class="form mb-2" value="<?= $existingData['daughter2'] ?? '' ?>">
+        <input type="text" name="daughter3" placeholder="Daughter NID" class="form mb-2" value="<?= $existingData['daughter3'] ?? '' ?>">
         <br>
-        <h4>Other Members NID</h4>
-        <input type="text" name="other_member" class="form-control mb-2" placeholder="Other Member" value="<?= $existingData['other_member'] ?? '' ?>">
+        <h5>Other Members NID</h5>
+        <input type="text" name="other_member" class="form mb-2" placeholder="Other Member" value="<?= $existingData['other_member'] ?? '' ?>">
         <br>
         <h5>Assets</h5>
-        <input type="text" name="car_name" placeholder="Car Name" class="form-control mb-2" value="<?= $existingData['car_name'] ?? '' ?>">
-        <input type="text" name="house_name" placeholder="House Name" class="form-control mb-2" value="<?= $existingData['house_name'] ?? '' ?>">
-        <input type="text" name="company_name" placeholder="Company Name" class="form-control mb-2" value="<?= $existingData['company_name'] ?? '' ?>">
-        <input type="text" name="company_value" placeholder="Company Value" class="form-control mb-2" value="<?= $existingData['company_value'] ?? '' ?>">
-        <input type="text" name="farm_name" placeholder="Farm Name" class="form-control mb-2" value="<?= $existingData['farm_name'] ?? '' ?>">
-        <input type="text" name="farm_value" placeholder="Farm Value" class="form-control mb-2" value="<?= $existingData['farm_value'] ?? '' ?>">
-        <input type="text" name="pond_area" placeholder="Pond Area" class="form-control mb-2" value="<?= $existingData['pond_area'] ?? '' ?>">
-        <input type="text" name="pond_value" placeholder="Pond Value" class="form-control mb-2" value="<?= $existingData['pond_value'] ?? '' ?>">
-        <input type="text" name="land_name" placeholder="Land Name" class="form-control mb-2" value="<?= $existingData['land_name'] ?? '' ?>">
-        <input type="text" name="land_value" placeholder="Land Value" class="form-control mb-2" value="<?= $existingData['land_value'] ?? '' ?>">
+        <input type="text" name="car_name" placeholder="Car Name" class="form mb-2" value="<?= $existingData['car_name'] ?? '' ?>">
+        <input type="text" name="house_name" placeholder="House Name" class="form mb-2" value="<?= $existingData['house_name'] ?? '' ?>">
+        <input type="text" name="company_name" placeholder="Company Name" class="form mb-2" value="<?= $existingData['company_name'] ?? '' ?>">
+        <input type="text" name="company_value" placeholder="Company Value" class="form mb-2" value="<?= $existingData['company_value'] ?? '' ?>">
+        <input type="text" name="farm_name" placeholder="Farm Name" class="form mb-2" value="<?= $existingData['farm_name'] ?? '' ?>">
+        <input type="text" name="farm_value" placeholder="Farm Value" class="form mb-2" value="<?= $existingData['farm_value'] ?? '' ?>">
+        <input type="text" name="pond_area" placeholder="Pond Area" class="form mb-2" value="<?= $existingData['pond_area'] ?? '' ?>">
+        <input type="text" name="pond_value" placeholder="Pond Value" class="form mb-2" value="<?= $existingData['pond_value'] ?? '' ?>">
+        <input type="text" name="land_name" placeholder="Land Name" class="form mb-2" value="<?= $existingData['land_name'] ?? '' ?>">
+        <input type="text" name="land_value" placeholder="Land Value" class="form mb-2" value="<?= $existingData['land_value'] ?? '' ?>">
+<br><br><br>
+<h5>Required Documents Upload</h5>
+
+<h6>Please upload clear and valid images of the following documents and assets for verification purposes.</h6>
 <br>
-<h5>Documents</h5>
 <h6>NID Image</h6>
-<input type="file" name="nid_image" class="mb-2">
+<h6>Upload a clear image of your National Identity Card (Front Side & Back Side).</h6>
+<input type="file" name="nid_image" class="mb-2" style="width: 50%;background:white;" required>
 <?php if(!empty($existingData['nid_image'])): ?>
-    <br><img src="uploads/<?= $existingData['nid_number'] ?>/<?= $existingData['nid_image'] ?>" width="400">
+    <br><img src="uploads/<?= $existingData['nid_number'] ?>/<?= $existingData['nid_image'] ?>" width="300">
 <?php endif; ?>
-
+<br>
+<br>
+<br>
 <h6>Passport Image</h6>
-<input type="file" name="passport_image" class="mb-2">
+<h6>Upload a valid passport image if available.</h6>
+<input type="file" name="passport_image" class="mb-2" style="width: 50%;background:white;">
 <?php if(!empty($existingData['passport_image'])): ?>
-    <br><img src="uploads/<?= $existingData['nid_number'] ?>/<?= $existingData['passport_image'] ?>" width="400">
+    <br><img src="uploads/<?= $existingData['nid_number'] ?>/<?= $existingData['passport_image'] ?>" width="300">
 <?php endif; ?>
-
-<h6>Birth Image</h6>
-<input type="file" name="birth_image" class="mb-2">
+<br>
+<br>
+<br>
+<h6>Birth Certificate Image</h6>
+<h6>Upload a clear image of your Birth Certificate.</h6>
+<input type="file" name="birth_image" class="mb-2" style="width: 50%;background:white;">
 <?php if(!empty($existingData['birth_image'])): ?>
-    <br><img src="uploads/<?= $existingData['nid_number'] ?>/<?= $existingData['birth_image'] ?>" width="400">
+    <br><img src="uploads/<?= $existingData['nid_number'] ?>/<?= $existingData['birth_image'] ?>" width="300">
 <?php endif; ?>
-
-<h6>Company Head Office Image</h6>
-<input type="file" name="company_image" class="mb-2">
+<br>
+<br>
+<br>
+<h6> Office Image / Company Head Office Image</h6>
+<h6>Upload an image of your office, company building, or head office location.</h6>
+<input type="file" name="company_image" class="mb-2" style="width: 50%;background:white;">
 <?php if(!empty($existingData['company_image'])): ?>
-    <br><img src="uploads/<?= $existingData['nid_number'] ?>/<?= $existingData['company_image'] ?>" width="400">
+    <br><img src="uploads/<?= $existingData['nid_number'] ?>/<?= $existingData['company_image'] ?>" width="300">
 <?php endif; ?>
-
+<br>
+<br>
+<br>
 <h6>Car Image</h6>
-<input type="file" name="car_image" class="mb-2">
+<h6>Upload an image of your registered vehicle or car.</h6>
+<input type="file" name="car_image" class="mb-2" style="width: 50%;background:white;">
 <?php if(!empty($existingData['car_image'])): ?>
-    <br><img src="uploads/<?= $existingData['nid_number'] ?>/<?= $existingData['car_image'] ?>" width="400">
+    <br><img src="uploads/<?= $existingData['nid_number'] ?>/<?= $existingData['car_image'] ?>" width="300">
 <?php endif; ?>
-
+<br>
+<br>
+<br>
 <h6>Farm Image</h6>
-<input type="file" name="farm_image" class="mb-2">
+<h6>Upload an image of your farm, agricultural project, or related property.</h6>
+<input type="file" name="farm_image" class="mb-2" style="width: 50%;background:white;">
 <?php if(!empty($existingData['farm_image'])): ?>
-    <br><img src="uploads/<?= $existingData['nid_number'] ?>/<?= $existingData['farm_image'] ?>" width="400">
+    <br><img src="uploads/<?= $existingData['nid_number'] ?>/<?= $existingData['farm_image'] ?>" width="300">
 <?php endif; ?>
+<br><br>
 
-        <button type="submit" class="btn btn-primary mt-3">Save</button>
+        <button type="submit" class="btn btn-primary mt-3" style="width: 50%;background:white;">Save</button>
     </form>
+</div>
+</div>
+</div>
 </div>
 <script src="js/bootstrap.bundle.min.js"></script>
 </body>

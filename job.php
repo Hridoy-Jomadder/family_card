@@ -140,7 +140,7 @@ foreach ($salary_fields as $field) {
 <div class="header">
         <img src="img/Government_Seal_of_Bangladesh.png" style="width: 60px;">
     <h1 style="color:#fff;;">Welcome to Family Card</h1>
-    <h4 style="color: #fff;">Hand in hand, the country of pride is Shahid Ziaur Rahman Bangladesh.</h4>
+    <h4 style="color: #fff;">Hand in hand, we will build the proud Bangladesh envisioned by Shahid Ziaur Rahman.</h4>
 </div> 
    <div class="navbar">
     <a href="index.php">Home</a>
@@ -222,7 +222,7 @@ foreach ($salary_fields as $field) {
         <?php endif; ?>
         <form action="" method="POST">
             <div class="form-group">
-                <label for="job">Government Job/Company Job/Anytype of work:</label>
+                <label for="job">Government Job/Company Job/Anytype of work/Company Name:</label>
                 <input type="text" class="form-control" id="job" name="job" 
                     value="<?= htmlspecialchars($family_data['job'] ?? '') ?>" required>
             </div>

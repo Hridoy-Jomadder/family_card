@@ -121,7 +121,7 @@ $conn->close();
 <div class="header">
         <img src="img/Government_Seal_of_Bangladesh.png" style="width: 60px;">
     <h1 style="color:white;">Welcome to Family Card</h1>
-    <h4 style="color: #fff;">Hand in hand, the country of pride is Shahid Ziaur Rahman Bangladesh.</h4>
+    <h4 style="color: #fff;">Hand in hand, we will build the proud Bangladesh envisioned by Shahid Ziaur Rahman.</h4>
 </div> 
 
 <div class="navbar">

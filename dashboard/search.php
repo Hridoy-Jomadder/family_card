@@ -254,6 +254,28 @@ if ($stmt) {
                     </div>
                     </div>
 
+                    <div class="col-sm-6 col-xl-3">
+                    <div class="bg-light rounded d-flex align-items-center justify-content-center p-4">
+                    <div class="text-center">
+                    <i class="fa fa-id-card fa-3x text-primary mb-3"></i>
+                    <p class="mb-2">Top Family</p>
+                    <h6 class="mb-0"><a href="top_family_info.php">Top Family Info.</a></h6>
+                    </div>
+                    </div>
+                    </div>
+                    
+                    <div class="col-sm-6 col-xl-3">
+                    <div class="bg-light rounded d-flex align-items-center justify-content-center p-4">
+                    <div class="text-center">
+                    <i class="fa fa-id-card fa-3x text-primary mb-3"></i>
+                    <p class="mb-2">Qr Code</p>
+                    <h6 class="mb-0"><a href="http://localhost/familycard/generate_qr.php">Generate QR Code</a></h6>
+                    </div>
+                    </div>
+                    </div>
+
+                    
+
                 </div>
             </div>
             </div>

@@ -271,14 +271,14 @@ button{
                         বাড়ি নং: <?php echo htmlspecialchars($house); ?><br>
                         কার্ড নং: <?php echo htmlspecialchars($card); ?><br>
                         সদস্য সংখ্যা: <?php echo htmlspecialchars($members); ?>
-                    </div>
-                </div>
+                
 
                 <div class="signature">
-                    <h4 style="margin-top:40px;">আমি তারেক রহমান, আপনার পরিবারের পাশে আছি।</h4>
-                    _______________________<br>
-                    প্রধানমন্ত্রী
-                </div>
+                    <h4 style="margin-top:0px;">আমি তারেক রহমান, আপনার পরিবারের পাশে আছি।</h4>
+                    _______<img src="img/Tarique_Rahman_signature.png" style="height: 25px;">______<br>
+                    মাননীয় প্রধানমন্ত্রী তারেক রহমান 
+                </div></div>
+                    </div>
 
             </div>
 
